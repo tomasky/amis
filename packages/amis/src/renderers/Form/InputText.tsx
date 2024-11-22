@@ -323,7 +323,7 @@ export default class TextControl extends React.PureComponent<
         inputValue: pristineVal
       },
       () => {
-        this.focus();
+        //this.focus();
         this.loadAutoComplete();
       }
     );
@@ -361,7 +361,7 @@ export default class TextControl extends React.PureComponent<
         inputValue: resetValue
       },
       () => {
-        this.focus();
+        //this.focus();
         this.loadAutoComplete();
       }
     );
