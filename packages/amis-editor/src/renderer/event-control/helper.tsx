@@ -3296,7 +3296,7 @@ export const getEventControlConfig = (
       }
 
       // 不加回来可能数据会丢失
-      ['drawer', 'dialog', 'args'].forEach(key => {
+      ['drawer', 'dialog', 'args', 'preventDefault'].forEach(key => {
         action[key] = action[key] ?? actionData?.[key];
       });
 
