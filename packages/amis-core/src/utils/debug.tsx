@@ -10,6 +10,7 @@ import {autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {uuidv4, importLazyComponent} from './helper';
 import position from './position';
+import isPlainObject from 'lodash/isPlainObject';
 
 export const JsonView = React.lazy(() =>
   import('react-json-view').then(importLazyComponent)
@@ -81,17 +82,25 @@ const LogView = observer(({store}: {store: AMISDebugStore}) => {
   return (
     <>
       {logs.map((log, index) => {
+        let ext =
+          typeof log.ext === 'string' &&
+          (log.ext.startsWith('{') || log.ext.startsWith('['))
+            ? JSON.parse(log.ext)
+            : typeof log.ext === 'object'
+            ? normalizeDataForLog(log.ext)
+            : log.ext;
+
         return (
           <div className="AMISDebug-logLine" key={`log-${index}`}>
             <div className="AMISDebug-logLineMsg">
               [{log.cat}] {log.msg}
             </div>
-            {log.ext ? (
+            {typeof ext === 'object' ? (
               <React.Suspense fallback={<div>Loading...</div>}>
                 <JsonView
                   name={null}
                   theme="monokai"
-                  src={JSON.parse(log.ext)}
+                  src={ext}
                   collapsed={true}
                   enableClipboard={false}
                   displayDataTypes={false}
@@ -99,13 +108,35 @@ const LogView = observer(({store}: {store: AMISDebugStore}) => {
                   iconStyle="square"
                 />
               </React.Suspense>
-            ) : null}
+            ) : (
+              <pre className="AMISDebug-value">{JSON.stringify(ext)}</pre>
+            )}
           </div>
         );
       })}
     </>
   );
 });
+
+function normalizeDataForLog(data: any) {
+  try {
+    return JSON.parse(JSON.stringify(data));
+  } catch {
+    let ret: any = {};
+
+    Object.keys(data).forEach(key => {
+      const value = data[key];
+
+      if (typeof value === 'object' && value !== null && !isPlainObject(value)) {
+        ret[key] = '[complicated data]';
+      } else {
+        ret[key] = value;
+      }
+    });
+
+    return ret;
+  }
+}
 
 const AMISDebug = observer(({store}: {store: AMISDebugStore}) => {
   const activeId = store.activeId;
