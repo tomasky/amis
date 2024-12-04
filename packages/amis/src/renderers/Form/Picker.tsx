@@ -101,6 +101,11 @@ export interface PickerControlSchema extends FormOptionsSchema {
      */
     overflowTagPopoverInCRUD?: TooltipWrapperSchema;
   };
+
+  /**
+   * 选中项可删除，默认为true
+   */
+  itemClearable?: boolean;
 }
 
 export interface PickerProps extends OptionsControlProps {
@@ -523,6 +528,7 @@ export default class PickerControl extends React.PureComponent<
 
   renderTag(item: Option, index: number) {
     const {
+      itemClearable = true,
       classPrefix: ns,
       classnames: cx,
       labelField,
@@ -551,23 +557,25 @@ export default class PickerControl extends React.PureComponent<
           }
         )}
       >
-        <span
-          className={cx(
-            `${ns}Picker-valueIcon`,
-            setThemeClassName({
-              ...this.props,
-              name: 'pickValueIconClassName',
-              id,
-              themeCss: themeCss || css
-            })
-          )}
-          onClick={e => {
-            e.stopPropagation();
-            this.removeItem(index);
-          }}
-        >
-          ×
-        </span>
+        {itemClearable && (
+          <span
+            className={cx(
+              `${ns}Picker-valueIcon`,
+              setThemeClassName({
+                ...this.props,
+                name: 'pickValueIconClassName',
+                id,
+                themeCss: themeCss || css
+              })
+            )}
+            onClick={e => {
+              e.stopPropagation();
+              this.removeItem(index);
+            }}
+          >
+            ×
+          </span>
+        )}
         <span
           className={cx(
             `${ns}Picker-valueLabel`,

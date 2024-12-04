@@ -370,6 +370,13 @@ export class PickerControlPlugin extends BasePlugin {
                 },
                 visibleOn: 'this.multiple'
               },
+              {
+                type: 'switch',
+                name: 'itemClearable',
+                label: '选中项可删除',
+                pipeIn: defaultValue(true),
+                inputClassName: 'is-inline '
+              },
               getSchemaTpl('labelRemark'),
               getSchemaTpl('remark'),
               getSchemaTpl('placeholder'),
