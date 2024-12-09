@@ -77,6 +77,17 @@ export class TreeSelectControlPlugin extends BasePlugin {
       mode: 'normal'
     }
   };
+  defaultItemAction = {
+    type: 'container',
+    body: [
+      {
+        type: 'button',
+        icon: 'fa fa-plus',
+        level: 'link',
+        size: 'xs'
+      }
+    ]
+  };
 
   notRenderFormZone = true;
 
@@ -404,7 +415,44 @@ export class TreeSelectControlPlugin extends BasePlugin {
                     name: 'removeTip'
                   }
                 ]
-              })
+              }),
+              {
+                type: 'select',
+                label: '操作栏位置',
+                value: '',
+                name: 'themeCss.actionControlClassName.marginLeft',
+                options: [
+                  {
+                    label: '左侧',
+                    value: ''
+                  },
+                  {
+                    label: '右侧',
+                    value: 'auto'
+                  }
+                ]
+              },
+              {
+                type: 'ae-switch-more',
+                mode: 'normal',
+                label: '自定义操作',
+                bulk: false,
+                name: 'itemActions',
+                formType: 'extend',
+                defaultData: this.defaultItemAction,
+                form: {
+                  body: [
+                    {
+                      type: 'button',
+                      level: 'primary',
+                      size: 'sm',
+                      block: true,
+                      onClick: this.editDetail.bind(this, context.id),
+                      label: '配置自定义操作模板'
+                    }
+                  ]
+                }
+              }
             ]
           },
           {
@@ -423,7 +471,7 @@ export class TreeSelectControlPlugin extends BasePlugin {
                   '选项值包含父节点',
                   '开启后对应节点值会包含父节点'
                 ),
-                value: false,
+                falseValue: false,
                 formType: 'extend',
                 autoFocus: false,
                 form: {
@@ -442,7 +490,6 @@ export class TreeSelectControlPlugin extends BasePlugin {
                 mode: 'normal',
                 name: 'hideRoot',
                 label: '显示顶级节点',
-                value: true,
                 trueValue: false,
                 falseValue: true,
                 formType: 'extend',
@@ -505,7 +552,6 @@ export class TreeSelectControlPlugin extends BasePlugin {
                   '自定义展开层级',
                   '默认展开所有节点层级，开启后可自定义展开层级数'
                 ),
-                value: true,
                 trueValue: false,
                 falseValue: true,
                 formType: 'extend',
@@ -517,8 +563,7 @@ export class TreeSelectControlPlugin extends BasePlugin {
                       label: '设置层级',
                       name: 'unfoldedLevel',
                       value: 1,
-                      min: 0,
-                      hiddenOn: 'this.initiallyOpen'
+                      min: 0
                     }
                   ]
                 }
@@ -608,6 +653,77 @@ export class TreeSelectControlPlugin extends BasePlugin {
     }
 
     return dataSchema;
+  }
+
+  getSubEditorVariable(schema: any): Array<{label: string; children: any}> {
+    let labelField = schema?.labelField || 'label';
+    let valueField = schema?.valueField || 'value';
+
+    return [
+      {
+        label: '节点选项',
+        children: [
+          {
+            label: '节点索引',
+            value: 'index'
+          },
+          {
+            label: '节点名称',
+            value: labelField
+          },
+          {
+            label: '节点值',
+            value: valueField
+          },
+          {
+            label: '节点状态',
+            value: 'checked'
+          }
+        ]
+      }
+    ];
+  }
+
+  getDisplayField(data: any) {
+    if (
+      data.source ||
+      (data.map &&
+        Array.isArray(data.map) &&
+        data.map[0] &&
+        Object.keys(data.map[0]).length > 1)
+    ) {
+      return data.labelField ?? 'label';
+    }
+    return 'item';
+  }
+
+  editDetail(id: string) {
+    const manager = this.manager;
+    const store = manager.store;
+    const node = store.getNodeById(id);
+    const value = store.getValueOf(id);
+    const defaultItemSchema = this.defaultItemAction;
+    let originData = value.itemActions;
+
+    if (originData.type && originData.type !== 'container') {
+      originData = {
+        type: 'container',
+        body: [originData]
+      };
+    } else {
+      originData = originData ?? defaultItemSchema;
+    }
+
+    node &&
+      value &&
+      this.manager.openSubEditor({
+        title: '配置自定义操作模板',
+        value: originData,
+        onChange: (newValue: any) => {
+          newValue = {...value, itemActions: newValue};
+          manager.panelChangeValue(newValue, diff(value, newValue));
+        }
+      });
   }
 }
 

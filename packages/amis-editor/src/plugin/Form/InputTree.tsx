@@ -466,7 +466,61 @@ export class TreeControlPlugin extends BasePlugin {
                     name: 'removeTip'
                   }
                 ]
-              })
+              }),
+              {
+                type: 'select',
+                label: '操作栏位置',
+                value: '',
+                name: 'themeCss.actionControlClassName.marginLeft',
+                options: [
+                  {
+                    label: '左侧',
+                    value: ''
+                  },
+                  {
+                    label: '右侧',
+                    value: 'auto'
+                  }
+                ]
+              },
+              {
+                type: 'ae-switch-more',
+                mode: 'normal',
+                label: '自定义操作',
+                bulk: false,
+                name: 'itemActions',
+                formType: 'extend',
+                defaultData: {
+                  type: 'container',
+                  body: [{type: 'button', label: '按钮'}]
+                },
+                form: {
+                  body: [
+                    {
+                      type: 'button',
+                      level: 'primary',
+                      size: 'sm',
+                      block: true,
+                      onClick: this.editDetail.bind(this, context.id),
+                      label: '配置自定义操作模板'
+                    }
+                  ]
+                },
+                pipeIn: (value: any) => {
+                  return value !== undefined;
+                },
+                pipeOut: (value: any) => {
+                  if (value === true) {
+                    return {
+                      type: 'button',
+                      icon: 'fa fa-plus',
+                      level: 'link',
+                      size: 'xs'
+                    };
+                  }
+                  return value ? value : undefined;
+                }
+              }
             ]
           },
           {
@@ -579,8 +633,7 @@ export class TreeControlPlugin extends BasePlugin {
                       label: '设置层级',
                       name: 'unfoldedLevel',
                       value: 1,
-                      min: 0,
-                      hiddenOn: 'this.initiallyOpen'
+                      min: 0
                     }
                   ]
                 }

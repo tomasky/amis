@@ -187,35 +187,6 @@ export class ImagePlugin extends BasePlugin {
                   }
                 ]
               },
-              {
-                name: 'width',
-                label: '宽度',
-                type: 'input-number',
-                onChange: (value: any) => {
-                  const node = context.node;
-                  node.updateState({
-                    width: value
-                  });
-                  requestAnimationFrame(() => {
-                    node.calculateHighlightBox();
-                  });
-                }
-              },
-              {
-                name: 'height',
-                label: '高度',
-                type: 'input-number',
-                onChange: (value: any) => {
-                  const node = context.node;
-                  node.updateState({
-                    height: value
-                  });
-                  requestAnimationFrame(() => {
-                    node.calculateHighlightBox();
-                  });
-                }
-              },
-
               isUnderField
                 ? null
                 : getSchemaTpl('imageUrl', {

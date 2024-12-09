@@ -99,6 +99,21 @@ export class TimelinePlugin extends BasePlugin {
                 bulk: false,
                 name: 'itemTitleSchema',
                 formType: 'extend',
+                defaultData: {
+                  type: 'container',
+                  body: [
+                    {
+                      type: 'tpl',
+                      tpl: '${label}',
+                      editorSetting: {
+                        mock: {
+                          tpl: '节点标题'
+                        }
+                      },
+                      wrapperComponent: ''
+                    }
+                  ]
+                },
                 form: {
                   body: [
                     {

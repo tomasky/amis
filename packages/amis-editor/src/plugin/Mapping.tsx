@@ -75,6 +75,7 @@ export class MappingPlugin extends BasePlugin {
                   bulk: false,
                   name: 'itemSchema',
                   formType: 'extend',
+                  defaultData: this.scaffold.itemSchema,
                   form: {
                     body: [
                       {
