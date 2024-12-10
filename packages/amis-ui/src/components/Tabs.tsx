@@ -607,6 +607,7 @@ export class Tabs extends React.Component<TabsProps, any> {
       iconPosition,
       title,
       toolbar,
+      className,
       tabClassName,
       closable: tabClosable,
       tip,
@@ -668,6 +669,7 @@ export class Tabs extends React.Component<TabsProps, any> {
           'Tabs-link',
           activeKey === eventKey ? 'is-active' : '',
           disabled ? 'is-disabled' : '',
+          className,
           tabClassName
         )}
         key={this.generateTabKey(hash, eventKey, index)}
