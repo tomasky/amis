@@ -934,7 +934,7 @@ export default class FormTable extends React.Component<TableProps, TableState> {
     if (isNew && isEffectiveApi(addApi, createObject(data, item))) {
       remote = await env.fetcher(addApi, createObject(data, item));
       apiMsg = (addApi as ApiObject)?.messages?.failed;
-    } else if (isEffectiveApi(updateApi, createObject(data, item))) {
+    } else if (!isNew && isEffectiveApi(updateApi, createObject(data, item))) {
       remote = await env.fetcher(updateApi, createObject(data, item));
       apiMsg = (updateApi as ApiObject)?.messages?.failed;
     }
