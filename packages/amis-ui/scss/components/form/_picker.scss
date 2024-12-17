@@ -97,6 +97,12 @@
 
   .#{$ns}Picker-values {
     display: inline;
+
+    .#{$ns}OverflowTpl {
+      .#{$ns}Picker-valueLabel {
+        pointer-events: auto;
+      }
+    }
   }
 
   &-valueWrap {
