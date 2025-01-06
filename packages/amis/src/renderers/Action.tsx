@@ -168,6 +168,8 @@ export interface ButtonSchema extends BaseSchema {
    * 子内容
    */
   body?: SchemaCollection;
+
+  tabIndex?: string;
 }
 
 export interface AjaxActionSchema extends ButtonSchema {
@@ -748,7 +750,8 @@ export class Action extends React.Component<ActionProps, ActionState> {
       css,
       id,
       testIdBuilder,
-      env
+      env,
+      tabIndex
     } = this.props;
 
     if (actionType !== 'email' && body) {
@@ -880,6 +883,7 @@ export class Action extends React.Component<ActionProps, ActionState> {
           tooltipRootClose={tooltipRootClose}
           block={block}
           iconOnly={!!(icon && !label && level !== 'link')}
+          tabIndex={tabIndex}
         >
           {!loading ? iconElement : ''}
           {label ? <span>{filter(String(label), data)}</span> : null}

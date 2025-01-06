@@ -2943,6 +2943,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -2994,6 +2995,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3045,6 +3047,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3096,6 +3099,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3148,6 +3152,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3200,6 +3205,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3252,6 +3258,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3304,6 +3311,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3356,6 +3364,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock
@@ -3408,6 +3417,7 @@ exports[`13. enderer: crud keepItemSelectionOnPageChange & maxKeepItemSelectionL
                           </span>
                           <button
                             class="cxd-Button cxd-Button--link cxd-Button--size-default cxd-Field-quickEditBtn"
+                            tabindex="-1"
                             type="button"
                           >
                             <icon-mock

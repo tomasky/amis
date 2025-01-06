@@ -436,7 +436,8 @@ exports[`Renderer:input table add 1`] = `
                         data-index="0"
                       >
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -462,7 +463,8 @@ exports[`Renderer:input table add 1`] = `
                           </div>
                         </td>
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -684,7 +686,8 @@ exports[`Renderer:input-table cell selects delete 1`] = `
                         data-index="0"
                       >
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1031,7 +1034,8 @@ exports[`Renderer:input-table init display 1`] = `
                         data-index="0"
                       >
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1057,7 +1061,8 @@ exports[`Renderer:input-table init display 1`] = `
                           </div>
                         </td>
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1168,7 +1173,8 @@ exports[`Renderer:input-table init display 1`] = `
                           </div>
                         </td>
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1232,7 +1238,8 @@ exports[`Renderer:input-table init display 1`] = `
                         data-index="1"
                       >
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1258,7 +1265,8 @@ exports[`Renderer:input-table init display 1`] = `
                           </div>
                         </td>
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1369,7 +1377,8 @@ exports[`Renderer:input-table init display 1`] = `
                           </div>
                         </td>
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"
@@ -1616,7 +1625,8 @@ exports[`Renderer:input-table with combo column 1`] = `
                         data-index="0"
                       >
                         <td
-                          class=""
+                          class="cxd-Field--quickEditable"
+                          tabindex="0"
                         >
                           <div
                             class="cxd-Form-item cxd-Form-item--normal"

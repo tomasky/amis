@@ -2306,13 +2306,7 @@ export class FormRenderer extends Form {
     super.componentDidMount();
 
     if (this.props.autoFocus) {
-      const scoped = this.context as IScopedContext;
-      const inputs = scoped.getComponents();
-      let focuableInput = find(
-        inputs,
-        input => input.focus
-      ) as ScopedComponentType;
-      focuableInput && setTimeout(() => focuableInput.focus!(), 200);
+      this.focus();
     }
   }
 
@@ -2321,6 +2315,16 @@ export class FormRenderer extends Form {
     scoped.unRegisterComponent(this);
 
     super.componentWillUnmount();
+  }
+
+  focus() {
+    const scoped = this.context as IScopedContext;
+    const inputs = scoped.getComponents();
+    let focuableInput = find(
+      inputs,
+      input => input.focus
+    ) as ScopedComponentType;
+    focuableInput && setTimeout(() => focuableInput.focus!(), 200);
   }
 
   doAction(
