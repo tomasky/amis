@@ -1092,6 +1092,7 @@ export class Select extends React.Component<SelectProps, SelectState> {
                 }}
                 disabled={item.disabled}
                 testIdBuilder={optTestIdBudr?.getChild('chekbx')}
+                size="sm"
               >
                 {renderMenu(item, {
                   multiple,
