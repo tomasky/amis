@@ -50,12 +50,12 @@ export interface CarouselSchema extends BaseSchema {
   /**
    * 设置宽度
    */
-  width?: number;
+  width?: number | string;
 
   /**
    * 设置高度
    */
-  height?: number;
+  height?: number | string;
 
   controlsTheme?: 'light' | 'dark';
 
@@ -475,8 +475,21 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
     let carouselStyles: {
       [propName: string]: string;
     } = style || {};
-    width ? (carouselStyles.width = width + 'px') : '';
-    height ? (carouselStyles.height = height + 'px') : '';
+
+    // 不允许传0，需要有最小高度
+    if (width) {
+      // 数字类型认为是px单位，否则传入字符串直接赋给style对象
+      !isNaN(Number(width))
+        ? (carouselStyles.width = width + 'px')
+        : (carouselStyles.width = width as string);
+    }
+
+    if (height) {
+      !isNaN(Number(height))
+        ? (carouselStyles.height = height + 'px')
+        : (carouselStyles.height = height as string);
+    }
+
     const [dots, arrows] = [
       controls!.indexOf('dots') > -1,
       controls!.indexOf('arrows') > -1
