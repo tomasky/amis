@@ -3000,6 +3000,9 @@ export class TableRenderer extends Table {
       targets.forEach(target => {
         target.updateData(values);
       });
+    } else if (this.props?.host) {
+      // 如果在 CRUD 里面，优先让 CRUD 去更新状态
+      return this.props.host.setData?.(values, replace, index, condition);
     } else {
       const data = {
         ...values,
