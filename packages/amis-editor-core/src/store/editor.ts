@@ -1085,6 +1085,10 @@ export const MainStore = types
     );
 
     const observer = new ResizeObserver(entries => {
+      if (!isAlive(self)) {
+        return;
+      }
+
       (self as any).calculateHighlightBox([]);
       for (let entry of entries) {
         const target = entry.target as HTMLElement;
@@ -2309,6 +2313,7 @@ export const MainStore = types
       },
 
       beforeDestroy() {
+        observer.disconnect();
         lazyUpdateTargetName.cancel();
       }
     };
