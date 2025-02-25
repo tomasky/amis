@@ -280,7 +280,7 @@ export class TplPlugin extends BasePlugin {
     ]);
   };
 
-  popOverBody = [
+  popOverBody?: any[] = [
     getSchemaTpl('tpl:content'),
     getSchemaTpl('tpl:rich-text'),
     getSchemaTpl('tpl:wrapperComponent')
