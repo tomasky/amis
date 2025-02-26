@@ -1156,6 +1156,7 @@ export default class FormTable extends React.Component<TableProps, TableState> {
       rowProps.quickEditEnabled = true;
       return rowProps;
     } else if (
+      !this.props.static &&
       !this.props.editable &&
       !this.props.addable &&
       !this.state.isCreateMode
