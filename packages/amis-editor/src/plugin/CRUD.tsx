@@ -2196,7 +2196,7 @@ export class CRUDPlugin extends BasePlugin {
     const {$$editor, style, ...rest} = props;
     const renderer = $$editor.renderer;
     return (
-      <div className="ae-CRUDEditor" style={style}>
+      <div className="ae-CRUDEditor" style={style} data-role="container">
         {this.renderEditableComponents(props)}
         <renderer.component $$editor={$$editor} {...rest} />
       </div>
