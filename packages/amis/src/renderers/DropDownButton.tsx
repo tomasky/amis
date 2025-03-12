@@ -258,7 +258,8 @@ export default class DropDownButton extends React.Component<
       classnames: cx,
       data,
       ignoreConfirm,
-      testIdBuilder
+      testIdBuilder,
+      mobileUI
     } = this.props;
     index = typeof index === 'number' ? index.toString() : index;
 
@@ -266,7 +267,7 @@ export default class DropDownButton extends React.Component<
       return (
         <div
           key={index}
-          className={cx('DropDown-menu', {'is-mobile': isMobile()})}
+          className={cx('DropDown-menu', {'is-mobile': mobileUI})}
         >
           <li key={`${index}/0`} className={cx('DropDown-groupTitle')}>
             {button.icon ? (
@@ -339,7 +340,8 @@ export default class DropDownButton extends React.Component<
       closeOnOutside,
       menuClassName,
       overlayPlacement,
-      trigger
+      trigger,
+      mobileUI
     } = this.props;
 
     const buttons =
@@ -359,7 +361,7 @@ export default class DropDownButton extends React.Component<
                 'DropDown-menu-root',
                 'DropDown-menu',
                 {
-                  'is-mobile': isMobile()
+                  'is-mobile': mobileUI
                 },
                 menuClassName
               )}
@@ -433,7 +435,8 @@ export default class DropDownButton extends React.Component<
       data,
       hideCaret,
       env,
-      testIdBuilder
+      testIdBuilder,
+      mobileUI
     } = this.props;
 
     return (
@@ -445,7 +448,7 @@ export default class DropDownButton extends React.Component<
             'DropDown--alignRight': align === 'right',
             'is-opened': this.state.isOpened,
             'is-actived': isActived,
-            'is-mobile': isMobile()
+            'is-mobile': mobileUI
           },
           className
         )}

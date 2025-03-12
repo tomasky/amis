@@ -2680,6 +2680,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       footerToolbarRender,
       testIdBuilder,
       id,
+      mobileUI,
       filterCanAccessSuperData = true,
       ...rest
     } = this.props;
@@ -2688,7 +2689,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       <div
         className={cx('Crud', className, {
           'is-loading': store.loading,
-          'is-mobile': isMobile()
+          'is-mobile': mobileUI
         })}
         style={style}
         data-id={id}

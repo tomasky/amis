@@ -139,7 +139,7 @@ export class LocationControl extends React.Component<LocationControlProps> {
   }
 
   renderStatic(displayValue = '-') {
-    const {classnames: cx, value} = this.props;
+    const {classnames: cx, value, mobileUI} = this.props;
     const __ = this.props.translate;
 
     if (!value) {
@@ -149,7 +149,7 @@ export class LocationControl extends React.Component<LocationControlProps> {
     return (
       <div
         className={this.props.classnames('LocationControl', {
-          'is-mobile': isMobile()
+          'is-mobile': mobileUI
         })}
         ref={this.domRef}
       >
@@ -160,12 +160,12 @@ export class LocationControl extends React.Component<LocationControlProps> {
 
   @supportStatic()
   render() {
-    const {style, env} = this.props;
+    const {style, env, mobileUI} = this.props;
     const ak = filter(this.props.ak, this.props.data) || env.locationPickerAK!;
     return (
       <div
         className={this.props.classnames('LocationControl', {
-          'is-mobile': isMobile()
+          'is-mobile': mobileUI
         })}
       >
         <LocationPicker
