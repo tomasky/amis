@@ -503,7 +503,14 @@ export class TreeSelector extends React.Component<
     // TODO: 重新梳理这里的逻辑
     const props = this.props;
     const value = this.state.valueSet;
-    const {onlyChildren, withChildren, cascade, autoCheckChildren} = props;
+    const {
+      onlyChildren,
+      withChildren,
+      cascade,
+      autoCheckChildren,
+      autoCancelParent,
+      valueField
+    } = props;
     if (checked) {
       if (!value.has(item)) {
         value.add(item);
@@ -587,7 +594,7 @@ export class TreeSelector extends React.Component<
           while (true) {
             const parent = getTreeParent(props.options, toCheck);
             // 判断 parent 节点是否已经勾选，避免重复值
-            if (parent?.value && !value.has(parent)) {
+            if (parent?.[valueField || 'value'] && !value.has(parent)) {
               // 如果所有孩子节点都勾选了，应该自动勾选父级。
 
               if (parent.children.every((child: any) => value.has(child))) {
