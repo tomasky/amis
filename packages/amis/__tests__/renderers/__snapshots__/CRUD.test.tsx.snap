@@ -1259,8 +1259,7 @@ exports[`5. Renderer:crud cards 1`] = `
                 class="cxd-Cards-body cxd-Grid"
               >
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1328,8 +1327,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1397,8 +1395,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1466,8 +1463,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1535,8 +1531,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1604,8 +1599,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1673,8 +1667,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1742,8 +1735,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1811,8 +1803,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1880,8 +1871,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--sm6"
-                  style="flex: 0 0 50%; max-width: 50%;"
+                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
