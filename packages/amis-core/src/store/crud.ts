@@ -72,7 +72,7 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
     items: types.optional(types.array(types.frozen()), []),
     selectedItems: types.optional(types.array(types.frozen()), []),
     unSelectedItems: types.optional(types.array(types.frozen()), []),
-    filterTogggable: false,
+    filterTogglable: false,
     filterVisible: true,
     hasInnerModalOpen: false
   })
@@ -577,8 +577,11 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
       }
     });
 
-    const setFilterTogglable = (toggable: boolean, filterVisible?: boolean) => {
-      self.filterTogggable = toggable;
+    const setFilterTogglable = (
+      togglable: boolean,
+      filterVisible?: boolean
+    ) => {
+      self.filterTogglable = togglable;
 
       filterVisible !== void 0 && (self.filterVisible = filterVisible);
     };

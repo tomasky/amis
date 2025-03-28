@@ -606,7 +606,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     // 所以这里应该忽略 autoGenerateFilter 情况
     if (
       (!this.props.filter && !autoGenerateFilter) ||
-      (store.filterTogggable && !store.filterVisible)
+      (store.filterTogglable && !store.filterVisible)
     ) {
       this.handleFilterInit({});
     }
@@ -2294,7 +2294,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   renderFilterToggler() {
     const {store, classnames: cx, translate: __, filterTogglable} = this.props;
 
-    if (!store.filterTogggable) {
+    if (!store.filterTogglable) {
       return null;
     }
 
@@ -2695,7 +2695,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
         data-id={id}
         {...testIdBuilder?.getChild('wrapper').getTestId()}
       >
-        {filter && (!store.filterTogggable || store.filterVisible)
+        {filter && (!store.filterTogglable || store.filterVisible)
           ? render(
               'filter',
               {
