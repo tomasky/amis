@@ -469,6 +469,17 @@ export default class List extends React.Component<ListProps, object> {
   handleCheck(item: IItem) {
     item.toggle();
     this.syncSelected();
+
+    const {dispatchEvent, store} = this.props;
+    dispatchEvent(
+      //增删改查卡片模式选择表格项
+      'selectedChange',
+      createObject(store.data, {
+        selectedItems: store.selectedItems.map(item => item.data),
+        unSelectedItems: store.unSelectedItems.map(item => item.data),
+        item: item.data
+      })
+    );
   }
 
   handleCheckAll() {
@@ -476,6 +487,16 @@ export default class List extends React.Component<ListProps, object> {
 
     store.toggleAll();
     this.syncSelected();
+
+    const {dispatchEvent} = this.props;
+    dispatchEvent(
+      //增删改查卡片模式选择表格项
+      'selectedChange',
+      createObject(store.data, {
+        selectedItems: store.selectedItems.map(item => item.data),
+        unSelectedItems: store.unSelectedItems.map(item => item.data)
+      })
+    );
   }
 
   syncSelected() {

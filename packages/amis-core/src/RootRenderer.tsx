@@ -12,6 +12,7 @@ import mapValues from 'lodash/mapValues';
 import {saveAs} from 'file-saver';
 import {normalizeApi} from './utils/api';
 import {findDOMNode} from 'react-dom';
+import {dispatchEvent} from './utils/renderer-event';
 
 export interface RootRendererProps extends RootProps {
   location?: any;
@@ -40,6 +41,7 @@ export class RootRenderer extends React.Component<RootRendererProps> {
     // 将数据里面的函数批量的绑定到 this 上
     bulkBindFunctions<RootRenderer /*为毛 this 的类型自动识别不出来？*/>(this, [
       'handleAction',
+      'dispatchEvent',
       'handleDialogConfirm',
       'handleDialogClose',
       'handleDrawerConfirm',
@@ -292,6 +294,15 @@ export class RootRenderer extends React.Component<RootRendererProps> {
     }
   }
 
+  dispatchEvent(
+    e: string | React.MouseEvent<any>,
+    data: any,
+    renderer?: React.Component<any>,
+    scoped?: IScopedContext
+  ) {
+    return dispatchEvent(e, renderer!, scoped!, data);
+  }
+
   handleDialogConfirm(
     values: object[],
     action: ActionObject,
@@ -472,7 +483,8 @@ export class RootRenderer extends React.Component<RootRendererProps> {
         onConfirm: this.handleDialogConfirm,
         onClose: this.handleDialogClose,
         show: store.dialogOpen,
-        onAction: this.handleAction
+        onAction: this.handleAction,
+        dispatchEvent: this.dispatchEvent
       }
     );
   }
@@ -496,7 +508,8 @@ export class RootRenderer extends React.Component<RootRendererProps> {
         onConfirm: this.handleDrawerConfirm,
         onClose: this.handleDrawerClose,
         show: store.drawerOpen,
-        onAction: this.handleAction
+        onAction: this.handleAction,
+        dispatchEvent: this.dispatchEvent
       }
     );
   }
@@ -517,7 +530,8 @@ export class RootRenderer extends React.Component<RootRendererProps> {
             topStore: this.store,
             data: this.store.downStream,
             context: store.context,
-            onAction: this.handleAction
+            onAction: this.handleAction,
+            dispatchEvent: this.dispatchEvent
           }) as JSX.Element
         }
 

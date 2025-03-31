@@ -1055,8 +1055,9 @@ export default class Table extends React.Component<TableProps, object> {
       // 那么用户只能通过事件动作来更新上层变量来实现选中
       item.toggle(value);
     }
+    this.syncSelected();
 
-    const rendererEvent = await dispatchEvent(
+    await dispatchEvent(
       'selectedChange',
       createObject(data, {
         selectedItems: store.selectedRows.map(row => row.data),
@@ -1064,12 +1065,6 @@ export default class Table extends React.Component<TableProps, object> {
         item: item.data
       })
     );
-
-    if (rendererEvent?.prevented) {
-      return;
-    }
-
-    this.syncSelected();
   }
 
   handleRowClick(item: IRow, index: number) {
@@ -1126,8 +1121,9 @@ export default class Table extends React.Component<TableProps, object> {
     const items = store.rows.map((row: any) => row.data);
 
     store.toggleAll();
+    this.syncSelected();
 
-    const rendererEvent = await dispatchEvent(
+    await dispatchEvent(
       'selectedChange',
       createObject(data, {
         selectedItems: store.selectedRows.map(row => row.data),
@@ -1135,12 +1131,6 @@ export default class Table extends React.Component<TableProps, object> {
         items
       })
     );
-
-    if (rendererEvent?.prevented) {
-      return;
-    }
-
-    this.syncSelected();
   }
 
   handleQuickChange(
