@@ -1128,7 +1128,7 @@ export default class Wizard extends React.Component<WizardProps, WizardState> {
         <>
           {step.actions.map((action, index) =>
             render(`action/${index}`, action, {
-              key: index,
+              key: `${currentStepIndex}-${index}`,
               data: createObject(this.props.data, {
                 currentStep: currentStepIndex
               }),
