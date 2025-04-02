@@ -42,7 +42,9 @@ export class NumberControlPlugin extends BasePlugin {
     type: 'input-number',
     label: '数字',
     name: 'number',
-    keyboard: true
+    showSteps: true,
+    keyboard: true,
+    kilobitSeparator: true
   };
   previewSchema: any = {
     type: 'form',
