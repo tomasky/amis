@@ -491,6 +491,14 @@ export class DebugWrapper extends Component<DebugWrapperProps> {
 
 type Category = 'api' | 'event';
 
+export function safeStringify(data: any) {
+  try {
+    return JSON.stringify(data);
+  } catch {
+    return data;
+  }
+}
+
 /**
  * 一般调试日志
  * @param msg 简单消息
