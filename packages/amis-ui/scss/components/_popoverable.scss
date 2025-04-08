@@ -17,6 +17,19 @@
   position: relative;
 }
 
+.#{$ns}Field--copyable {
+  white-space: nowrap;
+
+  .#{$ns}Form-item {
+    display: inline-block;
+    margin-bottom: unset;
+    vertical-align: middle;
+  }
+  .#{$ns}Field-copyBtn {
+    vertical-align: middle;
+  }
+}
+
 .#{$ns}PopOverAble-popover {
   min-width: px2rem(320px);
   max-width: px2rem(640px);
