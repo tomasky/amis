@@ -201,6 +201,34 @@ function InnerComponent({
     iframe.style.cssText += `height: ${doc!.body.offsetHeight}px`;
   }, []);
 
+  const handleDragEnter = React.useCallback((e: DragEvent) => {
+    if (!editable) {
+      return;
+    }
+    manager.dnd.dragEnter(e);
+  }, []);
+
+  const handleDragLeave = React.useCallback((e: DragEvent) => {
+    if (!editable) {
+      return;
+    }
+    manager.dnd.dragLeave(e);
+  }, []);
+
+  const handleDragOver = React.useCallback((e: DragEvent) => {
+    if (!editable) {
+      return;
+    }
+    manager.dnd.dragOver(e);
+  }, []);
+
+  const handleDrop = React.useCallback((e: DragEvent) => {
+    if (!editable) {
+      return;
+    }
+    manager.dnd.drop(e);
+  }, []);
+
   React.useEffect(() => {
     store.setDoc(doc);
     const layer = doc?.querySelector('.frame-content') as HTMLElement;
@@ -210,6 +238,10 @@ function InnerComponent({
     layer!.addEventListener('mousemove', handleMouseMove);
     layer!.addEventListener('click', handleClick, true);
     layer!.addEventListener('mouseover', handeMouseOver);
+    layer!.addEventListener('dragenter', handleDragEnter);
+    layer!.addEventListener('dragleave', handleDragLeave);
+    layer!.addEventListener('dragover', handleDragOver);
+    layer!.addEventListener('drop', handleDrop);
 
     const unSensor = resizeSensor(doc!.body, () => {
       syncIframeHeight();
@@ -223,6 +255,10 @@ function InnerComponent({
       layer!.removeEventListener('click', handleClick);
       layer!.removeEventListener('mouseover', handeMouseOver);
 
+      layer!.removeEventListener('dragenter', handleDragEnter);
+      layer!.removeEventListener('dragleave', handleDragLeave);
+      layer!.removeEventListener('dragover', handleDragOver);
+      layer!.removeEventListener('drop', handleDrop);
       store.setDoc(document);
       unSensor();
     };
