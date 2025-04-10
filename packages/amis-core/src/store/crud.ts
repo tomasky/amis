@@ -257,7 +257,8 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
 
           const data = {
             ...self.data,
-            total: items.length,
+            count: items.length,
+            [options.totalField || 'total']: items.length,
             items: items.slice(
               (self.page - 1) * self.perPage,
               self.page * self.perPage
