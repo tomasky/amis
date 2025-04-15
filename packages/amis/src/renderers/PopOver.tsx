@@ -200,14 +200,14 @@ export const HocPopOver =
       }
 
       buildSchema() {
-        const {popOver, name, label, translate: __} = this.props;
+        const {popOver, name, label, translate: __, column} = this.props;
 
         let schema;
 
         if (popOver === true) {
           schema = {
             type: 'panel',
-            body: `\${${name}}`
+            body: column ?? `\${${name}}`
           };
         } else if (
           popOver &&
