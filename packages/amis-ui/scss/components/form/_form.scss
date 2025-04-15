@@ -601,6 +601,14 @@
   margin-bottom: 0;
 }
 
+// 修复弹窗中 form 可能内容超出弹窗的问题：容器元素需要能收缩
+@for $i from 1 through 10 {
+  .#{$ns}Form--column-#{$i} > [data-role*='container'] {
+    flex: 100%;
+    min-width: 0;
+  }
+}
+
 /* 移动端样式调整 */
 @include media-breakpoint-down(sm) {
   .#{$ns}Form {
