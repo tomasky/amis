@@ -206,6 +206,8 @@ export function renderChild(
     props = transform(props);
   }
 
+  const Comp = props.env.SchemaRenderer || SchemaRenderer;
+
   if (
     ['dialog', 'drawer'].includes(schema?.type) &&
     !schema?.component &&
@@ -228,7 +230,7 @@ export function renderChild(
   }
 
   return (
-    <SchemaRenderer
+    <Comp
       render={renderChild as any}
       {...props}
       key={props.key ?? schema.key}

@@ -17,6 +17,7 @@ import BackTop from './base/BackTop';
 import {reaction} from 'mobx';
 import type {RendererConfig} from 'amis-core';
 import IFramePreview from './IFramePreview';
+import {SchemaRenderer} from './SchemaRenderer';
 
 export interface PreviewProps {
   // isEditorEnabled?: (
@@ -716,7 +717,14 @@ class SmartPreview extends React.Component<SmartPreviewProps> {
             locale: appLocale,
             editorDialogMountNode: this.getDialogMountRef
           },
-          env
+          {
+            ...env,
+            session: `${env.session}-${
+              editable ? 'edit' : 'preview'
+            }-smart-preview`,
+            SchemaRenderer: editable ? SchemaRenderer : undefined,
+            enableAMISDebug: !editable
+          }
         )}
       </div>
     );

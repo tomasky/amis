@@ -141,6 +141,11 @@ export interface RendererEnv {
   enableTestid?: boolean;
 
   /**
+   * 自定义 SchemaRenderer，编辑器编辑态下会替换成自己的实现
+   */
+  SchemaRenderer?: React.ComponentType<any>;
+
+  /**
    * pdfjs worker 地址，用于渲染 pdf
    */
   pdfjsWorkerSrc?: string;
