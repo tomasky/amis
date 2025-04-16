@@ -413,6 +413,8 @@ export default class ImageControl extends React.Component<
             ? {
                 value,
                 url: value,
+                name: value.split('/').pop(),
+                filename: value.split('/').pop(),
                 id: guid()
               }
             : value),
