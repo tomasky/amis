@@ -186,11 +186,11 @@ export class LocationControlPlugin extends BasePlugin {
                 getSchemaTpl('labelRemark'),
                 getSchemaTpl('remark'),
                 getSchemaTpl('placeholder', {
-                  visibleOn: '!onlySelectCurrentLoc'
+                  visibleOn: '${!onlySelectCurrentLoc}'
                 }),
                 getSchemaTpl('placeholder', {
                   name: 'getLocationPlaceholder',
-                  visibleOn: 'onlySelectCurrentLoc'
+                  visibleOn: '${onlySelectCurrentLoc}'
                 }),
                 getSchemaTpl('description')
               ]

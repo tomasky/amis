@@ -31,6 +31,7 @@ interface MapPickerProps {
   coordinatesType: string;
   classnames: ClassNamesFn;
   classPrefix: string;
+  placeholder?: string;
   value?: {
     address: string;
     lat: number;
@@ -390,7 +391,7 @@ export class BaiduMapPicker extends React.Component<
   }
 
   render() {
-    const {classnames: cx} = this.props;
+    const {classnames: cx, placeholder} = this.props;
     const onlySelectCurrentLoc = this.props.onlySelectCurrentLoc ?? false;
     const {locIndex, locs, inputValue, sugs} = this.state;
     const hasSug = Array.isArray(sugs) && sugs.length;
@@ -403,7 +404,7 @@ export class BaiduMapPicker extends React.Component<
               <input
                 onChange={this.handleChange}
                 value={inputValue}
-                placeholder="搜索地点"
+                placeholder={placeholder || '搜索地点'}
               />
             </div>
           </div>

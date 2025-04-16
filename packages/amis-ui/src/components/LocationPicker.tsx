@@ -179,6 +179,7 @@ export class LocationPicker extends React.Component<
             <BaiduMapPicker
               ak={ak}
               value={value}
+              placeholder={__('MapPicker.searchPlaceholder')}
               coordinatesType={coordinatesType}
               autoSelectCurrentLoc={autoSelectCurrentLoc}
               onlySelectCurrentLoc={onlySelectCurrentLoc}
@@ -250,6 +251,7 @@ export class LocationPicker extends React.Component<
                 <BaiduMapPicker
                   ak={ak}
                   value={value}
+                  placeholder={__('MapPicker.searchPlaceholder')}
                   coordinatesType={coordinatesType}
                   autoSelectCurrentLoc={autoSelectCurrentLoc}
                   onlySelectCurrentLoc={onlySelectCurrentLoc}
@@ -278,6 +280,7 @@ export class LocationPicker extends React.Component<
                 <BaiduMapPicker
                   ak={ak}
                   value={value}
+                  placeholder={__('MapPicker.searchPlaceholder')}
                   coordinatesType={coordinatesType}
                   autoSelectCurrentLoc={autoSelectCurrentLoc}
                   onlySelectCurrentLoc={onlySelectCurrentLoc}

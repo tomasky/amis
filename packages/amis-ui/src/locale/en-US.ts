@@ -183,6 +183,7 @@ register('en-US', {
   'LocationPicker.placeholder': 'Pick location',
   'LocationPicker.getLocation': 'Click to obtain location information',
   'Month.placeholder': 'Select a month',
+  'MapPicker.searchPlaceholder': 'Search location',
   'Nav.sourceError': 'Fetch link error',
   'networkError': 'Network error or missing CORS configuration',
   'noResult': 'No Result',
