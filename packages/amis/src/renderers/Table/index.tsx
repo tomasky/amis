@@ -698,7 +698,8 @@ export default class Table extends React.Component<TableProps, object> {
   static syncRows(
     store: ITableStore,
     props: TableProps,
-    prevProps?: TableProps
+    prevProps?: TableProps,
+    forceUpdateRows = false
   ) {
     const source = props.source;
     const value = getPropValue(props, (props: TableProps) => props.items);
@@ -708,6 +709,7 @@ export default class Table extends React.Component<TableProps, object> {
     // 要严格比较前后的value值，否则某些情况下会导致循环update无限渲染
     if (Array.isArray(value)) {
       if (
+        forceUpdateRows ||
         !prevProps ||
         !isEqual(
           getPropValue(prevProps, (props: TableProps) => props.items),
@@ -913,6 +915,7 @@ export default class Table extends React.Component<TableProps, object> {
   componentDidUpdate(prevProps: TableProps) {
     const props = this.props;
     const store = props.store;
+    let forceReSync = false;
 
     changedEffect(
       [
@@ -952,6 +955,13 @@ export default class Table extends React.Component<TableProps, object> {
             10
           );
         }
+        if (
+          !forceReSync &&
+          changes.hasOwnProperty('combineNum') &&
+          store.combineNum !== changes.combineNum
+        ) {
+          forceReSync = true;
+        }
         if (changes.orderBy && !props.onQuery) {
           delete changes.orderBy;
         }
@@ -962,13 +972,15 @@ export default class Table extends React.Component<TableProps, object> {
     );
 
     if (
+      forceReSync ||
       anyChanged(['source', 'value', 'items'], prevProps, props) ||
       (!props.value &&
         !props.items &&
         (props.data !== prevProps.data ||
           (typeof props.source === 'string' && isPureVariable(props.source))))
     ) {
-      Table.syncRows(store, props, prevProps) && this.syncSelected();
+      Table.syncRows(store, props, prevProps, forceReSync) &&
+        this.syncSelected();
     } else if (isArrayChildrenModified(prevProps.selected!, props.selected!)) {
       const prevSelectedRows = store.selectedRows
         .map(item => item.id)

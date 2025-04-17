@@ -1999,7 +1999,7 @@ export default class FormTable extends React.Component<TableProps, TableState> {
             quickEditFormRef: this.subFormRef,
             quickEditFormItemRef: this.subFormItemRef,
             columnsTogglable: columnsTogglable,
-            combineNum: combineNum,
+            combineNum: this.state.editIndex ? 0 : combineNum,
             combineFromIndex: combineFromIndex,
             expandConfig,
             canAccessSuperData,
