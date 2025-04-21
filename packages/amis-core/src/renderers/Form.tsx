@@ -2067,8 +2067,7 @@ export default class Form extends React.Component<FormProps, object> {
         {render(
           'modal',
           {
-            ...((store.action as ActionObject) &&
-              ((store.action as ActionObject).dialog as object)),
+            ...store.dialogSchema,
             type: 'dialog'
           },
           {
@@ -2083,8 +2082,7 @@ export default class Form extends React.Component<FormProps, object> {
         {render(
           'modal',
           {
-            ...((store.action as ActionObject) &&
-              ((store.action as ActionObject).drawer as object)),
+            ...store.drawerSchema,
             type: 'drawer'
           },
           {

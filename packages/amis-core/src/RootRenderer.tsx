@@ -470,8 +470,7 @@ export class RootRenderer extends React.Component<RootRendererProps> {
     return render(
       'dialog',
       {
-        ...((store.action as ActionObject) &&
-          ((store.action as ActionObject).dialog as object)),
+        ...store.dialogSchema,
         type: 'dialog'
       },
       {
@@ -495,8 +494,7 @@ export class RootRenderer extends React.Component<RootRendererProps> {
     return render(
       'drawer',
       {
-        ...((store.action as ActionObject) &&
-          ((store.action as ActionObject).drawer as object)),
+        ...store.drawerSchema,
         type: 'drawer'
       },
       {

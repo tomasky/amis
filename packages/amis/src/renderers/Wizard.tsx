@@ -1321,8 +1321,7 @@ export default class Wizard extends React.Component<WizardProps, WizardState> {
         {render(
           'dialog',
           {
-            ...((store.action as ActionObject) &&
-              ((store.action as ActionObject).dialog as object)),
+            ...store.dialogSchema,
             type: 'dialog'
           },
           {
