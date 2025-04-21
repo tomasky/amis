@@ -1376,7 +1376,8 @@ export const TableStore = iRendererStore
       cols.forEach((col: HTMLElement) => {
         const index = parseInt(col.getAttribute('data-index')!, 10);
         const column = self.columns[index];
-        column.setRealWidth(col.offsetWidth);
+        const realWidth = col.getBoundingClientRect().width;
+        column.setRealWidth(realWidth);
       });
     }
 
