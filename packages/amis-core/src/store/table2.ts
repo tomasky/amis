@@ -34,6 +34,11 @@ import {IFormStore} from './form';
 import {getPageId} from '../utils/getPageId';
 class ServerError extends Error {
   type = 'ServerError';
+
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, ServerError.prototype);
+  }
 }
 
 export const Column = types
