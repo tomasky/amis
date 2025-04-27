@@ -663,12 +663,10 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
             )}
             onClick={this.prev}
           >
-            {icons && icons.prev ? (
-              React.isValidElement(icons.prev) ? (
-                icons.prev
-              ) : (
-                render('arrow-prev', icons.prev)
-              )
+            {icons?.prev ? (
+              <div className="ImageGallery-prevBtn">
+                <Icon icon={icons.prev} />
+              </div>
             ) : (
               <Icon
                 icon="left-arrow"
@@ -691,12 +689,10 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
             )}
             onClick={this.next}
           >
-            {icons && icons.next ? (
-              React.isValidElement(icons.next) ? (
-                icons.next
-              ) : (
-                render('arrow-next', icons.next)
-              )
+            {icons?.next ? (
+              <div className="ImageGallery-prevBtn">
+                <Icon icon={icons.next} />
+              </div>
             ) : (
               <Icon
                 icon="right-arrow"
