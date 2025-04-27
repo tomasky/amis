@@ -8,7 +8,9 @@ import {
   BasePlugin,
   BasicSubRenderInfo,
   RendererEventContext,
-  SubRendererInfo
+  SubRendererInfo,
+  getI18nEnabled,
+  BaseEventContext
 } from 'amis-editor-core';
 
 export class KVControlPlugin extends BasePlugin {
@@ -128,31 +130,36 @@ export class KVControlPlugin extends BasePlugin {
   ];
 
   panelTitle = 'KV 键值对';
-  panelBody = [
-    getSchemaTpl('layout:originPosition', {value: 'left-top'}),
-    {
-      type: 'input-text',
-      name: 'valueType',
-      label: '值类型',
-      pipeIn: defaultValue('input-text')
-    },
-    {
-      type: 'input-text',
-      name: 'keyPlaceholder',
-      label: 'key 的提示信息'
-    },
-    {
-      type: 'input-text',
-      name: 'valuePlaceholder',
-      label: 'value 的提示信息'
-    },
-    {
-      type: 'switch',
-      name: 'draggable',
-      label: '是否可排序',
-      pipeIn: defaultValue(true)
-    }
-  ];
+
+  panelBodyCreator = (context: BaseEventContext) => {
+    const i18nEnabled = getI18nEnabled();
+
+    return [
+      getSchemaTpl('layout:originPosition', {value: 'left-top'}),
+      {
+        type: 'input-text',
+        name: 'valueType',
+        label: '值类型',
+        pipeIn: defaultValue('input-text')
+      },
+      {
+        type: i18nEnabled ? 'input-text-i18n' : 'input-text',
+        name: 'keyPlaceholder',
+        label: 'key 的提示信息'
+      },
+      {
+        type: i18nEnabled ? 'input-text-i18n' : 'input-text',
+        name: 'valuePlaceholder',
+        label: 'value 的提示信息'
+      },
+      {
+        type: 'switch',
+        name: 'draggable',
+        label: '是否可排序',
+        pipeIn: defaultValue(true)
+      }
+    ];
+  };
 }
 
 registerEditorPlugin(KVControlPlugin);

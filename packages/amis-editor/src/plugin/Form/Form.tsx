@@ -19,6 +19,7 @@ import {
   EditorNodeType,
   ScaffoldForm,
   RegionConfig,
+  getI18nEnabled,
   registerEditorPlugin,
   JSONPipeOut,
   InsertEventContext,
@@ -860,6 +861,7 @@ export class FormPlugin extends BasePlugin {
         };
       }
     };
+    const i18nEnabled = getI18nEnabled();
 
     return [
       getSchemaTpl('tabs', [
@@ -1074,7 +1076,7 @@ export class FormPlugin extends BasePlugin {
                       {
                         name: 'message',
                         label: '报错提示',
-                        type: 'input-text',
+                        type: i18nEnabled ? 'input-text-i18n' : 'input-text',
                         ...justifyLayout(4)
                       }
                     ]

@@ -6,7 +6,12 @@ import {
 } from 'amis-editor-core';
 import {getSchemaTpl} from 'amis-editor-core';
 import {registerEditorPlugin} from 'amis-editor-core';
-import {BasePlugin, BaseEventContext, tipedLabel} from 'amis-editor-core';
+import {
+  BasePlugin,
+  BaseEventContext,
+  tipedLabel,
+  getI18nEnabled
+} from 'amis-editor-core';
 import {ValidatorTag} from '../../validator';
 import {getEventControlConfig} from '../../renderer/event-control/helper';
 import {resolveOptionEventDataSchame, resolveOptionType} from '../../util';
@@ -216,6 +221,7 @@ export class NestedSelectControlPlugin extends BasePlugin {
   ];
   panelBodyCreator = (context: BaseEventContext) => {
     const renderer: any = context.info.renderer;
+    const i18nEnabled = getI18nEnabled();
     return getSchemaTpl('tabs', [
       {
         title: '属性',
@@ -240,7 +246,7 @@ export class NestedSelectControlPlugin extends BasePlugin {
                 form: {
                   body: [
                     {
-                      type: 'input-text',
+                      type: i18nEnabled ? 'input-text-i18n' : 'input-text',
                       name: 'noResultsText',
                       label: tipedLabel('空提示', '检索无结果时的文本')
                     }
