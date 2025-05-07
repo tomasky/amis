@@ -16,7 +16,7 @@ import {TooltipWrapper} from 'amis-ui';
 
 import {getSchemaTpl} from 'amis-editor';
 
-import {autobind} from 'amis-editor-core';
+import {autobind, getI18nEnabled} from 'amis-editor-core';
 import type {FormControlProps} from 'amis-core';
 import type {SchemaApi} from 'amis';
 import {getOwnValue} from '../util';
@@ -621,6 +621,7 @@ export class NavSourceControl extends React.Component<
       isEdit
     } = this.state;
     const treeData = cloneDeep(links);
+    const i18nEnabled = getI18nEnabled();
     this.handleFilterTreeData(treeData);
     return renderAmis(
       {
@@ -634,7 +635,7 @@ export class NavSourceControl extends React.Component<
           actions: [],
           body: [
             {
-              type: 'input-text',
+              type: i18nEnabled ? 'input-text-i18n' : 'input-text',
               label: '菜单名称',
               name: 'modalName',
               placeholder: '请输入菜单名称',
