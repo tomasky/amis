@@ -40,7 +40,7 @@ export default class IFramePreview extends React.Component<IFramePreviewProps> {
         return el.outerHTML;
       });
     styles.push(
-      `<style>body {height:auto !important;min-height:100%;overflow-y:auto !important;display: flex;flex-direction: column;}</style>`
+      `<style>body {height:auto !important;min-height:auto;overflow-y:auto !important;display: flex;flex-direction: column;}</style>`
     );
 
     this.initialContent = `<!DOCTYPE html><html><head>${styles.join(
@@ -202,7 +202,10 @@ function InnerComponent({
 
   const syncIframeHeight = React.useCallback(() => {
     const iframe = manager.store.getIframe()!;
-    iframe.style.cssText += `height: ${doc!.body.offsetHeight}px`;
+    iframe.style.cssText += `height: ${Math.max(
+      doc!.body.offsetHeight,
+      667
+    )}px`;
   }, []);
 
   const handleDragEnter = React.useCallback((e: DragEvent) => {
