@@ -1867,7 +1867,8 @@ export function getModals(schema: any) {
         modals.push({
           ...body,
           type: key,
-          actionType: value
+          actionType: value,
+          $$ref: undefined
         });
       }
     }
