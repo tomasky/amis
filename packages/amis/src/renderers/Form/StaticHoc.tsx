@@ -1,7 +1,6 @@
 import React from 'react';
-import {getPropValue, FormControlProps} from 'amis-core';
+import {getPropValue, FormControlProps, createObject} from 'amis-core';
 import {ErrorBoundary} from 'amis-core';
-import omit from 'lodash/omit';
 
 function renderCommonStatic(props: any, defaultValue: string) {
   const {type, render, staticSchema} = props;
@@ -127,7 +126,21 @@ export function supportStatic<T extends FormControlProps>() {
           body = render(
             [props.type || '', 'form-static-schema'].join('-'),
             staticSchema,
-            omit(props, ['onEvent'])
+            {
+              selectedOptions: props.selectedOptions,
+              ...(props.selectedOptions
+                ? {
+                    data: createObject(
+                      {
+                        selectedItems: props.multiple
+                          ? props.selectedOptions
+                          : props.selectedOptions?.[0]
+                      },
+                      props.data
+                    )
+                  }
+                : {})
+            }
           );
         } else if (target.renderStatic) {
           // 特殊组件，control有 renderStatic 时，特殊处理
