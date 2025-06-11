@@ -813,6 +813,7 @@ export class DateRangePicker extends React.Component<
   }
 
   close(isConfirm: boolean = false) {
+    const newState: any = {};
     if (!isConfirm) {
       /** 未点击确认关闭时，将日期恢复至未做任何选择的状态 */
       const {
@@ -834,7 +835,7 @@ export class DateRangePicker extends React.Component<
         data,
         utc
       );
-      this.setState({
+      Object.assign(newState, {
         startDate,
         endDate,
         oldStartDate: startDate,
@@ -849,13 +850,14 @@ export class DateRangePicker extends React.Component<
             : ''
       });
     } else {
-      this.setState({
+      Object.assign(newState, {
         oldStartDate: this.state.startDate,
         oldEndDate: this.state.endDate
       });
     }
     this.setState(
       {
+        ...newState,
         isOpened: false,
         editState: undefined,
         endDateOpenedFirst: false
