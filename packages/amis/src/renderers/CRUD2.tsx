@@ -1258,6 +1258,9 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
             replaceQuery: true,
             resetPage: true
           });
+        },
+        onInit: (data: any) => {
+          this.initQuery(data);
         }
       })
     );
