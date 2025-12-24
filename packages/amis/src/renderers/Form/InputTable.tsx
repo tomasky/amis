@@ -818,6 +818,7 @@ export default class FormTable extends React.Component<TableProps, TableState> {
           this.emitValue();
         }
 
+        this.table?.updateTableInfo?.();
         callback?.();
       }
     );
