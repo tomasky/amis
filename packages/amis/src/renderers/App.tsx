@@ -316,10 +316,14 @@ export default class App extends React.Component<AppProps, object> {
       render,
       store,
       logo,
-      env
+      env,
+      data
     } = this.props;
 
-    if (!header && !logo && !brandName) {
+    // logo 支持模板变量
+    const resolvedLogo = logo ? filter(logo, data) : logo;
+
+    if (!header && !resolvedLogo && !brandName) {
       return null;
     }
 
@@ -334,14 +338,14 @@ export default class App extends React.Component<AppProps, object> {
           </div>
 
           <div className={cx('Layout-brand')}>
-            {logo && ~logo.indexOf('<svg') ? (
+            {resolvedLogo && ~resolvedLogo.indexOf('<svg') ? (
               <Html
                 className={cx('AppLogo-html')}
-                html={logo}
+                html={resolvedLogo}
                 filterHtml={env.filterHtml}
               />
-            ) : logo ? (
-              <img className={cx('AppLogo')} src={logo} />
+            ) : resolvedLogo ? (
+              <img className={cx('AppLogo')} src={resolvedLogo} />
             ) : (
               <span className="visible-folded ">
                 {brandName?.substring(0, 1)}

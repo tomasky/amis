@@ -226,6 +226,9 @@ export class Tabs extends React.Component<TabsProps, any> {
   draging: boolean = false;
   toDispose: Array<() => void> = [];
   resizeDom = React.createRef<HTMLDivElement>();
+  // 记录上次自动定位时的 activeKey，避免 resize 等情况重复居中导致闪回
+  private lastActiveKey: any;
+  private hasAutoLocated: boolean = false;
 
   checkArrowStatus = debounce(
     () => {
@@ -382,7 +385,13 @@ export class Tabs extends React.Component<TabsProps, any> {
     }
 
     // 正在拖动的不自动定位
-    if (isOverflow && !this.draging) {
+    if (
+      isOverflow &&
+      !this.draging &&
+      (!this.hasAutoLocated || this.lastActiveKey !== this.props.activeKey)
+    ) {
+      this.hasAutoLocated = true;
+      this.lastActiveKey = this.props.activeKey;
       this.showSelected();
     }
   }
