@@ -1679,10 +1679,6 @@ export default class FormTable extends React.Component<TableProps, TableState> {
   }
 
   columnToQuickEdit(column: any) {
-    const quickEdit: any = {
-      type: 'input-text'
-    };
-
     if (
       getRendererByName(column?.type)?.isFormItem ||
       ~['group'].indexOf(column.type)
@@ -1693,7 +1689,22 @@ export default class FormTable extends React.Component<TableProps, TableState> {
       };
     }
 
-    return quickEdit;
+    // 显式指定了非表单项类型（如 button/tpl/mapping）的列不应该被换成输入框，
+    // 否则编辑模式下按钮会变成输入框（operation 列由外层单独处理）
+    if (
+      column?.type &&
+      column.type !== 'operation' &&
+      getRendererByName(column.type)
+    ) {
+      return {
+        ...column,
+        label: ''
+      };
+    }
+
+    return {
+      type: 'input-text'
+    };
   }
 
   handleTableSave(
