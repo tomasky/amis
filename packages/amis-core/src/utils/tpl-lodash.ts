@@ -21,8 +21,23 @@ const imports = {
 
     return Math.ceil((date.getTime() - now) / (1000 * 60 * 60 * 24)) + '天';
   },
-  formatDate: (value: any, format: string = 'LLL', inputFormat: string = '') =>
-    moment(value, inputFormat).format(format)
+  formatDate: (
+    value: any,
+    format: string = 'LLL',
+    inputFormat: string = ''
+  ) => {
+    // value 为 null/undefined 时 moment 会回退到当前时间，导致 typo 字段静默渲染成
+    // 今天的日期；字符串无法解析时 moment 会静默返回 "Invalid date"。这里都做守卫：
+    // 空值回显空串，无法解析回显原值。
+    if (value == null || value === '') {
+      return '';
+    }
+    const m = moment(value, inputFormat);
+    if (!m.isValid()) {
+      return String(value);
+    }
+    return m.format(format);
+  }
 };
 
 // 缓存一下提升性能

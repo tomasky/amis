@@ -86,27 +86,24 @@ export const AppStore = ServiceStore.named('AppStore')
         let path = item.link || item.url;
 
         if (item.schema || item.schemaApi) {
-          path =
-            item.url ||
-            `/${paths
-              .map(item => item.index)
-              .concat(index)
-              .map(index => `page-${index + 1}`)
-              .join('/')}`;
+          // 最近的、已经生成好 path 的祖先路径，作为子页面路径前缀。
+          // 不能直接用所有祖先的 index 拼 page-n，否则父级配置了 url 时会生成
+          // page-n/page-n 而丢掉父级路径。
+          let parentPath = '/';
+          let idx = paths.length;
+          while (idx > 0) {
+            const parent = paths[idx - 1];
+
+            if (parent?.path) {
+              parentPath = parent.path.replace(/\/+$/, '') + '/';
+              break;
+            }
+            idx--;
+          }
+
+          path = item.url ? item.url : `${parentPath}page-${index + 1}`;
 
           if (path && path[0] !== '/') {
-            let parentPath = '/';
-            let index = paths.length;
-            while (index > 0) {
-              const item = paths[index - 1];
-
-              if (item?.path) {
-                parentPath = item.path + '/';
-                break;
-              }
-              index--;
-            }
-
             path = parentPath + path;
           }
         }

@@ -145,8 +145,18 @@ extendsFilters({
       [modifier === 'add' ? 'add' : 'subtract'](parseInt(amount, 10) || 0, unit)
       .toDate();
   },
-  date: (input, format = 'LLL', inputFormat = 'X') =>
-    moment(input, inputFormat).format(format),
+  date: (input, format = 'LLL', inputFormat = 'X') => {
+    // input 为空 / 解析失败时不要静默渲染成 "Invalid date"，也不要让 moment
+    // 对 null/undefined 回退到当前时间导致渲染出今天的日期。
+    if (input == null || input === '') {
+      return '';
+    }
+    const m = moment(input, inputFormat);
+    if (!m.isValid()) {
+      return String(input);
+    }
+    return m.format(format);
+  },
   number: input => {
     let parts = String(input).split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');

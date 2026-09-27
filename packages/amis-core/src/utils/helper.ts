@@ -383,12 +383,18 @@ export function immutableExtends(to: any, from: any, deep = false) {
   Object.keys(from).forEach(key => {
     const origin = to[key];
     const value = from[key];
+    let newValue = value;
 
-    // todo 支持深度merge
-    if (origin !== value) {
+    // 深度 merge：当新旧值都是普通对象时递归合并，
+    // 以支持形如 name="obj.a"、name="obj.b" 的字段逐个更新而不互相覆盖。
+    if (deep && isObject(origin) && isObject(value)) {
+      newValue = immutableExtends(origin, value, deep);
+    }
+
+    if (origin !== newValue) {
       // 一旦有修改，就创建个新对象。
       ret = ret !== to ? ret : {...to};
-      ret[key] = value;
+      ret[key] = newValue;
     }
   });
 

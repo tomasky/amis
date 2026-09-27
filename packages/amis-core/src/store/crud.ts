@@ -476,6 +476,7 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
           return;
         }
 
+        self.updateMessage(e.message || e, true);
         console.error(e);
         !(api as ApiObject)?.silent && env.notify('error', e.message);
         return;

@@ -187,7 +187,7 @@ export const Row = types
       }
     },
     change(values: object, savePristine?: boolean) {
-      self.data = immutableExtends(self.data, values);
+      self.data = immutableExtends(self.data, values, true);
       savePristine && (self.pristine = self.data);
     },
     reset() {
