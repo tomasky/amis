@@ -42,3 +42,6 @@ revision.json
 
 !/.vscode/iconConfig.json
 publish.sh
+
+# packages/amis-sdk/package.json 需要提交；只有 sdk/ 是 CI 构建时填充的产物，忽略它
+packages/amis-sdk/sdk/
