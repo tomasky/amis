@@ -62,6 +62,13 @@ export class QueryBuilder extends React.Component<
   config = {...defaultConfig, ...this.props.config};
 
   dragTarget?: HTMLElement;
+  // 记录拖拽开始时的 value 与 onChange，避免拖拽期间使用到过期的 props。
+  // 非内嵌（Picker）模式下 draft 保存在 PickerContainer 内部，
+  // 直接读 props.value 会拿到未包含草稿的旧值，导致排序结果丢失。
+  dragContext?: {
+    value?: ConditionGroupValue;
+    onChange: (value?: ConditionGroupValue) => void;
+  };
   // dragNextSibling: Element | null;
   ghost?: HTMLElement;
   host: HTMLElement;
@@ -70,13 +77,18 @@ export class QueryBuilder extends React.Component<
   lastMoveAt: number = 0;
 
   @autobind
-  handleDragStart(e: React.DragEvent) {
+  handleDragStart(
+    e: React.DragEvent,
+    value?: ConditionGroupValue,
+    onChange?: (value?: ConditionGroupValue) => void
+  ) {
     const {draggable = true, disabled} = this.props;
     // draggable为false或disabled时不可拖拽
     if (!draggable || disabled) {
       e.preventDefault();
       return;
     }
+    this.dragContext = {value, onChange};
     const target = e.currentTarget;
     const item = target.closest('[data-id]') as HTMLElement;
     this.dragTarget = item;
@@ -176,7 +188,7 @@ export class QueryBuilder extends React.Component<
 
   @autobind
   handleDragDrop() {
-    const onChange = this.props.onChange;
+    const onChange = this.dragContext!.onChange;
     const fromId = this.dragTarget!.getAttribute('data-id')!;
     const toId = this.host.getAttribute('data-group-id')!;
     const children = [].slice.call(this.ghost!.parentElement!.children);
@@ -187,7 +199,7 @@ export class QueryBuilder extends React.Component<
     }
 
     const toIndex = children.indexOf(this.ghost);
-    let value = this.props.value!;
+    let value = this.dragContext!.value!;
 
     const indexes = findTreeIndex([value], item => item.id === fromId);
 
@@ -222,6 +234,7 @@ export class QueryBuilder extends React.Component<
     //   this.dragTarget.parentElement!.appendChild(this.dragTarget);
     // }
     delete this.dragTarget;
+    delete this.dragContext;
     // delete this.dragNextSibling;
     this.ghost!.parentElement?.removeChild(this.ghost!);
     delete this.ghost;
@@ -300,7 +313,9 @@ export class QueryBuilder extends React.Component<
         classnames={cx}
         fieldClassName={fieldClassName}
         removeable={false}
-        onDragStart={this.handleDragStart}
+        onDragStart={(e: React.DragEvent) =>
+          this.handleDragStart(e, normalizedValue, onChange)
+        }
         showANDOR={showANDOR}
         showNot={showNot}
         data={data}

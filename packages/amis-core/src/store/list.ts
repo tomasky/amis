@@ -290,6 +290,9 @@ export const ListStore = iRendererStore
     }
 
     function reset() {
+      // 拖拽排序只改动了数组顺序与 newIndex，reset 时需要按原始 index 还原顺序，
+      // 否则数据顺序仍是拖拽后的顺序，但 moved 已归零，导致展示与数据不一致。
+      self.items.replace(self.items.slice().sort((a, b) => a.index - b.index));
       self.items.forEach(item => item.reset());
       self.dragging = false;
     }

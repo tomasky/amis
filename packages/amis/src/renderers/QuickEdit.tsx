@@ -216,7 +216,7 @@ export const HocQuickEdit =
 
         if (
           keycode(e) === 'space' &&
-          !~['INPUT', 'TEXTAREA'].indexOf(el.tagName)
+          !~['INPUT', 'TEXTAREA'].indexOf((e.target as HTMLElement).tagName)
         ) {
           e.preventDefault();
           e.stopPropagation();
