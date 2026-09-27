@@ -596,17 +596,19 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   }
 
   componentDidMount() {
-    const {store, autoGenerateFilter, perPageField, columns} = this.props;
+    const {store, autoGenerateFilter, perPageField, columns, mode} = this.props;
     if (this.props.perPage && !store.query[perPageField || 'perPage']) {
       store.changePage(store.page, this.props.perPage);
     }
 
     // 没有 filter 或者 没有展示 filter 时应该默认初始化一次，
     // 否则就应该等待 filter 里面的表单初始化的时候才初始化
-    // 另外autoGenerateFilter时，table 里面会单独处理这块逻辑
-    // 所以这里应该忽略 autoGenerateFilter 情况
+    // 另外autoGenerateFilter时，只有 table 模式（Table 渲染器）里面会单独处理这块逻辑，
+    // 卡片/列表模式下 body 不是 Table，不会触发初始化，所以这里不能忽略
+    const autoGenerateFilterHandledByBody =
+      !!autoGenerateFilter && (mode || 'table') === 'table';
     if (
-      (!this.props.filter && !autoGenerateFilter) ||
+      (!this.props.filter && !autoGenerateFilterHandledByBody) ||
       (store.filterTogglable && !store.filterVisible)
     ) {
       this.handleFilterInit({});
@@ -1131,10 +1133,11 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       store,
       pageField,
       stopAutoRefreshWhenModalIsOpen,
-      interval,
+      interval: intervalProp,
       silentPolling,
       env
     } = this.props;
+    const interval = this.resolveInterval(intervalProp);
 
     store.closeDialog(true, values);
     const dialogAction = store.action as ActionObject;
@@ -1220,8 +1223,13 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   }
 
   handleDialogClose(confirmed = false) {
-    const {store, stopAutoRefreshWhenModalIsOpen, silentPolling, interval} =
-      this.props;
+    const {
+      store,
+      stopAutoRefreshWhenModalIsOpen,
+      silentPolling,
+      interval: intervalProp
+    } = this.props;
+    const interval = this.resolveInterval(intervalProp);
     store.closeDialog(confirmed);
 
     if (stopAutoRefreshWhenModalIsOpen && interval) {
@@ -1254,6 +1262,27 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     });
   }
 
+  /**
+   * 轮询间隔支持配置成变量/表达式，这里统一解析成数字，
+   * 否则 `Math.max('${interval}', 1000)` 会得到 NaN，
+   * setTimeout(NaN) 会被当成 0，从而无限轮询。
+   */
+  resolveInterval(interval: any): number | undefined {
+    if (typeof interval === 'number') {
+      return interval;
+    }
+    if (!interval) {
+      return undefined;
+    }
+    const resolved = resolveVariableAndFilter(
+      interval,
+      this.props.data,
+      '| raw'
+    );
+    const num = parseInt(resolved as any, 10);
+    return isNaN(num) ? undefined : num;
+  }
+
   search(
     values?: any,
     silent?: boolean,
@@ -1267,7 +1296,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       messages,
       pageField,
       perPageField,
-      interval,
+      interval: intervalProp,
       stopAutoRefreshWhen,
       stopAutoRefreshWhenModalIsOpen,
       silentPolling,
@@ -1305,6 +1334,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       );
     this.lastQuery = store.query;
     const data = createObject(store.data, store.query);
+    const interval = this.resolveInterval(intervalProp);
     const matchFunc =
       this.props?.matchFunc && typeof this.props.matchFunc === 'string'
         ? (str2function(
@@ -1822,7 +1852,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
   handleChildPopOverOpen(popOver: any) {
     if (
-      this.props.interval &&
+      this.resolveInterval(this.props.interval) &&
       popOver &&
       ~['dialog', 'drawer'].indexOf(popOver.mode)
     ) {
@@ -1832,8 +1862,12 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   }
 
   handleChildPopOverClose(popOver: any) {
-    const {stopAutoRefreshWhenModalIsOpen, silentPolling, interval} =
-      this.props;
+    const {
+      stopAutoRefreshWhenModalIsOpen,
+      silentPolling,
+      interval: intervalProp
+    } = this.props;
+    const interval = this.resolveInterval(intervalProp);
 
     if (popOver && ~['dialog', 'drawer'].indexOf(popOver.mode)) {
       this.props.store.setInnerModalOpened(false);

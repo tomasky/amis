@@ -584,6 +584,26 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
   }
 
   /**
+   * 轮询间隔支持配置成变量/表达式，这里统一解析成数字，
+   * 避免 `Math.max('${interval}', 1000)` 得到 NaN 后 setTimeout 退化成 0 导致无限轮询。
+   */
+  resolveInterval(interval: any): number | undefined {
+    if (typeof interval === 'number') {
+      return interval;
+    }
+    if (!interval) {
+      return undefined;
+    }
+    const resolved = resolveVariableAndFilter(
+      interval,
+      this.props.data,
+      '| raw'
+    );
+    const num = parseInt(resolved as any, 10);
+    return isNaN(num) ? undefined : num;
+  }
+
+  /**
    * 更新列表数据
    */
   getData(
@@ -602,7 +622,7 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
       messages,
       pageField,
       perPageField,
-      interval,
+      interval: intervalProp,
       stopAutoRefreshWhen,
       silentPolling,
       syncLocation,
@@ -634,6 +654,7 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
     const loadDataMode = loadMore ?? loadType === 'more';
 
     const data: Record<string, any> = createObject(store.data, store.query);
+    const interval = this.resolveInterval(intervalProp);
 
     // handleLoadMore 是在事件触发后才执行，首次加载并不走到 handleLoadMore
     // 所以加载更多模式下，首次加载也需要使用设置的 perPage，避免前后 perPage 不一致导致的问题
