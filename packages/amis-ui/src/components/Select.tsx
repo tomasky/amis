@@ -58,7 +58,15 @@ export const defaultFilterOption = (
 ): Option[] =>
   matchSorter(options, inputValue, {
     threshold: matchSorter.rankings.CONTAINS,
-    ...option
+    ...option,
+    // 将 key 统一转为字符串取值，避免 number/undefined 等类型在匹配时崩溃
+    ...(option?.keys?.length
+      ? {
+          keys: option.keys.map(
+            key => (item: any) => String(item?.[key] ?? '')
+          )
+        }
+      : {})
   });
 
 export type FilterOption = typeof defaultFilterOption;
