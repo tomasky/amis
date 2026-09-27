@@ -55,8 +55,8 @@ export const defaultFilterOption = (
   options: Option[],
   inputValue: string,
   option: {keys: string[]}
-): Option[] =>
-  matchSorter(options, inputValue, {
+): Option[] => {
+  const filtered = matchSorter(options, inputValue, {
     threshold: matchSorter.rankings.CONTAINS,
     ...option,
     // 将 key 统一转为字符串取值，避免 number/undefined 等类型在匹配时崩溃
@@ -68,6 +68,17 @@ export const defaultFilterOption = (
         }
       : {})
   });
+
+  // 搜索结果保持选项原有顺序，避免 matchSorter 的相关性排序导致顺序错乱
+  const orderMap = new Map<any, number>();
+  options.forEach((item, index) => orderMap.set(item, index));
+
+  return filtered
+    .slice()
+    .sort(
+      (a, b) => (orderMap.get(a) ?? 0) - (orderMap.get(b) ?? 0)
+    );
+};
 
 export type FilterOption = typeof defaultFilterOption;
 
