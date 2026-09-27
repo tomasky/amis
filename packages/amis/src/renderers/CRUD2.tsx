@@ -1080,6 +1080,17 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
       // @ts-ignore
       return this[`handle${upperFirst(action.actionType)}`](data);
     }
+
+    // 选择/展开相关的动作由内容区的 table2/table 处理，
+    // 否则像 clearAll（清除选中项）直接作用在 crud2 上时会无效
+    if (
+      action.actionType &&
+      ['selectAll', 'clearAll', 'select', 'expand', 'collapse'].includes(
+        action.actionType
+      )
+    ) {
+      return this.control?.doAction?.(action, data, throwErrors);
+    }
   }
 
   @autobind

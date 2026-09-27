@@ -831,7 +831,10 @@ export default class Table2 extends React.Component<Table2Props, object> {
           wrapperComponent: wrapperComponent || undefined,
           title: title || rest.label,
           type: 'cell-field',
-          column: rest,
+          // width 要能传给单元格内的组件（比如 image 靠它设置图片宽度），
+          // 但又不能作为 TableCell 的 props（否则会把外层 div 撑开），
+          // 所以只放到 column 里，由 TableCell 作为 schema 渲染
+          column: width === undefined ? rest : {...rest, width},
           data: props.data,
           name: schema.name
         },
@@ -1875,9 +1878,12 @@ export default class Table2 extends React.Component<Table2Props, object> {
     switch (actionType) {
       case 'selectAll':
         store.updateSelectedAll();
+        // 同步给外层（onSelect/selectedChange），否则数据域不会更新
+        this.syncSelected();
         break;
       case 'clearAll':
         store.updateSelected([]);
+        this.syncSelected();
         break;
       case 'select':
         const selected: Array<any> = [];
@@ -1894,6 +1900,7 @@ export default class Table2 extends React.Component<Table2Props, object> {
           }
         });
         store.updateSelected(selected);
+        this.syncSelected();
         break;
       case 'expand':
         const expandableKey = primaryField || expandable?.keyField || key;

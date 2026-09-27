@@ -554,6 +554,17 @@ export async function exportExcel(
             } else {
               label = viewValue[labelField || 'label'];
             }
+
+            // 映射值是组件 schema（比如 status 的 labelMap）时上面取不到 label，
+            // 这里用 labelMap 兵底，避免导出为空
+            if (label === undefined || label === null) {
+              label =
+                (viewValue.labelMap &&
+                  (viewValue.labelMap[value] ??
+                    viewValue.labelMap['*'])) ??
+                viewValue.label ??
+                value;
+            }
           }
 
           let text = removeHTMLTag(label);
