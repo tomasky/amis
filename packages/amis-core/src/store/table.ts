@@ -1724,6 +1724,19 @@ export const TableStore = iRendererStore
       toggleAncestors(parent);
     }
 
+    /**
+     * 展开某行的所有祖先行，保证该行可见。
+     * 用于 toggleExpanded 指定内层 index/condition 时自动展开外层。
+     */
+    function expandAncestors(row: IRow) {
+      let parent: any = row.parent;
+
+      while (parent && parent.storeType === Row.name) {
+        setExpanded(parent, true);
+        parent = parent.parent;
+      }
+    }
+
     function toggleDescendants(row: IRow, checked: boolean) {
       const {children} = row;
 
@@ -2011,6 +2024,7 @@ export const TableStore = iRendererStore
       toggle,
       toggleAncestors,
       toggleDescendants,
+      expandAncestors,
       toggleShift,
       getToggleShiftRows,
       toggleExpandAll,

@@ -145,9 +145,11 @@ export default class OfficeViewer extends React.Component<
   evalVar(text: string, data: any) {
     const localData = this.props.data;
 
+    // 行内循环数据 data 应优先于组件自身数据 localData，
+    // 否则当行内变量与父层（如 service 返回的主表）同名时，会错误地取到父层值。
     return resolveVariableAndFilter(
       '${' + text + '}',
-      createObject(data, localData),
+      createObject(localData, data),
       '| raw'
     );
   }

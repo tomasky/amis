@@ -1367,7 +1367,8 @@ export default class FormTable extends React.Component<TableProps, TableState> {
                       hidden: false,
                       saveImmediately: true,
                       mode: 'inline',
-                      disabled,
+                      // 仅在表格整体 disabled 时强制禁用，避免覆盖列上 quickEdit.disabled
+                      ...(disabled ? {disabled: true} : {}),
                       static: isStatic || column.static
                     }
                   })
@@ -1401,7 +1402,8 @@ export default class FormTable extends React.Component<TableProps, TableState> {
                   isQuickEditFormMode: !!render?.isFormItem,
                   saveImmediately: true,
                   mode: 'inline',
-                  disabled
+                  // 仅在表格整体 disabled 时强制禁用，避免覆盖列上 quickEdit.disabled
+                  ...(disabled ? {disabled: true} : {})
                 }
               })
         };

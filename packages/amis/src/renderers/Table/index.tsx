@@ -3071,6 +3071,8 @@ export class TableRenderer extends Table {
         );
         targets.forEach(target => {
           store.toggleExpanded(target);
+          // 展开内层行时同步展开其祖先，避免目标行因外层收起而不可见
+          store.isExpanded(target) && store.expandAncestors(target);
         });
         break;
       case 'setExpanded':
@@ -3081,6 +3083,7 @@ export class TableRenderer extends Table {
         );
         targets2.forEach(target => {
           store.setExpanded(target, !!args.value);
+          !!args.value && store.expandAncestors(target);
         });
         break;
       default:
