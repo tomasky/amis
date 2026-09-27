@@ -116,7 +116,7 @@
 | --- | --- | --- | --- |
 | [16728](https://github.com/baidu/amis/issues/16728) | 表格颜色显示bug | 源码现存(高确信) | packages/amis-ui/scss/components/_table.scss:532-534 |
 | [14566](https://github.com/baidu/amis/issues/14566) | transferPicker组件，table模式下的分页问题 | 源码现存(高确信) | packages/amis-core/src/store/formItem.ts:841-846 |
-| [12389](https://github.com/baidu/amis/issues/12389) | Office Viewer 组件 表格行循环，如果行中变量名在父层作用域有同名变量时，会取父层变量值，应该取循环本层的变量值才对 | 源码现存(高确信) | packages/amis/src/renderers/OfficeViewer.tsx:152-156 |
+| [12389](https://github.com/baidu/amis/issues/12389) | Office Viewer 组件 表格行循环，如果行中变量名在父层作用域有同名变量时，会取父层变量值，应该取循环本层的变量值才对 | 源码现存(高确信) ✅已修复(本轮) | OfficeViewer.tsx:148-152 evalVar 用 `createObject(data, localData)`，own 属性 localData（组件/父层 data）反而覆盖了行内 data；改为 `createObject(localData, data)` 使行内数据优先 |
 | [12006](https://github.com/baidu/amis/issues/12006) | 【bug】crud2 筛选条件的数据填充到了表格里 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:991-993 |
 | [12001](https://github.com/baidu/amis/issues/12001) | 【BUG】inputTable组件在编辑模式下时，原来列中的按钮会变为输入框 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Form/InputTable.tsx:1766-1782 |
 | [11837](https://github.com/baidu/amis/issues/11837) | input-table中使用mapping映射多个时，导出Excel内容错误 | 源码现存(高确信) | packages/amis/src/renderers/Table/exportExcel.ts:541 |
@@ -127,12 +127,12 @@
 | [11584](https://github.com/baidu/amis/issues/11584) | popOverEnableOn中使用表达式函数时提示找不到该方法 | 源码现存(高确信) | packages/amis-core/src/schema.ts:844 |
 | [11506](https://github.com/baidu/amis/issues/11506) | inputTable取消编辑时会导致数据错误 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputTable.tsx:1136-1145 |
 | [11489](https://github.com/baidu/amis/issues/11489) | inputTable 编辑模式下 如果列是按钮 动态添加渲染出来是个输入框 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Form/InputTable.tsx:1766-1781 |
-| [11103](https://github.com/baidu/amis/issues/11103) | input-table needConfirm属性为false的情况下表单disabled属性不生效 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputTable.tsx:1487-1499 |
+| [11103](https://github.com/baidu/amis/issues/11103) | input-table needConfirm属性为false的情况下表单disabled属性不生效 | 源码现存(高确信) ✅已修复(本轮) | InputTable.tsx:1360-1372/1393-1405 合并 quickEdit 时把表格级 `disabled` 放在 `...quickEdit` 之后，覆盖了列上 quickEdit.disabled；改为仅当表格 disabled 为真时才强制 `{disabled:true}` |
 | [10982](https://github.com/baidu/amis/issues/10982) | table2组件中选中表达式`selectedRowKeysExpr`无法与变量比较 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:667-672 |
 | [10980](https://github.com/baidu/amis/issues/10980) | table2组件，无法指定image组件的宽度，恒为110px | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Table2/index.tsx:838 |
 | [10950](https://github.com/baidu/amis/issues/10950) | Table2 itemDraggableOn 配置当前行是否可拖拽的条件无效 | 源码现存(高确信) | packages/amis-core/src/store/table2.ts:204; packages/amis-ui/src/components/table/index.tsx:515-518 |
 | [10912](https://github.com/baidu/amis/issues/10912) | crud2(表格2.0)不支持export-excel类型 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:1966-2069; packages/amis/src/renderers/Table/index.tsx:2448 |
-| [10837](https://github.com/baidu/amis/issues/10837) | table和crud的toggleExpanded动作展开内部层级时不会自动展开祖先 | 源码现存(高确信) | packages/amis-core/src/store/table.ts:1936-1952 |
+| [10837](https://github.com/baidu/amis/issues/10837) | table和crud的toggleExpanded动作展开内部层级时不会自动展开祖先 | 源码现存(高确信) ✅已修复(本轮) | Table/index.tsx toggleExpanded/setExpanded 只对目标行操作，内层 index/condition 命中时祖先仍收起；新增 TableStore.expandAncestors 在展开时同步展开祖先行 |
 | [10816](https://github.com/baidu/amis/issues/10816) | CRUD中table使用groupName导出Excel会丢失表头 | 源码现存(高确信) | packages/amis/src/renderers/Table/exportExcel.ts:377-381 |
 | [10724](https://github.com/baidu/amis/issues/10724) | input-table组件渲染80条数据的时候，遇到特别卡顿的情况需要10秒钟才能加载完成 | 源码现存(高确信) | packages/amis/src/renderers/QuickEdit.tsx:358-369; packages/amis-core/src/store/table.ts:425 |
 | [10605](https://github.com/baidu/amis/issues/10605) | inputtable组件分页校验不通过仍然提交接口 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputTable.tsx:507-508,2075 |
