@@ -321,7 +321,8 @@ export async function exportExcel(
     filename = filter(toolbar.filename, data, '| raw');
   }
 
-  if (rows.length === 0) {
+  // 导出模板（withoutData）时不需要数据，没有数据也应该能导出表头
+  if (rows.length === 0 && !withoutData) {
     env.notify('warning', __('placeholder.noData'));
     return;
   }
@@ -395,7 +396,10 @@ export async function exportExcel(
   // 数据从第二行开始
   let rowIndex = 1;
   if (toolbar.rowSlice) {
-    rows = arraySlice(rows, toolbar.rowSlice);
+    // rowSlice 支持用变量/表达式指定要导出的行，
+    // 否则会拿 "${selectedIndexes|join}" 这样的字符串去 parseInt 得到空数组，导出结果为空
+    const rowSlice = filter(toolbar.rowSlice, data, '| raw');
+    rows = arraySlice(rows, rowSlice);
   }
   // 前置总结行
   rowIndex = renderSummary(worksheet, data, prefixRow, rowIndex);
