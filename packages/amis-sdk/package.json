@@ -1,6 +1,6 @@
 {
   "name": "@tomasko/amis",
-  "version": "6.8.5",
+  "version": "6.8.6",
   "description": "baidu/amis前端低代码框架，通过 JSON 配置就能生成各种页面。基于amis@6.8.0版本修复各种bug而来",
   "license": "Apache-2.0",
   "main": "sdk/sdk.js",
@@ -11,5 +11,13 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "keywords": [
+    "react",
+    "amis",
+    "mis",
+    "renderer",
+    "json",
+    "schema"
+  ]
 }
