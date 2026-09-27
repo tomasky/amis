@@ -124,28 +124,31 @@ export class BreadcrumbField extends React.Component<BreadcrumbProps, object> {
 
     if (crumbItems) {
       crumbItems = crumbItems.map(item => {
-        if (item.label) {
-          item.label = filter(item.label, data);
+        // 不要就地修改原始 item，否则模板变量被替换后无法再次解析
+        const newItem = {...item};
+        if (newItem.label) {
+          newItem.label = filter(newItem.label, data);
         }
-        if (item.href) {
-          item.href = resolveVariableAndFilter(item.href, data, '| raw');
+        if (newItem.href) {
+          newItem.href = resolveVariableAndFilter(newItem.href, data, '| raw');
         }
-        if (item.dropdown) {
-          item.dropdown = item.dropdown.map(dropdownItem => {
-            if (dropdownItem.label) {
-              dropdownItem.label = filter(dropdownItem.label, data);
+        if (newItem.dropdown) {
+          newItem.dropdown = newItem.dropdown.map(dropdownItem => {
+            const newDropdownItem = {...dropdownItem};
+            if (newDropdownItem.label) {
+              newDropdownItem.label = filter(newDropdownItem.label, data);
             }
-            if (dropdownItem.href) {
-              dropdownItem.href = resolveVariableAndFilter(
-                dropdownItem.href,
+            if (newDropdownItem.href) {
+              newDropdownItem.href = resolveVariableAndFilter(
+                newDropdownItem.href,
                 data,
                 '| raw'
               );
             }
-            return dropdownItem;
+            return newDropdownItem;
           });
         }
-        return item;
+        return newItem;
       });
     }
 

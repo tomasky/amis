@@ -22,12 +22,18 @@ export function attachmentAdpator(
         filename = api.downloadFileName;
       } else {
         // disposition 有可能是 attachment; filename="??.xlsx"; filename*=UTF-8''%E4%B8%AD%E6%96%87.xlsx
-        // 这种情况下最后一个才是正确的文件名
-        let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i;
-
-        let matches = disposition.match(filenameRegex);
-        if (matches && matches.length) {
-          filename = matches[1].replace(`UTF-8''`, '').replace(/['"]/g, '');
+        // 这种情况下 filename*= 才是正确的文件名（RFC 5987），优先使用
+        const utf8Matches = disposition.match(
+          /filename\*\s*=\s*(?:UTF-8'')?((['"]).*?\2|[^;\n]*)/i
+        );
+        if (utf8Matches && utf8Matches[1]) {
+          filename = utf8Matches[1].replace(/['"]/g, '').trim();
+        } else {
+          let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i;
+          let matches = disposition.match(filenameRegex);
+          if (matches && matches.length) {
+            filename = matches[1].replace(`UTF-8''`, '').replace(/['"]/g, '');
+          }
         }
 
         // 很可能是中文被 url-encode 了

@@ -468,7 +468,8 @@ extendsFilters({
       input,
       hasAlternate,
       this,
-      !!input,
+      // 空数组视为 false，避免 pick 等返回数组时结果恒为 true
+      Array.isArray(input) ? input.length > 0 : !!input,
       trueValue,
       falseValue,
       0
@@ -480,7 +481,8 @@ extendsFilters({
       input,
       hasAlternate,
       this,
-      !input,
+      // 空数组视为 false，故 isFalse 对空数组应返回 true
+      Array.isArray(input) ? input.length === 0 : !input,
       trueValue,
       falseValue,
       0

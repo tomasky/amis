@@ -904,7 +904,7 @@ export default class Cards extends React.Component<GridProps, object> {
       itemIndex: item.index,
       multiple,
       selectable: store.selectable,
-      checkable: item.checkable,
+      checkable: card?.checkable ?? item.checkable,
       draggable: item.draggable,
       selected: item.checked,
       dragging: store.dragging,
