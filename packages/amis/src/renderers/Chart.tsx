@@ -183,7 +183,8 @@ function recoverFunctionType(config: object) {
     'animationDuration',
     'position',
     'sort',
-    'renderItem'
+    'renderItem',
+    'onclick'
   ].forEach((key: string) => {
     const objects = findObjectsWithKey(config, key);
     for (const object of objects) {

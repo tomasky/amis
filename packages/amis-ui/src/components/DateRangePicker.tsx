@@ -168,30 +168,30 @@ export const availableShortcuts: {[propName: string]: any} = {
   '7daysago': {
     label: 'DateRange.7daysago',
     startDate: (now: moment.Moment) => {
-      return now.add(-7, 'days').startOf('day');
+      return now.add(-6, 'days').startOf('day');
     },
     endDate: (now: moment.Moment) => {
-      return now.add(-1, 'days').endOf('day');
+      return now.endOf('day');
     }
   },
 
   '30daysago': {
     label: 'DateRange.30daysago',
     startDate: (now: moment.Moment) => {
-      return now.add(-30, 'days').startOf('day');
+      return now.add(-29, 'days').startOf('day');
     },
     endDate: (now: moment.Moment) => {
-      return now.add(-1, 'days').endOf('day');
+      return now.endOf('day');
     }
   },
 
   '90daysago': {
     label: 'DateRange.90daysago',
     startDate: (now: moment.Moment) => {
-      return now.add(-90, 'days').startOf('day');
+      return now.add(-89, 'days').startOf('day');
     },
     endDate: (now: moment.Moment) => {
-      return now.add(-1, 'days').endOf('day');
+      return now.endOf('day');
     }
   },
 

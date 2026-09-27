@@ -97,13 +97,14 @@ export class DateField extends React.Component<DateProps, DateState> {
 
   componentDidMount() {
     const {fromNow, updateFrequency} = this.props;
+    const frequency = Number(updateFrequency);
 
-    if (fromNow && updateFrequency) {
+    if (fromNow && frequency > 0) {
       this.refreshInterval = setInterval(() => {
         this.setState({
           random: Math.random()
         });
-      }, updateFrequency);
+      }, frequency);
     }
   }
 
@@ -148,7 +149,7 @@ export class DateField extends React.Component<DateProps, DateState> {
     if (value && (date = normalizeDate(value, valueFormat))) {
       let normalizeDate: Moment = date;
 
-      if (displayTimeZone) {
+      if (displayTimeZone && moment.tz.zone(displayTimeZone)) {
         normalizeDate = normalizeDate.clone().tz(displayTimeZone);
       }
 
