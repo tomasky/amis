@@ -115,10 +115,13 @@ import {StatusScoped} from './StatusScoped';
 
 // @ts-ignore
 export const version = '__buildVersion';
-(window as any).amisVersionInfo = {
-  version: '__buildVersion',
-  buildTime: '__buildTime'
-};
+// 包一层 typeof 判断，避免在 Node/SSR 等无 window 环境下引入即报错
+if (typeof window !== 'undefined') {
+  (window as any).amisVersionInfo = {
+    version: '__buildVersion',
+    buildTime: '__buildTime'
+  };
+}
 
 export {
   clearStoresCache,

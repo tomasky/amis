@@ -91,7 +91,17 @@ function getLabel(
     }`;
   }
 
-  return labelToString(item[labelField]) || `选项${index}`;
+  // 字符串直接透传（省一次 labelToString 调用），空值回落到「选项N」，
+  // 其余（对象/布尔等）仍交给 labelToString 处理
+  const raw = item[labelField];
+  const label =
+    raw === undefined || raw === null
+      ? ''
+      : typeof raw === 'string'
+      ? raw
+      : labelToString(raw);
+
+  return label || `选项${index}`;
 }
 
 export class WordsField extends React.Component<WordsProps, object> {
