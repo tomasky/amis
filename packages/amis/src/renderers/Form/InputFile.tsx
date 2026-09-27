@@ -844,8 +844,14 @@ export default class FileControl extends React.Component<FileProps, FileState> {
       return;
     }
 
+    // 自定义 receiver 时，auto 模式下不再默认走分块上传，避免误用内置的 startChunk 接口
+    const isDefaultReceiver = !receiver || receiver === '/api/upload/file';
+
     let fn =
-      (useChunk === 'auto' && chunkSize && file.size > chunkSize) ||
+      (useChunk === 'auto' &&
+        isDefaultReceiver &&
+        chunkSize &&
+        file.size > chunkSize) ||
       useChunk === true
         ? this.uploadBigFile
         : this.uploadFile;

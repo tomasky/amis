@@ -1,5 +1,5 @@
 import React from 'react';
-import {getPropValue, FormControlProps, createObject} from 'amis-core';
+import {getPropValue, FormControlProps, createObject, filter} from 'amis-core';
 import {ErrorBoundary} from 'amis-core';
 
 function renderCommonStatic(props: any, defaultValue: string) {
@@ -78,7 +78,24 @@ function renderCommonStatic(props: any, defaultValue: string) {
       );
 
     default:
-      return defaultValue;
+      // 静态展示时保留输入框的前缀/后缀
+      return props.prefix || props.suffix ? (
+        <>
+          {props.prefix ? (
+            <span className="TextControl-inputPrefix">
+              {filter(props.prefix, props.data)}
+            </span>
+          ) : null}
+          {defaultValue}
+          {props.suffix ? (
+            <span className="TextControl-inputSuffix">
+              {filter(props.suffix, props.data)}
+            </span>
+          ) : null}
+        </>
+      ) : (
+        defaultValue
+      );
   }
 }
 

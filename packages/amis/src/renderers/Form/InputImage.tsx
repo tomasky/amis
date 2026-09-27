@@ -915,11 +915,11 @@ export default class ImageControl extends React.Component<
 
       onImageEnlarge({
         src: (file.preview || file.url) as string,
-        originalSrc: (file.preview || file.url) as string,
+        originalSrc: (file.url || file.preview) as string,
         index,
         list: files.map(file => ({
           src: (file.preview || file.url) as string,
-          originalSrc: (file.preview || file.url) as string,
+          originalSrc: (file.url || file.preview) as string,
           title: file.name || getNameFromUrl(file.value || file.url)
         }))
       });

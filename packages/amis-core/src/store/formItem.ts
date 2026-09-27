@@ -515,7 +515,10 @@ export const FormItemStore = StoreNode.named('FormItemStore')
         doValidate(
           self.tmpValue,
           data,
-          customRules ? str2rules(customRules) : self.rules,
+          // customRules 仅作为额外规则，需与表单项自身规则合并，避免覆盖掉已配置的校验
+          customRules
+            ? {...str2rules(self.rules), ...str2rules(customRules)}
+            : self.rules,
           self.messages,
           self.__
         )

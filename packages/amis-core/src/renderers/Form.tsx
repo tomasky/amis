@@ -2027,6 +2027,7 @@ export default class Form extends React.Component<FormProps, object> {
             })
         )}
         onSubmit={this.handleFormSubmit}
+        data-id={id}
         noValidate
       >
         {/* 实现回车自动提交 */}

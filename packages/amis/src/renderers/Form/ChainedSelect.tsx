@@ -148,7 +148,17 @@ export default class ChainedSelectControl extends React.Component<
       idx++;
     }
 
-    if (!arr[idx] || !env || !isEffectiveApi(source, data)) {
+    if (!arr[idx]) {
+      // 值被清空或层级减少时，移除多余的层级，避免残留上一次的选项
+      if (this.state.stack.length > idx) {
+        this.setState({
+          stack: this.state.stack.slice(0, idx)
+        });
+      }
+      return;
+    }
+
+    if (!env || !isEffectiveApi(source, data)) {
       return;
     }
 

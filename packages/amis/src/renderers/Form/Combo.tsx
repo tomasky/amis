@@ -574,7 +574,7 @@ export default class ComboControl extends React.Component<ComboProps> {
     return value;
   }
 
-  addItemWith(condition: ComboCondition) {
+  async addItemWith(condition: ComboCondition) {
     const {
       flat,
       joinValues,
@@ -582,7 +582,8 @@ export default class ComboControl extends React.Component<ComboProps> {
       delimiter,
       scaffold,
       disabled,
-      submitOnChange
+      submitOnChange,
+      dispatchEvent
     } = this.props;
 
     if (disabled) {
@@ -590,6 +591,19 @@ export default class ComboControl extends React.Component<ComboProps> {
     }
 
     let value = this.getValueAsArray();
+
+    const rendererEvent = await dispatchEvent(
+      'add',
+      resolveEventData(this.props, {
+        value:
+          flat && joinValues ? value.join(delimiter || ',') : cloneDeep(value),
+        condition
+      })
+    );
+
+    if (rendererEvent?.prevented) {
+      return;
+    }
 
     value.push(
       flat
@@ -1156,7 +1170,8 @@ export default class ComboControl extends React.Component<ComboProps> {
       data: any
     ) => {
       return createObject(
-        extendObject(data, {index, __index: index, ...data}),
+        // combo 自身的 index 需优先于外层数据域中的 index，避免被 Each 等覆盖
+        extendObject(data, {...data, index, __index: index}),
         {
           ...value,
           ...(Array.isArray(syncFields) ? pickVars(data, syncFields!) : null)
