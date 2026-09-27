@@ -1726,10 +1726,16 @@ export default class FormTable extends React.Component<TableProps, TableState> {
             items = spliceTree(items, indexes, 1, data);
           });
         } else {
-          rowIndexes = this.convertToRawPath(rowIndexes as string, state);
+          const offset =
+            page && page > 1 && typeof perPage === 'number'
+              ? (page - 1) * perPage
+              : 0;
 
           // 修改当前正在编辑的行
-          if (editIndex && rowIndexes === editIndex) {
+          if (
+            editIndex &&
+            this.rowPathPlusOffset(rowIndexes as string, offset) === editIndex
+          ) {
             const indexes = editIndex
               .split('.')
               .map(item => parseInt(item, 10));
@@ -1749,9 +1755,6 @@ export default class FormTable extends React.Component<TableProps, TableState> {
 
             Object.assign(newState, {
               items,
-              filteredItems: state.filteredItems.map(a =>
-                a === origin ? value : a
-              ),
               /** 记录最近一次编辑记录，用于取消编辑数据回溯， */
               ...(lastModifiedRow?.index === editIndex
                 ? {}
