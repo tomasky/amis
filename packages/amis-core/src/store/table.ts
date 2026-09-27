@@ -29,7 +29,8 @@ import {
   immutableExtends,
   extendObject,
   hasVisibleExpression,
-  sortArray
+  sortArray,
+  getVariable
 } from '../utils/helper';
 import {evalExpression} from '../utils/tpl';
 import {IFormStore} from './form';
@@ -1871,11 +1872,9 @@ export const TableStore = iRendererStore
       setOrderByInfo(key, direction);
       const dir = /desc/i.test(self.orderDir) ? -1 : 1;
       self.rows.replace(
-        sortArray(
-          self.rows.concat(),
-          self.orderBy,
-          dir,
-          (item, field) => item.data[field]
+        sortArray(self.rows.concat(), self.orderBy, dir, (item, field) =>
+          // 用 getVariable 支持 a.b 这种子对象属性
+          getVariable(item.data, field)
         )
       );
     }

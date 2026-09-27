@@ -253,7 +253,10 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
 
           if (self.query.orderBy) {
             const dir = /desc/i.test(self.query.orderDir) ? -1 : 1;
-            items = sortArray(items, self.query.orderBy, dir);
+            items = sortArray(items, self.query.orderBy, dir, (item, field) =>
+              // 用 getVariable 支持 a.b 这种子对象属性
+              getVariable(item, field)
+            );
           }
 
           const data = {
@@ -397,7 +400,13 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
 
             if (self.query.orderBy) {
               const dir = /desc/i.test(self.query.orderDir) ? -1 : 1;
-              filteredItems = sortArray(filteredItems, self.query.orderBy, dir);
+              filteredItems = sortArray(
+                filteredItems,
+                self.query.orderBy,
+                dir,
+                // 用 getVariable 支持 a.b 这种子对象属性
+                (item, field) => getVariable(item, field)
+              );
             }
             data.items = filteredItems.slice(
               (self.page - 1) * self.perPage,
@@ -640,7 +649,10 @@ export const CRUDStore = ServiceStore.named('CRUDStore')
 
       if (self.query.orderBy) {
         const dir = /desc/i.test(self.query.orderDir) ? -1 : 1;
-        items = sortArray(items.concat(), self.query.orderBy, dir);
+        items = sortArray(items.concat(), self.query.orderBy, dir, (item, field) =>
+          // 用 getVariable 支持 a.b 这种子对象属性
+          getVariable(item, field)
+        );
       }
 
       const data = {
