@@ -2205,6 +2205,7 @@ export function asFormItem(config: Omit<FormItemConfig, 'component'>) {
     }
 
     return wrapControl(
+      config,
       hoistNonReactStatic(
         class extends FormItemWrap {
           static defaultProps: any = {

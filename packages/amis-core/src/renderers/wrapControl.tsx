@@ -28,7 +28,7 @@ import {isAlive} from 'mobx-state-tree';
 import {observer} from 'mobx-react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import {withRootStore} from '../WithRootStore';
-import {FormBaseControl, FormItemWrap} from './Item';
+import {FormBaseControl, FormItemConfig, FormItemWrap} from './Item';
 import {Api} from '../types';
 import {TableStore} from '../store/table';
 import pick from 'lodash/pick';
@@ -90,7 +90,7 @@ export interface ControlProps {
 
 export function wrapControl<
   T extends React.ComponentType<React.ComponentProps<T> & ControlProps>
->(ComposedComponent: T) {
+>(config: Omit<FormItemConfig, 'component'>, ComposedComponent: T) {
   type OuterProps = JSX.LibraryManagedAttributes<
     T,
     Omit<React.ComponentProps<T>, keyof ControlProps>
@@ -196,9 +196,13 @@ export function wrapControl<
             }) as IFormItemStore;
             this.model = model;
             // 如果组件有默认验证器类型，则合并
+            // 注意：validations 可能是字符串（如 'isEmail'），需要先转成 rules 对象再合并
             const rules =
               validations && model && config.validations
-                ? {...validations, ...str2rules(config.validations)}
+                ? {
+                    ...str2rules(validations),
+                    ...str2rules(config.validations)
+                  }
                 : validations;
 
             // @issue 打算干掉这个
