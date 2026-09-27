@@ -233,22 +233,22 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [11907](https://github.com/baidu/amis/issues/11907) | form表单在里面的子项开启必填然后隐藏了，在提交时候form还是会去校验隐藏的必填项 | 源码现存(高确信) | formItem model registered unconditionally (wrapControl.tsx:197); validate loop form.ts:656 ignores visibility, so hidden… |
-| [11757](https://github.com/baidu/amis/issues/11757) | InputText输入框的前缀和后缀，在表单静态展示时不显示 | 源码现存(高确信) | InputText prefix/suffix only in renderInput (InputText.tsx:1097,1163); no renderStatic override, so static mode drops th… |
-| [11715](https://github.com/baidu/amis/issues/11715) | 无法打印表单 | 源码现存(高确信) | PrintAction.ts:41 queries [data-id]; Form renderer never sets data-id (only CRUD/Panel/Wrapper do), so lookup fails. |
+| [11757](https://github.com/baidu/amis/issues/11757) | InputText输入框的前缀和后缀，在表单静态展示时不显示 | 源码现存(高确信) ✅已修复(本轮) | InputText prefix/suffix only in renderInput (InputText.tsx:1097,1163); no renderStatic override, so static mode drops th… |
+| [11715](https://github.com/baidu/amis/issues/11715) | 无法打印表单 | 源码现存(高确信) ✅已修复(本轮) | PrintAction.ts:41 queries [data-id]; Form renderer never sets data-id (only CRUD/Panel/Wrapper do), so lookup fails. |
 | [11656](https://github.com/baidu/amis/issues/11656) | 日期输入框隐藏后，提交表单，不是时间戳的问题 | 源码现存(高确信) | valueFormat applied only in InputDate constructor InputDate.tsx:432; invisible control renders null (wrapControl.tsx:986… |
-| [11602](https://github.com/baidu/amis/issues/11602) | combo组件条件分支无法监听add事件 | 源码现存(高确信) | Combo.tsx:603 addItemWith lacks dispatchEvent('add'); conditions add button calls it at Combo.tsx:1653, while addItem di… |
+| [11602](https://github.com/baidu/amis/issues/11602) | combo组件条件分支无法监听add事件 | 源码现存(高确信) ✅已修复(本轮) | Combo.tsx:603 addItemWith lacks dispatchEvent('add'); conditions add button calls it at Combo.tsx:1653, while addItem di… |
 | [11210](https://github.com/baidu/amis/issues/11210) | Options 选择器表单项多选 multiple在联动时存在BUG，标签没被清除 | 源码现存(高确信) | formItem.ts:275-303 unmatched selected options retain label from origin instead of clearing; hiddenOn options leave stal… |
-| [10891](https://github.com/baidu/amis/issues/10891) | Each循环渲染器 中嵌入Combo时，Combo的index变量被each的index覆盖 | 源码现存(高确信) | Combo.tsx:1205 trailing ...data overrides combo index with Each's index; changing indexKeyName does not prevent it. |
+| [10891](https://github.com/baidu/amis/issues/10891) | Each循环渲染器 中嵌入Combo时，Combo的index变量被each的index覆盖 | 源码现存(高确信) ✅已修复(本轮) | Combo.tsx:1205 trailing ...data overrides combo index with Each's index; changing indexKeyName does not prevent it. |
 | [10440](https://github.com/baidu/amis/issues/10440) | combo组件多选模式下，在使用拼接符时会无限增加记录。 | 源码现存(高确信) | Combo.tsx:1363-1364 and 1716-1717 split flat string value by delimiter unconditionally; typing ',' grows item list. |
 | [10358](https://github.com/baidu/amis/issues/10358) | tabs 在 form 中使用，如果 tabs 使用 source 会出现 tab 切换无法正常获取到值 | 源码现存(高确信) | Tabs.tsx:348-355 and 492-499 early-return value sync whenever source is set; tab value never written to form. |
 | [10329](https://github.com/baidu/amis/issues/10329) | combo中select配置unique以及autoComplete之后，select进行搜索之后新增按钮会消失 | 源码现存(高确信) | combo.ts:58-78 addable counts item.items[0].options; autoComplete replaces options so total shrinks and isFull hides add… |
-| [10114](https://github.com/baidu/amis/issues/10114) | Combo 组合 多层嵌套时各层级${index}无法区分 | 源码现存(高确信) | Combo.tsx:1205 extendObject(data,{index,__index:index,...data}); trailing ...data lets outer index override combo index. |
+| [10114](https://github.com/baidu/amis/issues/10114) | Combo 组合 多层嵌套时各层级${index}无法区分 | 源码现存(高确信) ✅已修复(本轮) | Combo.tsx:1205 extendObject(data,{index,__index:index,...data}); trailing ...data lets outer index override combo index. |
 | [10111](https://github.com/baidu/amis/issues/10111) | 表单校验 | 源码现存(高确信) | form.ts:622-667 FormStore.validate iterates only self.items; a service-loaded nested form is a separate store, so outer … |
 | [10066](https://github.com/baidu/amis/issues/10066) | 表单项description有变量时，变量值改变后该表单项的description不会更新 | 源码现存(高确信) | Item.tsx:2309-2329 shouldComponentUpdate only checks detectProps (list 2157-2231); 'data' absent so raw ${select} descri… |
-| [5923](https://github.com/baidu/amis/issues/5923) | 如果表单包含chained-select 则提交完后重置表单  还是会留下组件选项 | 源码现存(高确信) | packages/amis/src/renderers/Form/ChainedSelect.tsx:160 early-returns when value empty, leaving stale this.state.stack se… |
+| [5923](https://github.com/baidu/amis/issues/5923) | 如果表单包含chained-select 则提交完后重置表单  还是会留下组件选项 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Form/ChainedSelect.tsx:160 early-returns when value empty, leaving stale this.state.stack se… |
 | [5822](https://github.com/baidu/amis/issues/5822) | 表单项validations不支持模板字符串 | 源码现存(高确信) | packages/amis-core/src/utils/validations.ts:646 str2rules parses only string/object; wrapControl.tsx:149 reads raw $sche… |
 | [5540](https://github.com/baidu/amis/issues/5540) | 当表单同时含有api、initApi接口且有初始值且部分字段配置visibleOn时，该部分字段clearValueOnHidden 属性配置后不生效 | 源码现存(高确信) | packages/amis-core/src/renderers/wrapControl.tsx:596 clearValueOnHidden cleared only in disposeModel; initially-invisibl… |
-| [4876](https://github.com/baidu/amis/issues/4876) | ActionType的required 从 一个1.10.2起引入，包括1.10.2，2.0.0, 2.0.2 里都只检查非空，不继续检查其他定义好的规则了 | 源码现存(高确信) | packages/amis-core/src/store/formItem.ts:520 uses customRules ? str2rules(customRules) : self.rules (replace, not merge)… |
+| [4876](https://github.com/baidu/amis/issues/4876) | ActionType的required 从 一个1.10.2起引入，包括1.10.2，2.0.0, 2.0.2 里都只检查非空，不继续检查其他定义好的规则了 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/store/formItem.ts:520 uses customRules ? str2rules(customRules) : self.rules (replace, not merge)… |
 | [4202](https://github.com/baidu/amis/issues/4202) | button 配一个 enter 的快捷键，form表单没配置api，光标停留在input-text输入框中，按enter无效，光标停留在input-text输… | 源码现存(高确信) | packages/amis/src/renderers/Action.tsx:345 hotkeys(hotKey, cb) uses default hotkeys-js filter which ignores INPUT/TEXTAR… |
 | [4055](https://github.com/baidu/amis/issues/4055) | form表单initApi，服务端返回的data中包含no、status字段时，客户端处理异常 | 源码现存(高确信) | packages/amis-core/src/utils/api.ts:475-477 maps business field 'no' to status; api.ts:495 ok = (status==0), so data con… |
 | [21264](https://github.com/baidu/amis/issues/21264) | 使用form上传文件流的，选了一个文件，然后编辑了本地文件，然后在点提交就会报错 | 源码待定(需复现) | Upload error after local file edit needs runtime repro; no obvious defect in InputFile source. |
@@ -359,9 +359,9 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [12253](https://github.com/baidu/amis/issues/12253) | input-file组件通过receiver自定义接口的时候默认 /api/upload/startChunk | 源码现存(高确信) | InputFile.tsx:140-142,329,854-858 startChunkApi default /api/upload/startChunk |
+| [12253](https://github.com/baidu/amis/issues/12253) | input-file组件通过receiver自定义接口的时候默认 /api/upload/startChunk | 源码现存(高确信) ✅已修复(本轮) | InputFile.tsx:140-142,329,854-858 startChunkApi default /api/upload/startChunk |
 | [11801](https://github.com/baidu/amis/issues/11801) | inputTree默认收起配置无效 | 源码现存(高确信) | packages/amis-ui/src/components/Tree.tsx:410 |
-| [11729](https://github.com/baidu/amis/issues/11729) | InputImage组件，回现时，点击查看大图，使用的还是perview的地址 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputImage.tsx:945-950 |
+| [11729](https://github.com/baidu/amis/issues/11729) | InputImage组件，回现时，点击查看大图，使用的还是perview的地址 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Form/InputImage.tsx:945-950 |
 | [11641](https://github.com/baidu/amis/issues/11641) | 组件数字输入框 展示不全大数字，或者变成科学计数法 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputNumber.tsx:381,515,520 |
 | [8259](https://github.com/baidu/amis/issues/8259) | quickEdit 中 input-image 开启 multiple 后 hideUploadButton 失效 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputImage.tsx:2010 |
 | [4201](https://github.com/baidu/amis/issues/4201) | 光标在输入框，按钮的快捷键无效，光标不在输入框时，按钮的快捷键有效  | 源码现存(高确信) | packages/amis/src/renderers/Action.tsx:345 |
@@ -486,9 +486,9 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [12101](https://github.com/baidu/amis/issues/12101) | 日期范围选择shortcuts中的最近7天不包含今日 | 源码现存(高确信) | packages/amis-ui/src/components/DateRangePicker.tsx:169-177 |
+| [12101](https://github.com/baidu/amis/issues/12101) | 日期范围选择shortcuts中的最近7天不包含今日 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/DateRangePicker.tsx:169-177 |
 | [11734](https://github.com/baidu/amis/issues/11734) | 日期值格式YYYY-MM-DD，DATEMODIFY后提交的格式错误 | 源码现存(高确信) | packages/amis-formula/src/evalutor.ts:1974 fnDATEMODIFY |
-| [9422](https://github.com/baidu/amis/issues/9422) | Date 日期时间组件的updateFrequency不支持使用数据映射，报错Moment Timezone has no data for ${ } | 源码现存(高确信) | packages/amis/src/renderers/Date.tsx:149-150 - normalizeDate.clone().tz(displayTimeZone) with no empty/unresolved guard;… |
+| [9422](https://github.com/baidu/amis/issues/9422) | Date 日期时间组件的updateFrequency不支持使用数据映射，报错Moment Timezone has no data for ${ } | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Date.tsx:149-150 - normalizeDate.clone().tz(displayTimeZone) with no empty/unresolved guard;… |
 | [12205](https://github.com/baidu/amis/issues/12205) | 日期输入组件国际化不正确 | 源码待定(需复现) | packages/amis-ui/src/components/calendar/Calendar.tsx:214-220,305 |
 | [11813](https://github.com/baidu/amis/issues/11813) | timeline样式异常 | 源码待定(需复现) | n/a |
 | [11682](https://github.com/baidu/amis/issues/11682) | 进入某些页面时会一直触发update，循环执行 | 源码待定(需复现) | n/a |
@@ -617,7 +617,7 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [11841](https://github.com/baidu/amis/issues/11841) | Chart组件间联动，会同时发起两个请求 | 源码现存(高确信) | packages/amis/src/renderers/Chart.tsx:561-566 (receive->reload) and :273-277 (componentDidUpdate->reload via isApiOutdat… |
-| [7339](https://github.com/baidu/amis/issues/7339) | chart组件toolbox自定义事件无法绑定函数 | 源码现存(高确信) | packages/amis/src/renderers/Chart.tsx:177-212 (recoverFunctionType key list omits 'onclick') |
+| [7339](https://github.com/baidu/amis/issues/7339) | chart组件toolbox自定义事件无法绑定函数 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Chart.tsx:177-212 (recoverFunctionType key list omits 'onclick') |
 | [9448](https://github.com/baidu/amis/issues/9448) | chart组件制作graph类型（关系图时）itemStyle的颜色都不生效 | 源码待定(需复现) | packages/amis/src/renderers/Chart.tsx:568-627 (renderChart passes config through, no itemStyle/normal handling) |
 
 ### Wizard （2 条）
@@ -639,8 +639,8 @@
 | --- | --- | --- | --- |
 | [12202](https://github.com/baidu/amis/issues/12202) | 【bug】Cards拖拽排序，取消排序后，无法重置数据 | 源码现存(高确信) | packages/amis/src/renderers/Cards.tsx:1308-1310 cancelDrag only calls store.stopDragging(); packages/amis-core/src/store… |
 | [12116](https://github.com/baidu/amis/issues/12116) | 长图预览时放大功能bug | 源码现存(高确信) | packages/amis-ui/src/components/ImageGallery.tsx:283-298 ZOOM_IN/ZOOM_OUT/SCALE_ORIGIN all set tx:0, ty:0, so zooming af… |
-| [12058](https://github.com/baidu/amis/issues/12058) | 面包屑组件，label和href设置成模板变量之后，重新点击面包屑组件，模板变量消失 | 源码现存(高确信) | packages/amis/src/renderers/Breadcrumb.tsx:129-135 assigns item.label = filter(item.label) and item.href = ... in place,… |
-| [11847](https://github.com/baidu/amis/issues/11847) | 下载后保存的中文文件文件名乱码 | 源码现存(高确信) | packages/amis-core/src/utils/attachmentAdpator.ts:27-31 regex matches the first filename= (the garbled one) and never pr… |
+| [12058](https://github.com/baidu/amis/issues/12058) | 面包屑组件，label和href设置成模板变量之后，重新点击面包屑组件，模板变量消失 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Breadcrumb.tsx:129-135 assigns item.label = filter(item.label) and item.href = ... in place,… |
+| [11847](https://github.com/baidu/amis/issues/11847) | 下载后保存的中文文件文件名乱码 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/utils/attachmentAdpator.ts:27-31 regex matches the first filename= (the garbled one) and never pr… |
 | [11597](https://github.com/baidu/amis/issues/11597) | 自定义组件里触发动作不生效 | 源码现存(高确信) | packages/amis-core/src/RootRenderer.tsx:190-358 handleAction (props.onAction) has no branch for setValue/custom; only di… |
 | [11566](https://github.com/baidu/amis/issues/11566) | aside 设置最小宽度，每次都需要拖拽下，才可以，默认不生效 | 源码现存(高确信) | packages/amis/src/renderers/Page.tsx:695,702 asideMinWidth is only read inside handleResizeMouseMove; no initial width/s… |
 | [11537](https://github.com/baidu/amis/issues/11537) | 轮播图Carousel组件的图片信息不显示 | 源码现存(高确信) | packages/amis/src/renderers/Carousel.tsx:156-192 defaultSchema renders Image (snapshot shows cxd-Image-title/caption), b… |
@@ -650,9 +650,9 @@
 | [10145](https://github.com/baidu/amis/issues/10145) | image配置enlargeTitle、enlargeCaption文字超过一行时展示有问题 | 源码现存(高确信) | packages/amis-ui/scss/components/_image-gallery.scss:39-48 - title/caption fixed height 18px, line-height 18px |
 | [9093](https://github.com/baidu/amis/issues/9093) | 设置delay为1000的spinner组件，show 属性设为 true 后，并没有延迟显示 | 源码现存(高确信) | Spinner.tsx:216,225-230 uses delay only as the Transition enter timeout; no delayed-show logic exists. |
 | [7605](https://github.com/baidu/amis/issues/7605) | 在编排动作里加入“刷新目标组件”的动作，但实际结上无法刷新目标组件 | 源码现存(高确信) | CmptAction.ts:40-62,90-101 resolves target only via componentId/componentName; `target` is ignored inside onEvent action… |
-| [5927](https://github.com/baidu/amis/issues/5927) | 数据映射中 数组/pick  和 isTrue 配合使用时结果一成不变 | 源码现存(高确信) | filter.ts:465-476 isTrue uses !!input; array returned by pick is always truthy so isTrue yields trueValue |
+| [5927](https://github.com/baidu/amis/issues/5927) | 数据映射中 数组/pick  和 isTrue 配合使用时结果一成不变 | 源码现存(高确信) ✅已修复(本轮) | filter.ts:465-476 isTrue uses !!input; array returned by pick is always truthy so isTrue yields trueValue |
 | [3643](https://github.com/baidu/amis/issues/3643) | condition-builder 中not 交互不生效 | 源码现存(高确信) | GroupOrItem.tsx:145-169 renders nested ConditionGroup without forwarding showNot; Group.tsx:248 not button only top leve… |
-| [3254](https://github.com/baidu/amis/issues/3254) | Cards 卡片组中Card点击高亮无法无法禁用 | 源码现存(高确信) | Cards.tsx:959 passes item.checkable (data row) not card.checkable; Card.tsx:305 defaults checkable:true, so card checkab… |
+| [3254](https://github.com/baidu/amis/issues/3254) | Cards 卡片组中Card点击高亮无法无法禁用 | 源码现存(高确信) ✅已修复(本轮) | Cards.tsx:959 passes item.checkable (data row) not card.checkable; Card.tsx:305 defaults checkable:true, so card checkab… |
 | [12000](https://github.com/baidu/amis/issues/12000) | divider配置color渐变色无效 | 源码待定(需复现) | packages/amis/src/renderers/Divider.tsx:96-103 does handle 'linear-gradient' by setting borderImage; cannot verify the r… |
 | [11883](https://github.com/baidu/amis/issues/11883) | Service组件初始化时死循环调用接口 | 源码待定(需复现) | packages/amis/src/renderers/Service.tsx:228-241 refetch is gated by isApiOutdated (packages/amis-core/src/utils/api.ts:8… |
 | [11819](https://github.com/baidu/amis/issues/11819) | qrcode 在 6.12.0 版本错误 | 源码待定(需复现) | Stack points to third-party qrcode-react-next@1.0.0 (useQrCode.js/QRCodeCanvas.js); packages/amis/src/renderers/QRCode.t… |
