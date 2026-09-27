@@ -1053,11 +1053,15 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     } = this.props;
     const parseQueryOptions = this.getParseQueryOptions(this.props);
 
-    /** 找出clearValueOnHidden的字段, 保证updateQuery时不会使用上次的保留值 */
-    values = {
-      ...values,
-      ...pickBy(values?.__super?.diff ?? {}, value => value === undefined)
-    };
+    /** 清空或隐藏的字段必须覆盖旧查询，不能因字段被删除而保留上次的值。 */
+    const clearedValues = pickBy(
+      {
+        ...values?.__super?.diff,
+        ...values?.__super?.__deletedValues,
+        ...values
+      },
+      value => value === undefined
+    );
     values = syncLocation
       ? qsparse(qsstringify(values, undefined, true))
       : values;
@@ -1070,6 +1074,8 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     store.updateQuery(
       {
         ...values,
+        // URL 序列化会丢弃 undefined，合并查询时恢复清空标记。
+        ...clearedValues,
         [pageField || 'page']: jumpToFirstPage ? 1 : store.page
       },
       syncLocation && env && env.updateLocation

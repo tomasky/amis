@@ -531,6 +531,9 @@ export const FormStore = ServiceStore.named('FormStore')
       }
     );
 
+    // 只保留上次提交的字段名，用于识别被清空删除的字段。
+    let submittedKeys: Array<string> = [];
+
     const submit: (
       fn?: (values: object) => Promise<any>,
       hooks?: Array<() => Promise<any>>,
@@ -558,11 +561,19 @@ export const FormStore = ServiceStore.named('FormStore')
 
         if (fn) {
           const diff = difference(self.data, self.pristine);
+          const deletedValues: Record<string, undefined> = {};
+          submittedKeys.forEach(key => {
+            if (!Object.prototype.hasOwnProperty.call(self.data, key)) {
+              deletedValues[key] = undefined;
+            }
+          });
+          submittedKeys = Object.keys(self.data);
           const result: any = yield fn(
             createObject(
               createObject(self.data.__super, {
                 diff: diff,
                 __diff: diff,
+                __deletedValues: deletedValues,
                 pristine: self.pristine
               }),
               self.data
