@@ -1,0 +1,15 @@
+{
+  "name": "@tomasko/amis",
+  "version": "6.8.1",
+  "description": "amis 浏览器 SDK 独立发布包，内容为 packages/amis 构建出的 sdk 目录（自包含 UMD 整合包）。注意：name/version 仅为占位，发布时由 CI 覆盖为 npm scope 与 tag 版本。",
+  "license": "Apache-2.0",
+  "main": "sdk/sdk.js",
+  "unpkg": "sdk/sdk.js",
+  "jsdelivr": "sdk/sdk.js",
+  "files": [
+    "sdk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

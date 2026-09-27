@@ -11,6 +11,7 @@ import {
   TestIdBuilder
 } from 'amis-core';
 import {BadgeObject, Checkbox, Icon, Spinner} from 'amis-ui';
+import {observer} from 'mobx-react';
 import React from 'react';
 
 export interface CellProps extends ThemeProps {
@@ -37,7 +38,7 @@ export interface CellProps extends ThemeProps {
   testIdBuilder?: TestIdBuilder;
 }
 
-export default function Cell({
+function Cell({
   region,
   column,
   item,
@@ -209,12 +210,15 @@ export default function Cell({
   const trackExpression = hasCustomTrackExpression
     ? column.pristine.trackExpression
     : React.useMemo(() => buildTrackExpression(column.pristine), []);
+  // item.locals 是 Row 的 mobx computed，Cell 用 observer 包裹后会对它建立观察，
+  // 数据未变化时引用保持稳定，因此无需再对整行数据做 JSON.stringify 全量比较。
+  // 配了 trackExpression 时仍以表达式结果作为更新依据，保留其“只追踪指定字段”的语义。
+  const trackResult = hasCustomTrackExpression
+    ? evalTrackExpression(trackExpression, item.locals)
+    : '';
   const data = React.useMemo(
     () => item.locals,
-    [
-      hasCustomTrackExpression ? '' : JSON.stringify(item.locals),
-      evalTrackExpression(trackExpression, item.locals)
-    ]
+    [hasCustomTrackExpression ? trackResult : item.locals]
   );
 
   const finalCanAccessSuperData =
@@ -274,3 +278,5 @@ export default function Cell({
     subProps
   );
 }
+
+export default observer(Cell);
