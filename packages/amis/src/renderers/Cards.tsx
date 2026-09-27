@@ -226,6 +226,8 @@ export default class Cards extends React.Component<GridProps, object> {
 
   dragTip?: HTMLElement;
   sortable?: Sortable;
+  // 拖拽排序前的数据快照，取消排序时用于还原
+  dragSnapshot?: Array<any>;
 
   body?: any;
   unSensor: Function;
@@ -1244,9 +1246,15 @@ export class CardsRenderer extends Cards {
         break;
       case 'initDrag':
         store.startDragging();
+        this.dragSnapshot = store.items.map(item => item.data);
         break;
       case 'cancelDrag':
         store.stopDragging();
+        // 取消排序时还原到拖拽前的数据顺序
+        if (this.dragSnapshot) {
+          store.initItems(this.dragSnapshot);
+          this.dragSnapshot = undefined;
+        }
         break;
       case 'submitQuickEdit':
         await this.handleSave();

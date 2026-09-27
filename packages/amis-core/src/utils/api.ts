@@ -417,29 +417,32 @@ export function responseAdaptor(ret: fetcherResult, api: ApiObject) {
   }
 
   // 兼容几种常见写法
-  if (data.hasOwnProperty('errorCode')) {
-    // 阿里 Java 规范
-    data.status = data.errorCode;
-    data.msg = data.errorMessage || data.errorMsg;
-  } else if (data.hasOwnProperty('errno')) {
-    data.status = data.errno;
-    data.msg = data.errmsg || data.errstr || data.msg;
-  } else if (data.hasOwnProperty('no')) {
-    data.status = data.no;
-    data.msg = data.error || data.msg;
-  } else if (data.hasOwnProperty('error')) {
-    // Google JSON guide
-    // https://google.github.io/styleguide/jsoncstyleguide.xml#error
-    if (
-      typeof data.error === 'object' &&
-      data.error &&
-      data.error.hasOwnProperty('code')
-    ) {
-      data.status = data.error.code;
-      data.msg = data.error.message;
-    } else {
-      data.status = data.error;
-      data.msg = data.errmsg || data.msg;
+  // 仅在响应中没有显式 status 字段时才做兼容映射，避免业务数据中的同名字段（如 no）被误当成状态码
+  if (!data.hasOwnProperty('status')) {
+    if (data.hasOwnProperty('errorCode')) {
+      // 阿里 Java 规范
+      data.status = data.errorCode;
+      data.msg = data.errorMessage || data.errorMsg;
+    } else if (data.hasOwnProperty('errno')) {
+      data.status = data.errno;
+      data.msg = data.errmsg || data.errstr || data.msg;
+    } else if (data.hasOwnProperty('no')) {
+      data.status = data.no;
+      data.msg = data.error || data.msg;
+    } else if (data.hasOwnProperty('error')) {
+      // Google JSON guide
+      // https://google.github.io/styleguide/jsoncstyleguide.xml#error
+      if (
+        typeof data.error === 'object' &&
+        data.error &&
+        data.error.hasOwnProperty('code')
+      ) {
+        data.status = data.error.code;
+        data.msg = data.error.message;
+      } else {
+        data.status = data.error;
+        data.msg = data.errmsg || data.msg;
+      }
     }
   }
 
