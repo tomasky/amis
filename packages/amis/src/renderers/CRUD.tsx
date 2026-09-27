@@ -2856,7 +2856,7 @@ export class CRUDRenderer extends CRUD {
     args?: any
   ) {
     const scoped = this.context as IScopedContext;
-    if (args?.index || args?.condition) {
+    if (args?.index !== undefined || args?.condition) {
       // 局部刷新
       // 由内容组件去实现
       return this.control?.reload('', query, ctx, undefined, undefined, args);

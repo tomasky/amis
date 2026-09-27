@@ -2968,7 +2968,7 @@ export class TableRenderer extends Table {
     replace?: boolean,
     args?: any
   ) {
-    if (args?.index || args?.condition) {
+    if (args?.index !== undefined || args?.condition) {
       // 局部刷新
       const targets = await this.getEventTargets(
         ctx || this.props.data,

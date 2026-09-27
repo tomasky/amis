@@ -1155,7 +1155,7 @@ export class CardsRenderer extends Cards {
     args?: any
   ) {
     const {store} = this.props;
-    if (args?.index || args?.condition) {
+    if (args?.index !== undefined || args?.condition) {
       // 局部刷新
       // todo 后续考虑添加局部刷新
       // const targets = await getMatchedEventTargets<IItem>(
