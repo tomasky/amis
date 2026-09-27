@@ -849,7 +849,17 @@ export class CRUDPlugin extends BasePlugin {
                       };
                     })
                 };
-                valueSchema.headerToolbar = [createSchemaBase, 'bulkActions'];
+                valueSchema.headerToolbar = [
+                  createSchemaBase,
+                  'bulkActions',
+                  ...(Array.isArray(valueSchema.headerToolbar)
+                    ? valueSchema.headerToolbar.filter(
+                        (item: any) =>
+                          item !== 'bulkActions' &&
+                          item.editorSetting?.behavior !== 'create'
+                      )
+                    : [])
+                ];
               }
               // 查询
               let keysFilter = Object.keys(valueSchema.filter || {});

@@ -252,13 +252,24 @@ export class StatusPlugin extends BasePlugin {
                     form: any
                   ) {
                     const res: any = {};
+                    // 保留用户在源码里额外配置的字段（如 className），避免被覆盖丢失
+                    const originSource =
+                      form?.data?.source &&
+                      typeof form.data.source === 'object' &&
+                      !Array.isArray(form.data.source)
+                        ? form.data.source
+                        : {};
                     value.forEach((item: any) => {
                       if (item.value !== '' && item.value != null) {
-                        res[item.value] = pick(item, [
-                          'label',
-                          'color',
-                          'icon'
-                        ]);
+                        const origin =
+                          originSource[item.value] &&
+                          typeof originSource[item.value] === 'object'
+                            ? originSource[item.value]
+                            : {};
+                        res[item.value] = {
+                          ...origin,
+                          ...pick(item, ['label', 'color', 'icon'])
+                        };
                       }
                     });
                     form.setValues({
