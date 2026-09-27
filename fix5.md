@@ -151,7 +151,7 @@
 | [3742](https://github.com/baidu/amis/issues/3742) | select 在table mode下配置的autoComplete接口无法触发 | 源码现存(高确信) | packages/amis/src/renderers/Form/Select.tsx:570-573,763; packages/amis/src/renderers/Form/Transfer.tsx:400 |
 | [21424](https://github.com/baidu/amis/issues/21424) | inputtable 内存在 包含weight字符的字段 开启分页时切换分页，然后切换回1页时数据错乱 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:495-516,2043-2137 |
 | [12181](https://github.com/baidu/amis/issues/12181) | InputTable新增行时，行内控件能回显示值但提交表单时值为空 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:1937-1968 |
-| [12123](https://github.com/baidu/amis/issues/12123) | 6.12.0版本input-table中使用input-text和textarea组件无法输入空格 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:1784-1876 |
+| [12123](https://github.com/baidu/amis/issues/12123) | 6.12.0版本input-table中使用input-text和textarea组件无法输入空格 | 源码现存(高确信) ✅已修复(本轮) | QuickEdit.tsx:218-219 handleWindowKeyPress 误用最近包裹元素 `el.tagName`（永远是 div/td）判断，导致快速编辑输入框内空格被 preventDefault；改用 `e.target.tagName`（同步 PR #21525） |
 | [12110](https://github.com/baidu/amis/issues/12110) | select组件表格形式通过api搜索过滤后，如果不是首次加载过的数据无法勾选，有图有代码 | 源码待定(需复现) | packages/amis-ui/src/components/TableSelection.tsx:84-90 |
 | [12028](https://github.com/baidu/amis/issues/12028) | 编辑数据后,再点击几次全选,编号列数据会消失 | 源码待定(需复现) | packages/amis/src/renderers/Table2/index.tsx:1840-1959 |
 | [11965](https://github.com/baidu/amis/issues/11965) | input-table 宽度超过父类宽度，并且设置input-table宽度不好使 | 源码待定(需复现) | packages/amis-ui/src/components/InputTable.tsx:227-234 |
@@ -253,7 +253,7 @@
 | [4055](https://github.com/baidu/amis/issues/4055) | form表单initApi，服务端返回的data中包含no、status字段时，客户端处理异常 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/utils/api.ts:475-477 maps business field 'no' to status; api.ts:495 ok = (status==0), so data con… |
 | [21264](https://github.com/baidu/amis/issues/21264) | 使用form上传文件流的，选了一个文件，然后编辑了本地文件，然后在点提交就会报错 | 源码待定(需复现) | Upload error after local file edit needs runtime repro; no obvious defect in InputFile source. |
 | [14059](https://github.com/baidu/amis/issues/14059) | combo下的service数据域污染问题 | 源码待定(需复现) | Combo/service scope pollution requires runtime repro; no clear isolation defect in source. |
-| [12216](https://github.com/baidu/amis/issues/12216) | bug: conditions组合条件组件，非内嵌模式，脱拽排序报错 | 源码待定(需复现) | condition-builder drag handlers lack null guards (index.tsx:184-187) but non-embed error needs runtime repro. |
+| [12216](https://github.com/baidu/amis/issues/12216) | bug: conditions组合条件组件，非内嵌模式，脱拽排序报错 | 源码现存(高确信) ✅已修复(本轮) | condition-builder/index.tsx handleDragDrop 读取 `this.props.value/onChange`，非内嵌 Picker 下拿到的是未含草稿的旧值导致排序丢失；改为拖拽开始时记录当前 value/onChange（同步 PR #21519） |
 | [12185](https://github.com/baidu/amis/issues/12185) | 【bug】使用下拉框开启[可编辑 or 可创建], 设置配置新增表单无法保存 amis 6.13.0 | 源码待定(需复现) | Select creatable/editable save flow spans amis-ui Select/Selection; no concrete defect located. Needs repro. |
 | [12079](https://github.com/baidu/amis/issues/12079) | BUG: 文本组件设置全局变量为默认值，切换为预览状态不显示 | 源码待定(需复现) | Global-variable value expression in static preview; no obvious source handling located. Needs repro. |
 | [12020](https://github.com/baidu/amis/issues/12020) | 弹窗里公式变量获取不到form表单 | 源码待定(需复现) | Dialog data scope/formula resolution for new dialog action not clearly addressed in source; needs runtime repro. |
@@ -723,7 +723,7 @@
 | --- | --- | --- |
 | [21220](https://github.com/baidu/amis/issues/21220) | CRUD/TABLE 组件在fixed冻结列和columntoggle两个功能同时使用时，table内容left计算错误 | packages/amis/src/renderers/Table/Cell.tsx:70-77 — sticky left style useMemo now depends o… |
 | [20778](https://github.com/baidu/amis/issues/20778) | Options 选择器表单项，配置支持检索，输入检索内容后，选项没有居左对齐 | _select.scss:456 sets Select-option-content justify-content:flex-start; no space-between r… |
-| [14136](https://github.com/baidu/amis/issues/14136) | 升级到3.4.1之后，input-table的单元格name存在点时数据域有影响 | packages/amis/src/renderers/Table/TableRow.tsx:167-173 |
+| [14136](https://github.com/baidu/amis/issues/14136) | 升级到3.4.1之后，input-table的单元格name存在点时数据域有影响 | 源码现存(高确信) ✅已修复(本轮) | Table/Table2 Row.change 使用 immutableExtends 非深度 merge，name="obj.a"/"obj.b" 会整体替换 obj 导致互相覆盖；immutableExtends 增加 deep 支持并在 Row.change 启用（同步 PR #21326） |
 | [13455](https://github.com/baidu/amis/issues/13455) | InputFile 文件上传组件展示文件名时存在反射型xss攻击 | InputFile.tsx:1574,1578,1545-1552 filename rendered as {filename} JSX + tooltip React node |
 | [12251](https://github.com/baidu/amis/issues/12251) | packages/amis项目缺少mobx-react-lite的依赖 | packages/amis/package.json:78 declares `"mobx-react-lite": "^2.2.0"` under dependencies; p… |
 | [12248](https://github.com/baidu/amis/issues/12248) | 基于表单提交的服务端验证不起作用 | form.ts:416-417 maps server status 422 payload.errors via setFormItemErrors. |
