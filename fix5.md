@@ -117,10 +117,10 @@
 | [16728](https://github.com/baidu/amis/issues/16728) | 表格颜色显示bug | 源码现存(高确信) | packages/amis-ui/scss/components/_table.scss:532-534 |
 | [14566](https://github.com/baidu/amis/issues/14566) | transferPicker组件，table模式下的分页问题 | 源码现存(高确信) | packages/amis-core/src/store/formItem.ts:841-846 |
 | [12389](https://github.com/baidu/amis/issues/12389) | Office Viewer 组件 表格行循环，如果行中变量名在父层作用域有同名变量时，会取父层变量值，应该取循环本层的变量值才对 | 源码现存(高确信) ✅已修复(本轮) | OfficeViewer.tsx:148-152 evalVar 用 `createObject(data, localData)`，own 属性 localData（组件/父层 data）反而覆盖了行内 data；改为 `createObject(localData, data)` 使行内数据优先 |
-| [12006](https://github.com/baidu/amis/issues/12006) | 【bug】crud2 筛选条件的数据填充到了表格里 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:991-993 |
+| [12006](https://github.com/baidu/amis/issues/12006) | 【bug】crud2 筛选条件的数据填充到了表格里 | 源码现存(高确信) ⏭️跳过(本轮) | Table2/index.tsx:962-963 计算出的 `finalCanAccessSuperData` 仅出现在注释代码里，普通文本列取值始终走 `item.locals`（含筛选/super data）。修复需把该标志透传进 amis-ui Table 的单元格取值逻辑（多组件共用），改动面大、回归风险高 → 本轮跳过 |
 | [12001](https://github.com/baidu/amis/issues/12001) | 【BUG】inputTable组件在编辑模式下时，原来列中的按钮会变为输入框 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Form/InputTable.tsx:1766-1782 |
 | [11837](https://github.com/baidu/amis/issues/11837) | input-table中使用mapping映射多个时，导出Excel内容错误 | 源码现存(高确信) | packages/amis/src/renderers/Table/exportExcel.ts:541 |
-| [11820](https://github.com/baidu/amis/issues/11820) | picker表格选择 修改已选中的数据 上面已选择标签跟随变化 但数据域中还是旧值 | 源码现存(高确信) | packages/amis/src/renderers/Form/Picker.tsx:533-539 |
+| [11820](https://github.com/baidu/amis/issues/11820) | picker表格选择 修改已选中的数据 上面已选择标签跟随变化 但数据域中还是旧值 | 源码现存(高确信) ⏭️跳过(本轮) | Picker.tsx:505-525 `handleSelect` 用交集比较（配了 valueField 时只比 value），前后数量一致即判为重复事件直接 return。放宽去重条件会破坏其抑制 CRUD 连续多次事件的机制，可能引发事件循环，无运行时验证不敢改 → 本轮跳过 |
 | [11803](https://github.com/baidu/amis/issues/11803) | InputTable组件自定义按钮在编辑状态不会被隐藏 | 源码现存(高确信) | packages/amis/src/renderers/Form/InputTable.tsx:1731-1761 |
 | [11596](https://github.com/baidu/amis/issues/11596) | 使用table2表格,工具栏添加右对齐的按钮，按钮执行“清除选中项”事件 无效 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/CRUD2.tsx:1181-1195 |
 | [11592](https://github.com/baidu/amis/issues/11592) | crud表格的mapping状态使用导出excel不显示状态值 bug | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Table/exportExcel.ts:551-562 |
@@ -130,7 +130,7 @@
 | [11103](https://github.com/baidu/amis/issues/11103) | input-table needConfirm属性为false的情况下表单disabled属性不生效 | 源码现存(高确信) ✅已修复(本轮) | InputTable.tsx:1360-1372/1393-1405 合并 quickEdit 时把表格级 `disabled` 放在 `...quickEdit` 之后，覆盖了列上 quickEdit.disabled；改为仅当表格 disabled 为真时才强制 `{disabled:true}` |
 | [10982](https://github.com/baidu/amis/issues/10982) | table2组件中选中表达式`selectedRowKeysExpr`无法与变量比较 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:667-672 |
 | [10980](https://github.com/baidu/amis/issues/10980) | table2组件，无法指定image组件的宽度，恒为110px | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Table2/index.tsx:838 |
-| [10950](https://github.com/baidu/amis/issues/10950) | Table2 itemDraggableOn 配置当前行是否可拖拽的条件无效 | 源码现存(高确信) | packages/amis-core/src/store/table2.ts:204; packages/amis-ui/src/components/table/index.tsx:515-518 |
+| [10950](https://github.com/baidu/amis/issues/10950) | Table2 itemDraggableOn 配置当前行是否可拖拽的条件无效 | 源码现存(高确信) ⏭️跳过(本轮) | v680 的 store/table2.ts 与 Table2/index.tsx 中不存在 `itemDraggableOn`/`draggable` 任何代码（fix5.md 原行号指向 Column 定义，已失效），该能力在此分支未实现 → 不适用，本轮跳过 |
 | [10912](https://github.com/baidu/amis/issues/10912) | crud2(表格2.0)不支持export-excel类型 | 源码现存(高确信) | packages/amis/src/renderers/Table2/index.tsx:1966-2069; packages/amis/src/renderers/Table/index.tsx:2448 |
 | [10837](https://github.com/baidu/amis/issues/10837) | table和crud的toggleExpanded动作展开内部层级时不会自动展开祖先 | 源码现存(高确信) ✅已修复(本轮) | Table/index.tsx toggleExpanded/setExpanded 只对目标行操作，内层 index/condition 命中时祖先仍收起；新增 TableStore.expandAncestors 在展开时同步展开祖先行 |
 | [10816](https://github.com/baidu/amis/issues/10816) | CRUD中table使用groupName导出Excel会丢失表头 | 源码现存(高确信) | packages/amis/src/renderers/Table/exportExcel.ts:377-381 |
@@ -625,7 +625,7 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [9308](https://github.com/baidu/amis/issues/9308) | 数据域更新延迟bug | 源码待定(需复现) | packages/amis/src/renderers/Wizard.tsx:727-739 (handleChange dispatches 'change' and store.updateData on form change) |
-| [5019](https://github.com/baidu/amis/issues/5019) | Wizard组件中角标显示异常 | 源码待定(需复现) | packages/amis/src/renderers/Wizard.tsx:1225-1250 (body renders nested type:'form'; no badge-specific handling, badge is … |
+| [5019](https://github.com/baidu/amis/issues/5019) | Wizard组件中角标显示异常 | 源码待定(需复现) ⏭️跳过(本轮) | 社区 PR #9296 尝试修复但维护者已 request-changes：做法是把 Wizard 下 Badge 的尺寸/颜色/圆角等样式整段注释掉、完全依赖全局 Badge，属 hack 且会丢失 Wizard 角标定制；问题来自 amis 2.0.2，当前分支需复现 → 本轮跳过 |
 
 ### Combo （1 条）
 
@@ -787,6 +787,22 @@
 | [5405](https://github.com/baidu/amis/issues/5405) | crud内联模式的快速编辑效果与文档上不一致 |
 | [5232](https://github.com/baidu/amis/issues/5232) | 编辑器升级到5.2.0后的一些问题 |
 | [3689](https://github.com/baidu/amis/issues/3689) | json-editor编辑后提交的数据类型会发生改变 |
+
+---
+
+## 六、本轮跳过项及原因
+
+> 说明：本仓库在 **v680 发布分支**，而 baidu/amis 的开放 PR 均基于 `master`（领先约 970 个提交），故每个 PR 都需先核对 v680 实际代码再决定采纳/跳过。以下为**未采纳**的社区 PR 及原因（深入调研的 Table 跳过项 #12006 / #11820 / #10950 已在正文行内标记）。
+
+| PR | 标题 | 跳过原因 |
+| --- | --- | --- |
+| [#21509](https://github.com/baidu/amis/pull/21509) | replace vulnerable xlsx dependency | 需安装/替换依赖并更新 lockfile，违反“不安装、不构建”约束 |
+| [#21280](https://github.com/baidu/amis/pull/21280) | 修复公式编辑器 XSS（引入 HTMLFilterContext 全局改造，1700+ 行） | 架构级大范围改动（preset/index/多 renderer 透传 filter），回归风险高；具体公式编辑器 XSS 已由 #21278 的定向转义覆盖 |
+| [#9296](https://github.com/baidu/amis/pull/9296) | Wizard 角标显示异常（→ issue #5019） | 维护者已 request-changes；做法是把 Wizard 下 Badge 样式整段注释掉，属 hack 且丢失定制（详见 #5019 行内标记） |
+| [#21246](https://github.com/baidu/amis/pull/21246) | 悬浮容器首次加入工作区无法拖动 | 用 `setTimeout(150)` 绕时序，属 hack、低置信 |
+| [#8099](https://github.com/baidu/amis/pull/8099) | 补全编辑器遗漏的 theme 参数 | v680 编辑器代码结构不同（无 `amisRender(...)` 调用点），无法套用 |
+| [#9094](https://github.com/baidu/amis/pull/9094) | inputTable 嵌套 picker 数据域更新 | v680 的 InputTable 已重构、不再使用 `mergeWith`（改浅拷贝），问题不复现 |
+| [#21241](https://github.com/baidu/amis/pull/21241) | validateFormItem 类型在 actionConfigInitFormatterHoc 中遗漏 | 目标文件 `eventControlConfigHelper.ts` 在 v680 不存在（master 新增/重构） |
 
 ---
 
