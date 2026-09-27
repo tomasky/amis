@@ -1434,8 +1434,10 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
             selectable: !!(selectable ?? pickerMode),
             itemActions,
             multiple: multiple,
-            // columnsTogglable在CRUD2中渲染 但需要给table2传columnsTogglable为false 否则列数超过5 table2会自动渲染
-            columnsTogglable: false,
+            // CRUD2 自身没有渲染列开关，所以这里需要把用户配置透传给 table2/table，
+            // 否则配置 columnsTogglable 不生效；未配置时保持原来的默认（不渲染）
+            columnsTogglable:
+              columnsTogglable === void 0 ? false : (columnsTogglable as any),
             selected:
               pickerMode || keepItemSelectionOnPageChange
                 ? store.selectedItemsAsArray
