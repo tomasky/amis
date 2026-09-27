@@ -1003,7 +1003,9 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   handleFilterReset(values: object, action: any) {
     const {store, syncLocation, env, pageField, perPageField} = this.props;
 
-    const resetQuery: any = {};
+    // 排序状态不在 filter 表单的 values 里，重置时需要显式清空，
+    // 否则重置后表格的排序图标不会被清除
+    const resetQuery: any = {orderBy: ''};
     Object.keys(values).forEach(key => (resetQuery[key] = ''));
     store.updateQuery(
       {
@@ -2010,7 +2012,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   }
 
   unSelectItem(item: any, index: number) {
-    const {store} = this.props;
+    const {store, onSelect} = this.props;
     const selected = store.selectedItems.concat();
     const unSelected = store.unSelectedItems.concat();
 
@@ -2019,6 +2021,8 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
     store.setSelectedItems(selected);
     store.setUnSelectedItems(unSelected);
+    // 通过 Tag 删除选中项时也需要触发选中事件，否则外部感知不到选择变化
+    onSelect?.(selected, unSelected);
   }
 
   clearSelection() {

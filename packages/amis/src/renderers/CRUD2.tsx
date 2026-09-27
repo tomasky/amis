@@ -1130,7 +1130,7 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
   }
 
   unSelectItem(item: any, index: number) {
-    const {store} = this.props;
+    const {store, onSelect} = this.props;
     const selected = store.selectedItems.concat();
     const unSelected = store.unSelectedItems.concat();
 
@@ -1139,6 +1139,8 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
 
     store.setSelectedItems(selected);
     store.setUnSelectedItems(unSelected);
+    // 通过 Tag 删除选中项时也需要触发选中事件，否则外部感知不到选择变化
+    onSelect?.(selected, unSelected);
   }
 
   clearSelection() {

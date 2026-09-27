@@ -359,10 +359,11 @@ export default class Cards extends React.Component<GridProps, object> {
     action: ActionObject,
     ctx: object
   ) {
-    const {onAction} = this.props;
+    const {onAction, data} = this.props;
 
     // 需要支持特殊事件吗？
-    return onAction?.(e, action, ctx);
+    // ctx 只有当前卡片的数据，需要合并卡片所在作用域，否则取不到上层数据
+    return onAction?.(e, action, createObject(data, ctx));
   }
 
   handleCheck(item: IItem) {
