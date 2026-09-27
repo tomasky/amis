@@ -36,6 +36,7 @@ export interface CBGroupOrItemProps extends ThemeProps {
   isAddBtnVisibleOn?: (param: {depth: number; breadth: number}) => boolean;
   isAddGroupBtnVisibleOn?: (param: {depth: number; breadth: number}) => boolean;
   showIf?: boolean;
+  showNot?: boolean;
   formulaForIf?: FormulaPickerProps;
   testIdBuilder?: TestIdBuilder;
 }
@@ -104,6 +105,7 @@ export class CBGroupOrItem extends React.Component<CBGroupOrItemProps> {
       isAddBtnVisibleOn,
       isAddGroupBtnVisibleOn,
       showIf,
+      showNot,
       formulaForIf,
       testIdBuilder,
       mobileUI
@@ -157,6 +159,7 @@ export class CBGroupOrItem extends React.Component<CBGroupOrItemProps> {
                 isAddBtnVisibleOn={isAddBtnVisibleOn}
                 isAddGroupBtnVisibleOn={isAddGroupBtnVisibleOn}
                 showIf={showIf}
+                showNot={showNot}
                 formulaForIf={formulaForIf}
                 testIdBuilder={testIdBuilder?.getChild(`sub-${depth}`)}
               />

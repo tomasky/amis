@@ -38,7 +38,7 @@
 
   &-title,
   &-caption {
-    height: px2rem(18px);
+    min-height: px2rem(18px);
     vertical-align: top;
     line-height: px2rem(18px);
     font-size: px2rem(12px);

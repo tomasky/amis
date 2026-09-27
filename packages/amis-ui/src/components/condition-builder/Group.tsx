@@ -294,6 +294,7 @@ export class ConditionGroup extends React.Component<
                   isAddBtnVisibleOn={isAddBtnVisibleOn}
                   isAddGroupBtnVisibleOn={isAddGroupBtnVisibleOn}
                   showIf={showIf}
+                  showNot={showNot}
                   formulaForIf={formulaForIf}
                   testIdBuilder={testIdBuilder?.getChild(`group-${index}`)}
                 />

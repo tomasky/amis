@@ -985,6 +985,7 @@ export default class Page extends React.Component<PageProps> {
       data,
       asideResizor,
       asideSticky,
+      asideMinWidth,
       pullRefresh,
       mobileUI,
       translate: __,
@@ -1046,6 +1047,9 @@ export default class Page extends React.Component<PageProps> {
                 themeCss
               })
             )}
+            style={
+              asideMinWidth ? {minWidth: `${asideMinWidth}px`} : undefined
+            }
           >
             {render('aside', aside || '', {
               ...subProps,
