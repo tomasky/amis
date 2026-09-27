@@ -250,7 +250,7 @@
 | [5540](https://github.com/baidu/amis/issues/5540) | 当表单同时含有api、initApi接口且有初始值且部分字段配置visibleOn时，该部分字段clearValueOnHidden 属性配置后不生效 | 源码现存(高确信) | packages/amis-core/src/renderers/wrapControl.tsx:596 clearValueOnHidden cleared only in disposeModel; initially-invisibl… |
 | [4876](https://github.com/baidu/amis/issues/4876) | ActionType的required 从 一个1.10.2起引入，包括1.10.2，2.0.0, 2.0.2 里都只检查非空，不继续检查其他定义好的规则了 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/store/formItem.ts:520 uses customRules ? str2rules(customRules) : self.rules (replace, not merge)… |
 | [4202](https://github.com/baidu/amis/issues/4202) | button 配一个 enter 的快捷键，form表单没配置api，光标停留在input-text输入框中，按enter无效，光标停留在input-text输… | 源码现存(高确信) | packages/amis/src/renderers/Action.tsx:345 hotkeys(hotKey, cb) uses default hotkeys-js filter which ignores INPUT/TEXTAR… |
-| [4055](https://github.com/baidu/amis/issues/4055) | form表单initApi，服务端返回的data中包含no、status字段时，客户端处理异常 | 源码现存(高确信) | packages/amis-core/src/utils/api.ts:475-477 maps business field 'no' to status; api.ts:495 ok = (status==0), so data con… |
+| [4055](https://github.com/baidu/amis/issues/4055) | form表单initApi，服务端返回的data中包含no、status字段时，客户端处理异常 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/utils/api.ts:475-477 maps business field 'no' to status; api.ts:495 ok = (status==0), so data con… |
 | [21264](https://github.com/baidu/amis/issues/21264) | 使用form上传文件流的，选了一个文件，然后编辑了本地文件，然后在点提交就会报错 | 源码待定(需复现) | Upload error after local file edit needs runtime repro; no obvious defect in InputFile source. |
 | [14059](https://github.com/baidu/amis/issues/14059) | combo下的service数据域污染问题 | 源码待定(需复现) | Combo/service scope pollution requires runtime repro; no clear isolation defect in source. |
 | [12216](https://github.com/baidu/amis/issues/12216) | bug: conditions组合条件组件，非内嵌模式，脱拽排序报错 | 源码待定(需复现) | condition-builder drag handlers lack null guards (index.tsx:184-187) but non-embed error needs runtime repro. |
@@ -299,7 +299,7 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [11639](https://github.com/baidu/amis/issues/11639) | Select 通过menuTpl实现多行option，option被遮挡 | 源码现存(高确信) | Select.tsx:456 itemHeight fixed (32); option container not auto-sized for menuTpl |
-| [11314](https://github.com/baidu/amis/issues/11314) | select组件搜索后，下拉选项顺序错乱 | 源码现存(高确信) | Select.tsx:968-974 filterOption=defaultFilterOption uses matchSorter ranking |
+| [11314](https://github.com/baidu/amis/issues/11314) | select组件搜索后，下拉选项顺序错乱 | 源码现存(高确信) ✅已修复(本轮) | Select.tsx:968-974 filterOption=defaultFilterOption uses matchSorter ranking |
 | [10359](https://github.com/baidu/amis/issues/10359) | select的source是表达式时，数据域发生变化后已选值不会自动清空 | 源码现存(高确信) | packages/amis-ui/src/components/Select.tsx:466-482 |
 | [9295](https://github.com/baidu/amis/issues/9295) | picker组件的嵌套crud模式多选时能否支持下选中节点时不要自动把子节点自动选中 | 源码现存(高确信) | packages/amis/src/renderers/Form/Picker.tsx (no cascade/autoCheckChildren prop) |
 | [9200](https://github.com/baidu/amis/issues/9200) | picker组件回显不能根据id映射name | 源码现存(高确信) | packages/amis/src/renderers/Form/Picker.tsx:246-263 |
@@ -529,8 +529,8 @@
 | [11034](https://github.com/baidu/amis/issues/11034) | editor中List2组件buildDataSchemas方法不关注root scope数据 | 源码现存(高确信) | packages/amis-editor/src/plugin/List2.tsx:574-576 only reads node.schema.source/name, never root-scope props schema. |
 | [10820](https://github.com/baidu/amis/issues/10820) | 编辑器内拖拽问题 | 源码现存(高确信) | packages/amis-editor-core/src/dnd/index.ts:107-116,121-125 |
 | [9390](https://github.com/baidu/amis/issues/9390) | amis-ui/lib/components/Editor定义全局window.MonacoEnvironment导致非amis的monaco editor无法… | 源码现存(高确信) | packages/amis-ui/src/components/Editor.tsx:19-20 still assigns global window.MonacoEnvironment when unset; amis-first sc… |
-| [8283](https://github.com/baidu/amis/issues/8283) | 编辑器中-状态显示组件-编辑左侧源码-添加className，再在右侧面板修改图标配置-比如修改颜色，组件刷新后定义的className不见了 | 源码现存(高确信) | packages/amis-editor/src/plugin/Status.tsx:257-261 onChange rebuilds source with pick(['label','color','icon']) only, dr… |
-| [7987](https://github.com/baidu/amis/issues/7987) | amis-editor的CRUD的headerToolbar每次设置后都会覆盖掉在外观设置添加的其他按钮 | 源码现存(高确信) | packages/amis-editor/src/plugin/CRUD.tsx:921 sets headerToolbar=[createSchemaBase,'bulkActions'] when create is added, d… |
+| [8283](https://github.com/baidu/amis/issues/8283) | 编辑器中-状态显示组件-编辑左侧源码-添加className，再在右侧面板修改图标配置-比如修改颜色，组件刷新后定义的className不见了 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-editor/src/plugin/Status.tsx:257-261 onChange rebuilds source with pick(['label','color','icon']) only, dr… |
+| [7987](https://github.com/baidu/amis/issues/7987) | amis-editor的CRUD的headerToolbar每次设置后都会覆盖掉在外观设置添加的其他按钮 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-editor/src/plugin/CRUD.tsx:921 sets headerToolbar=[createSchemaBase,'bulkActions'] when create is added, d… |
 | [3012](https://github.com/baidu/amis/issues/3012) | amis-editor 无法配置 combo 多条件分支的子表单集合 | 源码现存(高确信) | packages/amis-editor/src/plugin/Form/Combo.tsx:95-98 defines only one 'items' region; no `conditions` handling anywhere … |
 | [12236](https://github.com/baidu/amis/issues/12236) | amis 代码编辑器拖入富文本后顶部工具栏 格式 菜单不能正常使用 | 源码待定(需复现) | Rich text editor (froala/tinymce) not in editor source; reporter notes 6.12.0 runtime fix |
 | [12106](https://github.com/baidu/amis/issues/12106) | amis 6.12.0 fromNow选项展示变成英文的了, 在编辑器里是正常的 | 源码待定(需复现) | No fromNow handling in packages/amis-editor/src or amis-editor-core/src |
@@ -587,7 +587,7 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [12073](https://github.com/baidu/amis/issues/12073) | app的logo中对参数的解析异常 | 源码现存(高确信) | packages/amis/src/renderers/App.tsx:348-356 |
+| [12073](https://github.com/baidu/amis/issues/12073) | app的logo中对参数的解析异常 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/App.tsx:348-356 |
 | [11997](https://github.com/baidu/amis/issues/11997) | app组件的左侧导航栏使用iconfont下载的svg图标显示特别小 | 源码现存(高确信) | packages/amis-ui/scss/layout/_aside.scss (img.AsideNav-itemIcon) |
 | [11948](https://github.com/baidu/amis/issues/11948) | 关于amis 编辑框 在移动端 的选择栏 无法被选中的BUG | 源码待定(需复现) | packages/amis/src/renderers/Form/InputText.tsx |
 | [11099](https://github.com/baidu/amis/issues/11099) | pc状态画布样式正常，切换为移动端画布样式失效 | 源码待定(需复现) | packages/amis-editor/* |
@@ -605,7 +605,7 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [11150](https://github.com/baidu/amis/issues/11150) | Tabs组件bug，内容溢出时，左右点击滑动后，鼠标移动到tab上方，会出现tabs闪回到滑动前位置 | 源码现存(高确信) | packages/amis-ui/src/components/Tabs.tsx:387-394 - showSelected() re-centers active tab whenever computedWidth runs (isO… |
+| [11150](https://github.com/baidu/amis/issues/11150) | Tabs组件bug，内容溢出时，左右点击滑动后，鼠标移动到tab上方，会出现tabs闪回到滑动前位置 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/Tabs.tsx:387-394 - showSelected() re-centers active tab whenever computedWidth runs (isO… |
 | [12044](https://github.com/baidu/amis/issues/12044) | tabs 选中后，tab 页签无法切换 | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:670 - handleSelect sets activeKey and CTabs (uncontrolled) reacts; 6.12.0 switching… |
 | [11142](https://github.com/baidu/amis/issues/11142) | error throws when add a tabs component | 源码待定(需复现) | packages/amis-ui/src/components/Tabs.tsx:739 - renderTab clones child; 'reading type' of undefined is amis-editor-specif… |
 | [10081](https://github.com/baidu/amis/issues/10081) | crud2的syncLocation会导致tabs的hash不见的问题 | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:414 - tabs responds to location.hash changes; whether crud2 preserves hash on syncL… |
@@ -637,21 +637,21 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [12202](https://github.com/baidu/amis/issues/12202) | 【bug】Cards拖拽排序，取消排序后，无法重置数据 | 源码现存(高确信) | packages/amis/src/renderers/Cards.tsx:1308-1310 cancelDrag only calls store.stopDragging(); packages/amis-core/src/store… |
+| [12202](https://github.com/baidu/amis/issues/12202) | 【bug】Cards拖拽排序，取消排序后，无法重置数据 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Cards.tsx:1308-1310 cancelDrag only calls store.stopDragging(); packages/amis-core/src/store… |
 | [12116](https://github.com/baidu/amis/issues/12116) | 长图预览时放大功能bug | 源码现存(高确信) | packages/amis-ui/src/components/ImageGallery.tsx:283-298 ZOOM_IN/ZOOM_OUT/SCALE_ORIGIN all set tx:0, ty:0, so zooming af… |
 | [12058](https://github.com/baidu/amis/issues/12058) | 面包屑组件，label和href设置成模板变量之后，重新点击面包屑组件，模板变量消失 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Breadcrumb.tsx:129-135 assigns item.label = filter(item.label) and item.href = ... in place,… |
 | [11847](https://github.com/baidu/amis/issues/11847) | 下载后保存的中文文件文件名乱码 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-core/src/utils/attachmentAdpator.ts:27-31 regex matches the first filename= (the garbled one) and never pr… |
 | [11597](https://github.com/baidu/amis/issues/11597) | 自定义组件里触发动作不生效 | 源码现存(高确信) | packages/amis-core/src/RootRenderer.tsx:190-358 handleAction (props.onAction) has no branch for setValue/custom; only di… |
-| [11566](https://github.com/baidu/amis/issues/11566) | aside 设置最小宽度，每次都需要拖拽下，才可以，默认不生效 | 源码现存(高确信) | packages/amis/src/renderers/Page.tsx:695,702 asideMinWidth is only read inside handleResizeMouseMove; no initial width/s… |
+| [11566](https://github.com/baidu/amis/issues/11566) | aside 设置最小宽度，每次都需要拖拽下，才可以，默认不生效 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Page.tsx:695,702 asideMinWidth is only read inside handleResizeMouseMove; no initial width/s… |
 | [11537](https://github.com/baidu/amis/issues/11537) | 轮播图Carousel组件的图片信息不显示 | 源码现存(高确信) | packages/amis/src/renderers/Carousel.tsx:156-192 defaultSchema renders Image (snapshot shows cxd-Image-title/caption), b… |
 | [11536](https://github.com/baidu/amis/issues/11536) | 广播订阅事件中无法执行指定了 componentId/componentName 的动作 | 源码现存(高确信) | packages/amis-core/src/utils/renderer-event.ts:229 passes renderer.context as scoped; packages/amis-core/src/actions/Act… |
-| [10634](https://github.com/baidu/amis/issues/10634) | 卡片组件中头部标题和副标题未做自适应 | 源码现存(高确信) | packages/amis-ui/scss/components/_card.scss:77-82 Card-meta lacks min-width:0 while Card-title (19-21) is nowrap |
+| [10634](https://github.com/baidu/amis/issues/10634) | 卡片组件中头部标题和副标题未做自适应 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/scss/components/_card.scss:77-82 Card-meta lacks min-width:0 while Card-title (19-21) is nowrap |
 | [10181](https://github.com/baidu/amis/issues/10181) | action的防抖不生效，设置leading为true，trailing为false，没有起到防抖作用 | 源码现存(高确信) | packages/amis-core/src/utils/renderer-event.ts:352-374 - new lodash debounce instance created per dispatch |
-| [10145](https://github.com/baidu/amis/issues/10145) | image配置enlargeTitle、enlargeCaption文字超过一行时展示有问题 | 源码现存(高确信) | packages/amis-ui/scss/components/_image-gallery.scss:39-48 - title/caption fixed height 18px, line-height 18px |
+| [10145](https://github.com/baidu/amis/issues/10145) | image配置enlargeTitle、enlargeCaption文字超过一行时展示有问题 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/scss/components/_image-gallery.scss:39-48 - title/caption fixed height 18px, line-height 18px |
 | [9093](https://github.com/baidu/amis/issues/9093) | 设置delay为1000的spinner组件，show 属性设为 true 后，并没有延迟显示 | 源码现存(高确信) | Spinner.tsx:216,225-230 uses delay only as the Transition enter timeout; no delayed-show logic exists. |
 | [7605](https://github.com/baidu/amis/issues/7605) | 在编排动作里加入“刷新目标组件”的动作，但实际结上无法刷新目标组件 | 源码现存(高确信) | CmptAction.ts:40-62,90-101 resolves target only via componentId/componentName; `target` is ignored inside onEvent action… |
 | [5927](https://github.com/baidu/amis/issues/5927) | 数据映射中 数组/pick  和 isTrue 配合使用时结果一成不变 | 源码现存(高确信) ✅已修复(本轮) | filter.ts:465-476 isTrue uses !!input; array returned by pick is always truthy so isTrue yields trueValue |
-| [3643](https://github.com/baidu/amis/issues/3643) | condition-builder 中not 交互不生效 | 源码现存(高确信) | GroupOrItem.tsx:145-169 renders nested ConditionGroup without forwarding showNot; Group.tsx:248 not button only top leve… |
+| [3643](https://github.com/baidu/amis/issues/3643) | condition-builder 中not 交互不生效 | 源码现存(高确信) ✅已修复(本轮) | GroupOrItem.tsx:145-169 renders nested ConditionGroup without forwarding showNot; Group.tsx:248 not button only top leve… |
 | [3254](https://github.com/baidu/amis/issues/3254) | Cards 卡片组中Card点击高亮无法无法禁用 | 源码现存(高确信) ✅已修复(本轮) | Cards.tsx:959 passes item.checkable (data row) not card.checkable; Card.tsx:305 defaults checkable:true, so card checkab… |
 | [12000](https://github.com/baidu/amis/issues/12000) | divider配置color渐变色无效 | 源码待定(需复现) | packages/amis/src/renderers/Divider.tsx:96-103 does handle 'linear-gradient' by setting borderImage; cannot verify the r… |
 | [11883](https://github.com/baidu/amis/issues/11883) | Service组件初始化时死循环调用接口 | 源码待定(需复现) | packages/amis/src/renderers/Service.tsx:228-241 refetch is gated by isApiOutdated (packages/amis-core/src/utils/api.ts:8… |
