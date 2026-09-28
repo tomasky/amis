@@ -222,7 +222,7 @@ export const iRendererStore = StoreNode.named('iRendererStore')
         const mappingData = self.action.data ?? self.action.dialog?.data;
         if (mappingData) {
           self.dialogData = createObjectFromChain([
-            top?.context,
+            top?.downStream,
             dataMapping(mappingData, data)
           ]);
 
@@ -274,7 +274,7 @@ export const iRendererStore = StoreNode.named('iRendererStore')
         const mappingData = self.action.data ?? self.action.drawer.data;
         if (mappingData) {
           self.drawerData = createObjectFromChain([
-            top?.context,
+            top?.downStream,
             dataMapping(mappingData, data)
           ]);
 

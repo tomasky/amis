@@ -65,6 +65,7 @@ import type {PaginationProps} from './Pagination';
 import {isAlive} from 'mobx-state-tree';
 import isPlainObject from 'lodash/isPlainObject';
 import memoize from 'lodash/memoize';
+import {getQuickEditApi, type QuickEditConfig} from './QuickEdit';
 
 export type CRUDBultinToolbarType =
   | 'columns-toggler'
@@ -1554,10 +1555,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     indexes: Array<string>,
     unModifiedItems?: Array<any>,
     rowsOrigin?: Array<object> | object,
-    options?: {
-      resetOnFailed?: boolean;
-      reload?: string;
-    }
+    options?: QuickEditConfig
   ) {
     const {
       store,
@@ -1629,7 +1627,8 @@ export default class CRUD extends React.Component<CRUDProps, any> {
           );
         });
     } else {
-      if (!isEffectiveApi(quickSaveItemApi)) {
+      const api = getQuickEditApi(options?.saveImmediately, quickSaveItemApi);
+      if (!isEffectiveApi(api)) {
         env && env.alert('CRUD quickSaveItemApi is required!');
         return;
       }
@@ -1642,7 +1641,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
       const sendData = createObject(data, rows);
       return store
-        .saveRemote(quickSaveItemApi, sendData)
+        .saveRemote(api, sendData)
         .then(async (result: any) => {
           // 如果请求 cancel 了，会来到这里
           if (!result) {

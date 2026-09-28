@@ -275,6 +275,9 @@ export const validations: {
   notEmptyString: function (values, value) {
     return !isExisty(value) || !(String(value) && String(value).trim() === '');
   },
+  notEmpty: function (values, value) {
+    return !isExisty(value) || !(String(value) && String(value).trim() === '');
+  },
   matchRegexp1: function (values, value, regexp) {
     return validations.matchRegexp(values, value, regexp);
   },
@@ -485,6 +488,7 @@ export const validateMessages: {
   isJson: 'validate.isJson',
   isLength: 'validate.isLength',
   notEmptyString: 'validate.notEmptyString',
+  notEmpty: 'validate.notEmptyString',
   equalsField: 'validate.equalsField',
   equals: 'validate.equals',
   isPhoneNumber: 'validate.isPhoneNumber',

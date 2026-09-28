@@ -7,7 +7,14 @@ import {
   ThemeProps
 } from 'amis-core';
 
-import {alert, confirm, setRenderSchemaFn, toast, ImageGallery} from 'amis-ui';
+import {
+  alert,
+  confirm,
+  setRenderSchemaFn,
+  toast,
+  ImageGallery,
+  HTMLFilterContext
+} from 'amis-ui';
 import React from 'react';
 
 extendDefaultEnv({
@@ -44,9 +51,11 @@ setRenderSchemaFn((controls, value, callback, scopeRef, theme) => {
 addRootWrapper((props: any) => {
   const {env, children} = props;
   return (
-    <ImageGallery modalContainer={env.getModalContainer}>
-      {children}
-    </ImageGallery>
+    <HTMLFilterContext.Provider value={env.filterHtml}>
+      <ImageGallery modalContainer={env.getModalContainer}>
+        {children}
+      </ImageGallery>
+    </HTMLFilterContext.Provider>
   );
 });
 

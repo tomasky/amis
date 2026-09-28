@@ -392,7 +392,8 @@ export class FieldSetting extends React.Component<
       name = 'items',
       renderer,
       config,
-      feat
+      feat,
+      popOverContainer
     } = this.props;
     const {showDisplayType, showInputType} = config || {};
     const isFirstStep = this.isFirstStep();
@@ -526,6 +527,7 @@ export class FieldSetting extends React.Component<
             ].filter(Boolean)
           },
           {
+            popOverContainer,
             data: {
               [name]: fields
             },

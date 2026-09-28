@@ -67,7 +67,11 @@ import {
   SchemaTpl
 } from '../../Schema';
 import {SchemaPopOver} from '../PopOver';
-import {SchemaQuickEdit} from '../QuickEdit';
+import {
+  getQuickEditApi,
+  SchemaQuickEdit,
+  type QuickEditConfig
+} from '../QuickEdit';
 import {SchemaCopyable} from '../Copyable';
 import {SchemaRemark} from '../Remark';
 import ColumnToggler from './ColumnToggler';
@@ -424,10 +428,7 @@ export interface TableProps extends RendererProps, SpinnerExtraProps {
     rowIndexes: Array<string> | string,
     unModifiedItems?: Array<object>,
     rowOrigins?: Array<object> | object,
-    options?: {
-      resetOnFailed?: boolean;
-      reload?: string;
-    }
+    options?: QuickEditConfig
   ) => void;
   onSaveOrder?: (moved: Array<object>, items: Array<object>) => void;
   onQuery?: (values: object) => any;
@@ -1192,20 +1193,15 @@ export default class Table extends React.Component<TableProps, object> {
       return;
     }
 
-    if (saveImmediately && saveImmediately.api) {
-      this.props.onAction(
-        null,
-        {
-          actionType: 'ajax',
-          api: saveImmediately.api,
-          reload: options?.reload
-        },
-        item.locals
-      );
-      return;
-    }
-
     if (!onSave) {
+      const api = getQuickEditApi(saveImmediately);
+      if (isEffectiveApi(api)) {
+        this.props.onAction(
+          null,
+          {actionType: 'ajax', api, reload: options?.reload},
+          item.locals
+        );
+      }
       return;
     }
 
@@ -1457,7 +1453,8 @@ export default class Table extends React.Component<TableProps, object> {
   }
 
   getPopOverContainer() {
-    return this.dom.current;
+    const {popOverContainer} = this.props;
+    return popOverContainer ? popOverContainer() : this.dom.current;
   }
 
   handleMouseMove(e: React.MouseEvent<any>) {

@@ -38,7 +38,7 @@ import {Overlay} from 'amis-core';
 import {PopOver} from 'amis-core';
 import omit from 'lodash/omit';
 import {Icon} from 'amis-ui';
-import {SchemaCollection, SchemaObject} from '../Schema';
+import {SchemaApi, SchemaCollection, SchemaObject} from '../Schema';
 
 export type SchemaQuickEditObject =
   /**
@@ -48,7 +48,7 @@ export type SchemaQuickEditObject =
       /**
        * 是否立即保存
        */
-      saveImmediately?: boolean;
+      saveImmediately?: boolean | {api: SchemaApi};
 
       /**
        * 接口保存失败后，是否重置组件编辑状态
@@ -78,7 +78,7 @@ export type SchemaQuickEditObject =
       /**
        * 是否立即保存
        */
-      saveImmediately?: boolean;
+      saveImmediately?: boolean | {api: SchemaApi};
 
       /**
        * 接口保存失败后，是否重置组件编辑状态
@@ -106,7 +106,7 @@ export type SchemaQuickEditObject =
 export type SchemaQuickEdit = boolean | SchemaQuickEditObject;
 
 export interface QuickEditConfig {
-  saveImmediately?: boolean;
+  saveImmediately?: boolean | {api: SchemaApi};
   resetOnFailed?: boolean;
   reload?: string;
   mode?: 'inline' | 'dialog' | 'popOver' | 'append';
@@ -132,6 +132,19 @@ export interface QuickEditState {
 
 let inited: boolean = false;
 let currentOpened: any;
+
+export function getQuickEditApi(
+  saveImmediately?: boolean | {api: SchemaApi},
+  quickSaveItemApi?: SchemaApi
+): SchemaApi | undefined {
+  if (saveImmediately && typeof saveImmediately === 'object') {
+    if (!saveImmediately.api) {
+      throw new Error('quickEdit.saveImmediately.api is required');
+    }
+    return saveImmediately.api;
+  }
+  return quickSaveItemApi;
+}
 
 export const HocQuickEdit =
   (config: Partial<QuickEditConfig> = {}) =>
