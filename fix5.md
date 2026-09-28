@@ -610,11 +610,11 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [11150](https://github.com/baidu/amis/issues/11150) | Tabs组件bug，内容溢出时，左右点击滑动后，鼠标移动到tab上方，会出现tabs闪回到滑动前位置 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/Tabs.tsx:387-394 - showSelected() re-centers active tab whenever computedWidth runs (isO… |
-| [12044](https://github.com/baidu/amis/issues/12044) | tabs 选中后，tab 页签无法切换 | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:670 - handleSelect sets activeKey and CTabs (uncontrolled) reacts; 6.12.0 switching… |
-| [11142](https://github.com/baidu/amis/issues/11142) | error throws when add a tabs component | 源码待定(需复现) | packages/amis-ui/src/components/Tabs.tsx:739 - renderTab clones child; 'reading type' of undefined is amis-editor-specif… |
-| [10081](https://github.com/baidu/amis/issues/10081) | crud2的syncLocation会导致tabs的hash不见的问题 | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:414 - tabs responds to location.hash changes; whether crud2 preserves hash on syncL… |
-| [7830](https://github.com/baidu/amis/issues/7830) | 【Bug反馈】tabs组件 设置hash后 内部使用crud并开启syncLocation后 筛选条件带tabs的hash值 | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:704 - handleSelect writes env.updateLocation('#'+key); crud syncLocation including … |
-| [3120](https://github.com/baidu/amis/issues/3120) | 1.5.0 版本. page 初始化数据，无法专递到 tabs  | 源码待定(需复现) | packages/amis/src/renderers/Tabs.tsx:325 - source resolved via resolveVariableAndFilter(props.data); page initApi data r… |
+| [12044](https://github.com/baidu/amis/issues/12044) | tabs 选中后，tab 页签无法切换 | 未复现(需确认) | 现有 Tabs 用例已验证基础切换（点击页签→内容切换）正常；报告的“无法切换”疑为特定场景（hash/onSelect/action 联动），未能在 v680 独立复现，需带 schema 复现 |
+| [11142](https://github.com/baidu/amis/issues/11142) | error throws when add a tabs component | 非缺陷(amis-editor 特有) | 读取 `.type` 的崩溃位于 amis-editor 的 Tab 节点克隆逻辑（note 指向 renderTab），非 amis 运行时 Tabs 渲染器；v680 运行时 Tabs 经现有用例验证可正常增删/切换 → 跳过 |
+| [10081](https://github.com/baidu/amis/issues/10081) | crud2的syncLocation会导致tabs的hash不见的问题 | 未复现(需确认) | Tabs.tsx:414 tabs 响应 location.hash；与 crud2 syncLocation 的 hash 写入时序交互，需带 schema 复现其是否覆盖 tabs hash |
+| [7830](https://github.com/baidu/amis/issues/7830) | 【Bug反馈】tabs组件 设置hash后 内部使用crud并开启syncLocation后 筛选条件带tabs的hash值 | 未复现(需确认) | Tabs.tsx:704 handleSelect 写 `env.updateLocation('#'+key)`；与 crud syncLocation 互相写 hash 的顺序/合并需复现确认 |
+| [3120](https://github.com/baidu/amis/issues/3120) | 1.5.0 版本. page 初始化数据，无法专递到 tabs  | 未复现(需确认) | Tabs.tsx:325 source 经 `resolveVariableAndFilter(props.data)` 解析；page initApi 数据透传到 tabs 需带 schema 复现（疑似数据域/时序问题） |
 
 ### Chart （3 条）
 
@@ -622,7 +622,7 @@
 | --- | --- | --- | --- |
 | [11841](https://github.com/baidu/amis/issues/11841) | Chart组件间联动，会同时发起两个请求 | 源码现存(高确信) ✅已修复(本轮) | Chart.tsx:564-566 receive 主动 reload 前置 `skipNextApiReload=true`，componentDidUpdate:270-280 读取并清除该标记以跳过同一次 data 变化触发的重复 isApiOutdated reload；已加联动用例（无修复时 chart 请求 2 次，修复后 1 次） | packages/amis/src/renderers/Chart.tsx:561-566 (receive->reload) and :273-277 (componentDidUpdate->reload via isApiOutdat… |
 | [7339](https://github.com/baidu/amis/issues/7339) | chart组件toolbox自定义事件无法绑定函数 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Chart.tsx:177-212 (recoverFunctionType key list omits 'onclick') |
-| [9448](https://github.com/baidu/amis/issues/9448) | chart组件制作graph类型（关系图时）itemStyle的颜色都不生效 | 源码待定(需复现) | packages/amis/src/renderers/Chart.tsx:568-627 (renderChart passes config through, no itemStyle/normal handling) |
+| [9448](https://github.com/baidu/amis/issues/9448) | chart组件制作graph类型（关系图时）itemStyle的颜色都不生效 | 未复现(需确认) | renderChart（Chart.tsx:571-629）将 config 透传给 echarts，仅经 dataMapping/recoverFunctionType；字面量 color 不应被改写，需带 graph schema 复现是否为 dataMapping 误伤或 series 层级问题 |
 
 ### Wizard （2 条）
 
