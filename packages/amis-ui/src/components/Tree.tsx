@@ -175,9 +175,7 @@ interface TreeSelectorState {
   dropIndicator?: IDropIndicator;
 
   // 虚拟列表高度（heightAuto 场景下根据实际高度动态计算）
-  virtualHeight?: number;
-  // 单行高度（首次渲染时通过 styleGetter 测量）
-  itemHeight?: number;
+  virtualHeight: number;
 }
 
 export class TreeSelector extends React.Component<
@@ -267,8 +265,8 @@ export class TreeSelector extends React.Component<
       isEditing: false,
       editingItem: null,
       dropIndicator: undefined,
-      virtualHeight: 0,
-      itemHeight: 0
+      // 挂载后测量容器高度；首次渲染先保持约 8 行，避免一次挂载整棵树。
+      virtualHeight: 8 * (props.itemHeight ?? 32) + 10
     };
 
     this.syncUnFolded(props, undefined, true);
@@ -282,7 +280,25 @@ export class TreeSelector extends React.Component<
     this.props.onRef?.(this);
     enableNodePath && this.expandLazyLoadNodes();
 
-    // 监听容器高度变化，动态计算虚拟列表高度（heightAuto 场景）
+    this.updateVirtualHeightSensor();
+    this.handleVirtualHeight();
+  }
+
+  updateVirtualHeightSensor() {
+    const {virtualThreshold} = this.props;
+    if (
+      !virtualThreshold ||
+      this.state.flattenedOptions.length <= virtualThreshold
+    ) {
+      this.unSensor?.();
+      this.unSensor = undefined;
+      return;
+    }
+
+    if (this.unSensor) {
+      return;
+    }
+
     let treeElement: HTMLElement = this.root.current!;
     treeElement =
       treeElement?.parentElement?.matches('.cxd-TreeControl') &&
@@ -298,11 +314,14 @@ export class TreeSelector extends React.Component<
     );
   }
 
-  componentDidUpdate(prevProps: TreeSelectorProps) {
+  componentDidUpdate(
+    prevProps: TreeSelectorProps,
+    prevState: TreeSelectorState
+  ) {
     const props = this.props;
 
     if (prevProps.options !== props.options) {
-      this.syncUnFolded(props);
+      this.syncUnFolded(props, undefined, false, prevProps);
       this.flattenOptions(props);
     }
 
@@ -326,6 +345,15 @@ export class TreeSelector extends React.Component<
         value: newValue,
         valueSet: new Set(newValue)
       });
+    }
+
+    if (
+      prevState.flattenedOptions !== this.state.flattenedOptions ||
+      prevProps.virtualThreshold !== props.virtualThreshold ||
+      prevProps.itemHeight !== props.itemHeight
+    ) {
+      this.updateVirtualHeightSensor();
+      this.handleVirtualHeight();
     }
   }
 
@@ -354,7 +382,8 @@ export class TreeSelector extends React.Component<
   syncUnFolded(
     props: TreeSelectorProps,
     unfoldedLevel?: number,
-    initial?: boolean
+    initial?: boolean,
+    prevProps?: TreeSelectorProps
   ) {
     // 传入默认展开层级需要重新初始化unfolded
     let initFoldedLevel = typeof unfoldedLevel !== 'undefined';
@@ -362,12 +391,55 @@ export class TreeSelector extends React.Component<
       initFoldedLevel ? unfoldedLevel : props.unfoldedLevel
     );
 
-    // 初始化树节点的展开状态
-    let unfolded = this.unfolded;
+    // options 更新时按对象身份、唯一 value 或同位置内容保留展开态。
+    const previous = this.unfolded;
+    const byValue = new Map<any, boolean>();
+    const byPath = new Map<string, Option>();
+    const duplicates = new Set<any>();
+    const valueField = props.valueField;
+    const labelField = props.labelField;
+    if (prevProps) {
+      eachTree(prevProps.options, (node: Option) => {
+        const path = this.nodePaths.get(node);
+        const value = node[valueField];
+        if (path === undefined || previous[path] === undefined) {
+          return;
+        }
+        byPath.set(path, node);
+        if (value == null) {
+          return;
+        }
+        if (byValue.has(value)) {
+          duplicates.add(value);
+        } else {
+          byValue.set(value, previous[path]);
+        }
+      });
+    }
+
+    let unfolded: Record<string, boolean> = prevProps ? {} : previous;
     const {deferField, foldedField, unfoldedField} = this.props;
 
     eachTree(props.options, (node: Option, index, level, paths, indexes) => {
-      const unfoldedKey = indexes.concat(index).join('-');
+      const unfoldedKey = indexes!.concat(index).join('-');
+      if (prevProps) {
+        const oldPath = this.nodePaths.get(node);
+        const value = node[valueField];
+        const previousNode = byPath.get(unfoldedKey);
+        const state =
+          oldPath !== undefined
+            ? previous[oldPath]
+            : value != null && !duplicates.has(value)
+            ? byValue.get(value)
+            : previousNode &&
+              previousNode[valueField] === value &&
+              previousNode[labelField] === node[labelField]
+            ? previous[unfoldedKey]
+            : undefined;
+        if (state !== undefined) {
+          unfolded[unfoldedKey] = state;
+        }
+      }
       if (unfolded[unfoldedKey] !== undefined && !initFoldedLevel) {
         return;
       }
@@ -401,6 +473,7 @@ export class TreeSelector extends React.Component<
       }
     });
 
+    this.unfolded = unfolded;
     initFoldedLevel && this.forceUpdate();
     this.flattenOptions(undefined, initial);
     return unfolded;
@@ -1523,11 +1596,6 @@ export class TreeSelector extends React.Component<
   }
 
   @autobind
-  styleGetter(node: HTMLElement | null) {
-    node && this.setState({itemHeight: node?.offsetHeight || 0});
-  }
-
-  @autobind
   virtualListRefSetter(ref: HTMLDivElement | null) {
     this.virtualListRef = ref;
     ref && this.handleVirtualHeight();
@@ -1535,8 +1603,8 @@ export class TreeSelector extends React.Component<
 
   @autobind
   handleVirtualHeight() {
-    const {virtualThreshold} = this.props;
-    const {flattenedOptions, itemHeight} = this.state;
+    const {virtualThreshold, itemHeight = 32} = this.props;
+    const {flattenedOptions} = this.state;
 
     if (virtualThreshold && flattenedOptions.length > virtualThreshold) {
       // tree 对应元素
@@ -1544,6 +1612,7 @@ export class TreeSelector extends React.Component<
 
       if (
         !this.virtualListRef ||
+        !treeElement ||
         (!treeElement.offsetHeight && !treeElement.offsetWidth)
       ) {
         return;
@@ -1564,6 +1633,9 @@ export class TreeSelector extends React.Component<
         offsetHeight =
           itemHeight * Math.min(flattenedOptions.length, virtualThreshold);
       }
+      if (styles.maxHeight.endsWith('px')) {
+        offsetHeight = Math.min(offsetHeight, parseFloat(styles.maxHeight));
+      }
       const virtualElement = this.virtualListRef!;
 
       // 通常时外围设置了 maxHeight
@@ -1582,16 +1654,23 @@ export class TreeSelector extends React.Component<
       const virtualHeight =
         offsetHeight - calculateHeight(treeElement, virtualElement);
 
-      this.setState({virtualHeight: virtualHeight});
+      if (virtualHeight !== this.state.virtualHeight) {
+        this.setState({virtualHeight});
+      }
     }
   }
 
   @autobind
   renderList(list: Options, value: any[]) {
-    const {virtualThreshold} = this.props;
-    const {virtualHeight, itemHeight} = this.state;
+    const {virtualThreshold, itemHeight = 32} = this.props;
+    const {virtualHeight} = this.state;
     if (virtualThreshold && list.length > virtualThreshold) {
-      return itemHeight ? (
+      if (!(itemHeight > 0)) {
+        throw new Error(
+          'Tree itemHeight must be a positive number for virtual scrolling'
+        );
+      }
+      return (
         <div ref={this.virtualListRefSetter}>
           <VirtualList
             height={virtualHeight}
@@ -1601,8 +1680,6 @@ export class TreeSelector extends React.Component<
             renderItem={this.renderItem.bind(this)}
           />
         </div>
-      ) : (
-        this.renderItem({index: 0, ref: this.styleGetter})
       );
     }
 

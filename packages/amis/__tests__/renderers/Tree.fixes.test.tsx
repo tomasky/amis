@@ -1,17 +1,18 @@
 import React from 'react';
-import {act, cleanup, fireEvent, render} from '@testing-library/react';
-import {clearStoresCache} from '../../src';
-import TreeSelector from 'amis-ui/lib/components/Tree';
+import {cleanup, fireEvent, render} from '@testing-library/react';
+import TreeSelector from '../../../amis-ui/src/components/Tree';
+
+const baseProps = {value: undefined, onChange: () => {}};
 
 afterEach(() => {
   cleanup();
-  clearStoresCache();
 });
 
 test('Tree #6229: enableNodePath + valueField 与 labelField 同名时 valuePath 不重复', () => {
   const onChange = jest.fn();
   const {getByText} = render(
     <TreeSelector
+      {...baseProps}
       classPrefix="cxd"
       className="Tree"
       enableNodePath
@@ -40,13 +41,13 @@ test('Tree #11604: options 被克隆（新对象引用）后展开态按路径�
   const options = () => [
     {
       label: 'Parent',
-      value: 1,
-      children: [{label: 'Child', value: 11}]
+      children: [{label: 'Child'}]
     }
   ];
 
   const {getByText, rerender} = render(
     <TreeSelector
+      {...baseProps}
       classPrefix="cxd"
       className="Tree"
       options={options()}
@@ -62,6 +63,7 @@ test('Tree #11604: options 被克隆（新对象引用）后展开态按路径�
   // 用「克隆」后的 options（全新对象引用）重新渲染
   rerender(
     <TreeSelector
+      {...baseProps}
       classPrefix="cxd"
       className="Tree"
       options={JSON.parse(JSON.stringify(options()))}
@@ -70,8 +72,82 @@ test('Tree #11604: options 被克隆（新对象引用）后展开态按路径�
 
   // 折叠态应按路径保留，Child 不应再次出现
   expect(document.querySelector('.cxd-Tree-itemText')).toBeTruthy();
-  const texts = Array.from(
-    document.querySelectorAll('.cxd-Tree-itemText')
-  ).map(el => el.textContent);
+  const texts = Array.from(document.querySelectorAll('.cxd-Tree-itemText')).map(
+    el => el.textContent
+  );
   expect(texts).not.toContain('Child');
+});
+
+test('Tree: 超过虚拟化阈值时仍渲染后续节点，并使用配置的行高', () => {
+  const options = Array.from({length: 150}, (_, index) => ({
+    label: `Item ${index}`,
+    value: index
+  }));
+  const {getByText, container} = render(
+    <TreeSelector
+      {...baseProps}
+      classPrefix="cxd"
+      className="Tree"
+      virtualThreshold={2}
+      itemHeight={48}
+      options={options}
+    />
+  );
+
+  expect(getByText('Item 2')).toBeTruthy();
+  const renderedCount = container.querySelectorAll('.cxd-Tree-item').length;
+  expect(renderedCount).toBeGreaterThan(1);
+  expect(renderedCount).toBeLessThan(options.length);
+  expect((getByText('Item 1').closest('li') as HTMLElement).style.top).toBe(
+    '48px'
+  );
+});
+
+test('Tree: 节点重排后展开态跟随节点', () => {
+  const a = {
+    label: 'A',
+    value: 1,
+    children: [{label: 'A child', value: 11}]
+  };
+  const b = {
+    label: 'B',
+    value: 2,
+    children: [{label: 'B child', value: 21}]
+  };
+  const {getByText, queryByText, rerender, container} = render(
+    <TreeSelector
+      {...baseProps}
+      classPrefix="cxd"
+      className="Tree"
+      options={[a, b]}
+    />
+  );
+
+  fireEvent.click(
+    container.querySelector('.cxd-Tree-itemArrow') as HTMLElement
+  );
+  expect(queryByText('A child')).toBeNull();
+
+  rerender(
+    <TreeSelector
+      {...baseProps}
+      classPrefix="cxd"
+      className="Tree"
+      options={[b, a]}
+    />
+  );
+
+  expect(getByText('B child')).toBeTruthy();
+  expect(queryByText('A child')).toBeNull();
+
+  rerender(
+    <TreeSelector
+      {...baseProps}
+      classPrefix="cxd"
+      className="Tree"
+      options={JSON.parse(JSON.stringify([a, b]))}
+    />
+  );
+  expect(getByText('B child')).toBeTruthy();
+  expect(queryByText('A child')).toBeNull();
 });
