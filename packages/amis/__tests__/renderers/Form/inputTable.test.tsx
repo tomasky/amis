@@ -366,8 +366,6 @@ test('Renderer:input-table verifty', async () => {
   const selectBtn = await findByText('请选择');
   selectBtn.click();
 
-  await wait(100);
-
   const selectItem = await findByText('s2');
   selectItem.click();
 

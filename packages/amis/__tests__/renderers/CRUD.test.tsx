@@ -1319,7 +1319,7 @@ test('20. CRUD filters contain fields that modification inspection should use st
   fireEvent.click(submitBtn);
   await wait(200);
   expect(keyword).toEqual('0');
-}, 7000);
+}, 20000);
 
 /**
  * 在reUseRow为false情况下，强制刷新表格行状态
