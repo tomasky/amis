@@ -510,6 +510,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   control: any;
   lastQuery: any;
   lastData: any;
+  filterInitialized = false;
 
   timer: ReturnType<typeof setTimeout>;
   perPageChangeFrame?: number;
@@ -1006,6 +1007,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       true
     );
 
+    this.filterInitialized = true;
     store.setPristineQuery();
 
     const {pickerMode, options} = this.props;
@@ -1087,6 +1089,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       values = parsePrimitiveQueryString(values, parseQueryOptions);
     }
 
+    const previousQuery = store.query;
     store.updateQuery(
       {
         ...values,
@@ -1103,6 +1106,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     this.lastQuery = store.query;
 
     search &&
+      (!isInit || !this.filterInitialized || store.query !== previousQuery) &&
       this.search(
         undefined,
         undefined,
