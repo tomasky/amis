@@ -9,17 +9,18 @@ export const normalizeLink = (to: string, location = window.location) => {
 
   const idx = to.indexOf('?');
   const idx2 = to.indexOf('#');
+  const queryBeforeHash = idx !== -1 && (idx2 === -1 || idx < idx2);
   let pathname = to;
   let search = '';
   let hash = location.hash;
   // host?a=a#b 的情况
-  if (idx < idx2) {
+  if (queryBeforeHash) {
     pathname = ~idx ? to.substring(0, idx) : ~idx2 ? to.substring(0, idx2) : to;
     hash = ~idx2 ? to.substring(idx2) : location.hash;
     search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : '';
   }
   // host#b?a=a 的情况
-  else if (idx > idx2) {
+  else if (idx2 !== -1) {
     pathname = ~idx2 ? to.substring(0, idx2) : ~idx ? to.substring(0, idx) : to;
     hash = ~idx2 ? to.substring(idx2, ~idx ? idx : undefined) : location.hash;
     search = ~idx ? to.substring(idx) : '';
@@ -41,6 +42,6 @@ export const normalizeLink = (to: string, location = window.location) => {
     pathname = paths.concat(pathname).join('/');
   }
 
-  const rest = idx < idx2 ? search + hash : hash + search;
+  const rest = queryBeforeHash ? search + hash : hash + search;
   return pathname + rest;
 };

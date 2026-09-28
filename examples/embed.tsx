@@ -105,7 +105,7 @@ export function embed(
       }
 
       if (replace && window.history.replaceState) {
-        window.history.replaceState('', document.title, to);
+        window.history.replaceState('', document.title, normalizeLink(to));
         return;
       }
 

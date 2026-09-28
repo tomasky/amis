@@ -612,8 +612,8 @@
 | [11150](https://github.com/baidu/amis/issues/11150) | Tabs组件bug，内容溢出时，左右点击滑动后，鼠标移动到tab上方，会出现tabs闪回到滑动前位置 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/Tabs.tsx:387-394 - showSelected() re-centers active tab whenever computedWidth runs (isO… |
 | [12044](https://github.com/baidu/amis/issues/12044) | tabs 选中后，tab 页签无法切换 | 未复现(需确认) | 现有 Tabs 用例已验证基础切换（点击页签→内容切换）正常；报告的“无法切换”疑为特定场景（hash/onSelect/action 联动），未能在 v680 独立复现，需带 schema 复现 |
 | [11142](https://github.com/baidu/amis/issues/11142) | error throws when add a tabs component | 非缺陷(amis-editor 特有) | 读取 `.type` 的崩溃位于 amis-editor 的 Tab 节点克隆逻辑（note 指向 renderTab），非 amis 运行时 Tabs 渲染器；v680 运行时 Tabs 经现有用例验证可正常增删/切换 → 跳过 |
-| [10081](https://github.com/baidu/amis/issues/10081) | crud2的syncLocation会导致tabs的hash不见的问题 | 未复现(需确认) | Tabs.tsx:414 tabs 响应 location.hash；与 crud2 syncLocation 的 hash 写入时序交互，需带 schema 复现其是否覆盖 tabs hash |
-| [7830](https://github.com/baidu/amis/issues/7830) | 【Bug反馈】tabs组件 设置hash后 内部使用crud并开启syncLocation后 筛选条件带tabs的hash值 | 未复现(需确认) | Tabs.tsx:704 handleSelect 写 `env.updateLocation('#'+key)`；与 crud syncLocation 互相写 hash 的顺序/合并需复现确认 |
+| [10081](https://github.com/baidu/amis/issues/10081) | crud2的syncLocation会导致tabs的hash不见的问题 | 源码确认 ✅已修复(本轮) | `normalizeLink('?page=3')` 在当前 `#tab3` 下错误生成 `#tab3?page=3`；默认 embed 的 replace 分支又直接传入 `?page=3` 丢失 hash。现已修正两处，并加入 URL 回归测试。 |
+| [7830](https://github.com/baidu/amis/issues/7830) | 【Bug反馈】tabs组件 设置hash后 内部使用crud并开启syncLocation后 筛选条件带tabs的hash值 | 未复现(需确认) | 查询参数与 tab hash 顺序错误的相关根因已修复；原 issue 仅有一句描述及不可用截图，无法确认其具体筛选值污染场景。 |
 | [3120](https://github.com/baidu/amis/issues/3120) | 1.5.0 版本. page 初始化数据，无法专递到 tabs  | 未复现(需确认) | Tabs.tsx:325 source 经 `resolveVariableAndFilter(props.data)` 解析；page initApi 数据透传到 tabs 需带 schema 复现（疑似数据域/时序问题） |
 
 ### Chart （3 条）
