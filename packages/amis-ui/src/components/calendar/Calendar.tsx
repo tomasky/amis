@@ -86,7 +86,8 @@ interface BaseDatePickerProps {
   onChange?: (
     value: any,
     viewMode?: ChangeEventViewMode,
-    status?: ChangeEventViewStatus
+    status?: ChangeEventViewStatus,
+    selectedTimeUnit?: AllowedSetTime
   ) => void;
   isEndDate?: boolean;
   minDate?: moment.Moment;
@@ -145,7 +146,7 @@ interface BaseDatePickerState {
   open?: boolean;
 }
 
-type AllowedSetTime = 'hours' | 'minutes' | 'seconds' | 'milliseconds';
+export type AllowedSetTime = 'hours' | 'minutes' | 'seconds' | 'milliseconds';
 
 class BaseDatePicker extends React.Component<
   BaseDatePickerProps,
@@ -514,7 +515,7 @@ class BaseDatePicker extends React.Component<
         inputValue: date.format(state.displayForamt as string)
       });
     }
-    this.props.onChange && this.props.onChange(date, 'time');
+    this.props.onChange && this.props.onChange(date, 'time', undefined, type);
   };
 
   setDate = (type: 'month' | 'year' | 'quarters') => {

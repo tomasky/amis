@@ -50,7 +50,12 @@ interface CustomTimeViewProps extends LocaleProps {
   setDateTimeState: (state: any, callback?: () => void) => void;
   mobileUI: boolean;
   showToolbar?: boolean;
-  onChange: (value: moment.Moment) => void;
+  onChange: (
+    value: moment.Moment,
+    viewMode?: 'time',
+    status?: undefined,
+    selectedTimeUnit?: TimeScale
+  ) => void;
   timeConstraints?: any;
   timeRangeHeader?: string;
   testIdBuilder?: TestIdBuilder;
@@ -599,7 +604,7 @@ export class CustomTimeView extends React.Component<
     });
 
     if (!this.props.requiredConfirm) {
-      this.props.onChange(date);
+      this.props.onChange(date, 'time', undefined, type);
     }
   };
 

@@ -36,7 +36,8 @@ import type {
   ViewMode,
   ChangeEventViewMode,
   MutableUnitOfTime,
-  ChangeEventViewStatus
+  ChangeEventViewStatus,
+  AllowedSetTime
 } from './calendar/Calendar';
 import type {TestIdBuilder} from 'amis-core';
 
@@ -915,6 +916,7 @@ export class DateRangePicker extends React.Component<
       originValue?: moment.Moment;
       timeFormat?: string;
       subControlViewMode?: ChangeEventViewMode;
+      selectedTimeUnit?: AllowedSetTime;
       /** 自动初始化绑定值，用于首次选择且当前未绑定值，默认使用当前时间 */
       autoInitDefaultValue?: boolean;
     } = {type: 'start'}
@@ -924,6 +926,7 @@ export class DateRangePicker extends React.Component<
       originValue,
       timeFormat,
       subControlViewMode,
+      selectedTimeUnit,
       autoInitDefaultValue
     } = options || {
       type: 'start'
@@ -950,11 +953,12 @@ export class DateRangePicker extends React.Component<
         millisecond: value.get('millisecond')
       };
 
+      const selectedUnit = selectedTimeUnit?.slice(0, -1);
       Object.keys(timePart).forEach((unit: MutableUnitOfTime) => {
         /** 首次选择时间，日期使用当前时间; 将未设置过的时间字段设置为当前值 */
         if (
           (unit === 'date' && subControlViewMode === 'time') ||
-          (unit !== 'date' && timePart[unit] === 0)
+          (unit !== 'date' && unit !== selectedUnit && timePart[unit] === 0)
         ) {
           timePart[unit] = now.get(unit);
         }
@@ -1025,7 +1029,9 @@ export class DateRangePicker extends React.Component<
    */
   handleStartDateChange(
     newValue: moment.Moment,
-    subControlViewMode?: ChangeEventViewMode
+    subControlViewMode?: ChangeEventViewMode,
+    _status?: ChangeEventViewStatus,
+    selectedTimeUnit?: AllowedSetTime
   ) {
     const {
       minDate,
@@ -1048,6 +1054,7 @@ export class DateRangePicker extends React.Component<
       originValue: startDate || minDate,
       timeFormat,
       subControlViewMode,
+      selectedTimeUnit,
       autoInitDefaultValue: !!timeFormat && newValue && !startDate
     });
     const newState = {
@@ -1074,7 +1081,9 @@ export class DateRangePicker extends React.Component<
    */
   handelEndDateChange(
     newValue: moment.Moment,
-    subControlViewMode?: ChangeEventViewMode
+    subControlViewMode?: ChangeEventViewMode,
+    _status?: ChangeEventViewStatus,
+    selectedTimeUnit?: AllowedSetTime
   ) {
     const {
       embed,
@@ -1097,6 +1106,7 @@ export class DateRangePicker extends React.Component<
       originValue: endDate,
       timeFormat,
       subControlViewMode,
+      selectedTimeUnit,
       autoInitDefaultValue: !!timeFormat && newValue && !endDate
     });
 

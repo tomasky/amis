@@ -42,7 +42,9 @@ interface CustomDaysViewProps extends LocaleProps {
   onClose?: () => void;
   onChange: (
     value: moment.Moment,
-    viewMode?: Extract<ViewMode, 'time'>
+    viewMode?: Extract<ViewMode, 'time'>,
+    status?: undefined,
+    selectedTimeUnit?: TimeScale
   ) => void;
   onClick: (event: React.MouseEvent<any>) => void;
   onMouseEnter: (event: React.MouseEvent<any>) => void;
@@ -371,7 +373,7 @@ export class CustomDaysView extends React.Component<CustomDaysViewProps> {
     });
 
     if (!this.props.requiredConfirm) {
-      this.props.onChange(date, 'time');
+      this.props.onChange(date, 'time', undefined, type);
     }
   };
 

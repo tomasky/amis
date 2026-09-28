@@ -488,36 +488,38 @@
 
 ### Date/日期 （28 条）
 
+本轮逐条静态复核：此前已修 3 条，确认现存缺陷 1 条（#9185），归类并非日期组件问题 4 条，其余 20 条仍需对应 schema、操作序列或设备环境复现。静态复核不等于逐条动态复现。
+
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [12101](https://github.com/baidu/amis/issues/12101) | 日期范围选择shortcuts中的最近7天不包含今日 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/DateRangePicker.tsx:169-177 |
 | [11734](https://github.com/baidu/amis/issues/11734) | 日期值格式YYYY-MM-DD，DATEMODIFY后提交的格式错误 | 源码现存(高确信) ✅已修复(本轮) | InputDate.tsx:465-482 新增 componentDidUpdate 分支：`changeMotivation==='formulaChanged'` 且 value 变化时用 normalizeDate 按 valueFormat 归一化后 setPrinstineValue，避免 DATEMODIFY 返回的 Date 被提交成 ISO 字符串；已加回归用例 | packages/amis-formula/src/evalutor.ts:1974 fnDATEMODIFY |
 | [9422](https://github.com/baidu/amis/issues/9422) | Date 日期时间组件的updateFrequency不支持使用数据映射，报错Moment Timezone has no data for ${ } | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Date.tsx:149-150 - normalizeDate.clone().tz(displayTimeZone) with no empty/unresolved guard;… |
 | [12205](https://github.com/baidu/amis/issues/12205) | 日期输入组件国际化不正确 | 源码待定(需复现) | packages/amis-ui/src/components/calendar/Calendar.tsx:214-220,305 |
-| [11813](https://github.com/baidu/amis/issues/11813) | timeline样式异常 | 源码待定(需复现) | n/a |
+| [11813](https://github.com/baidu/amis/issues/11813) | timeline样式异常 | 非 Date 分组 | Timeline 样式问题，未涉及日期控件。 |
 | [11682](https://github.com/baidu/amis/issues/11682) | 进入某些页面时会一直触发update，循环执行 | 源码待定(需复现) | n/a |
 | [11184](https://github.com/baidu/amis/issues/11184) | 日期时间组件显示成文本框 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:1085-1103 |
 | [10993](https://github.com/baidu/amis/issues/10993) | 时间范围组件，点击确定后第一次点击其他区域，失去焦点效果失效 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:779,2097 |
-| [10580](https://github.com/baidu/amis/issues/10580) | input-group 包裹的 input-text 设置"validateOnChange": true, 每次值发生改变没有触发 input-group 的… | 源码待定(需复现) | packages/amis/src/renderers/Form/InputGroup.tsx:174 validate() |
+| [10580](https://github.com/baidu/amis/issues/10580) | input-group 包裹的 input-text 设置"validateOnChange": true, 每次值发生改变没有触发 input-group 的… | 非 Date 分组 | InputGroup 校验问题；原 issue 使用 input-email，不涉及日期控件。 |
 | [10373](https://github.com/baidu/amis/issues/10373) | 移动端input-datetime组件设置timeConstraints无效 | 当前代码已有处理(需原环境复现) | `DatePicker.tsx` 的两个移动端 Calendar 分支均传递 `timeConstraints`，Calendar/TimeView 已消费该配置；未找到当前代码中的遗漏。 |
-| [10360](https://github.com/baidu/amis/issues/10360) | validateApi 验证 联动数据时, 即使设置了 ``"validateOnChange": true,`` , 也只会验证第一次时候的数据 | 源码待定(需复现) | validateApi/validateOnChange linkage - runtime form behavior; not date-specific and needs repro at 3.5.2 |
+| [10360](https://github.com/baidu/amis/issues/10360) | validateApi 验证 联动数据时, 即使设置了 ``"validateOnChange": true,`` , 也只会验证第一次时候的数据 | 非 Date 分组 | validateApi 与表单联动问题，不限日期控件；仍需原场景复现。 |
 | [10120](https://github.com/baidu/amis/issues/10120) | input-time类型控件值来自字段value而不是上层作用域data中字段值时，会差8小时 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:651-658 - utc branch; input-time 8h offset with value vs parent-scope nee… |
 | [10032](https://github.com/baidu/amis/issues/10032) | InputDateRange 日期范围移动端BUG | 源码待定(需复现) | packages/amis-ui/src/components/calendar/YearsView.tsx:154-155 - desktop year range is currentYear±100 (covers 1964-2133… |
 | [9256](https://github.com/baidu/amis/issues/9256) | 日期范围选择器组件/日期自动跳转 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:912-921 - filterDate autoInitDefaultValue; date auto-jump on time ch… |
 | [9250](https://github.com/baidu/amis/issues/9250) | 日期范围会选中多个 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:1032-1062 - selection state editState start/end; multi-select highli… |
 | [9220](https://github.com/baidu/amis/issues/9220) | 【input-time】，当设置小时范围，在没有选中小时的时候，直接点击确定，会变成00:00 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:507-511 - closeOnSelect gating; input-time confirm-with-empty-hour=>00:00… |
-| [9185](https://github.com/baidu/amis/issues/9185) | InputDatetimeRange 首次选择时无法选择00项/日期自动跳转/最大值限制无效 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:912-921 - filterDate autoInitDefaultValue; 00-select / date-jump / m… |
+| [9185](https://github.com/baidu/amis/issues/9185) | InputDatetimeRange 首次选择时无法选择00项/日期自动跳转/最大值限制无效 | 首次选择 00 确认现存，已修复；其他子问题需复现 | `DateRangePicker.filterDate` 首次选时间时把值为 0 的时/分/秒当成未设置并替换为当前时间；现由 Calendar/DaysView/TimeView 传入用户点选的单位并保留该单位的 00。日期跳转和最大值限制仍需独立复现。 |
 | [9036](https://github.com/baidu/amis/issues/9036) | 移动端InputDateRange 日期范围组件在不同版本ios显示有不同的问题 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx - iOS17 +1year / iOS16 zoom are Safari/WebKit rendering issues; need… |
 | [6840](https://github.com/baidu/amis/issues/6840) | Cordova环境下input-date、input-datetime、input-time三个组件使用报错 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx - Cordova-specific runtime error not reproducible from source; needs Cord… |
 | [5287](https://github.com/baidu/amis/issues/5287) | InputDateRange选择时间错乱 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:1032-1049 - filterDate/setDate clamps to minDate; selection-order/ti… |
-| [5066](https://github.com/baidu/amis/issues/5066) | amisScoped.updateProps 的 callback 不执行 | 源码待定(需复现) | amis-core scoped updateProps callback - runtime SDK behavior; not date-specific and needs SDK repro at version 2.1.0 |
+| [5066](https://github.com/baidu/amis/issues/5066) | amisScoped.updateProps 的 callback 不执行 | 非 Date 分组 | Scoped API callback 问题，不涉及日期控件；仍需 SDK 场景复现。 |
 | [4936](https://github.com/baidu/amis/issues/4936) | InputDate日期选择器，相对值无效 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputDate.tsx:433 - filterDate(defaultValue) resolves relative; +1days-not-applied need… |
 | [4891](https://github.com/baidu/amis/issues/4891) | 项目使用了1.9.0 的 ”InputTimeRange 时间范围“ 组件内嵌模式，升级到任意最新 1.10.0， 2.0.0 无法正常加载 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:1016 - embed branch present; InputTimeRange (time) component embed loadin… |
 | [4842](https://github.com/baidu/amis/issues/4842) | InputDateRange 组件放在fieldSet中，选择弹层会宣示不全 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:1308-1336 - popover/closeOnSelect; CSS clipping inside fieldSet/Coll… |
 | [4841](https://github.com/baidu/amis/issues/4841) | InputDatetimeRange 有秒的情况，点击确定无法关闭选择弹层 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:886-910 - confirm() closes via this.close(true); seconds-specific bl… |
 | [4472](https://github.com/baidu/amis/issues/4472) | InputDatetime UTC异常 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:651-658 - utc branch formats via moment.utc; display/jump bug with format… |
 | [4279](https://github.com/baidu/amis/issues/4279) | InputDateRange 日期范围选择 移动版和pc版提交数据不统一 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx - no setHours(23) end-of-day logic; PC vs mobile submit-format diver… |
-| [3733](https://github.com/baidu/amis/issues/3733) | 日期范围控件解析默认值错误 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputDate.tsx:433 - filterDate handles default value; comma-separated range value parsi… |
+| [3733](https://github.com/baidu/amis/issues/3733) | 日期范围控件解析默认值错误 | 当前路径已有处理(需原场景复现) | 原 issue 的 `value: "${v}"` 是逗号分隔日期范围；当前 `DateRangePicker.unFormatValue` 在 `joinValues` 下按 delimiter 分割并逐项 `filterDate`，本地另有 `today,+2days` 范围值用例。未确认原版本的错误在当前代码仍存在。 |
 
 ### amis-editor （63 条）
 

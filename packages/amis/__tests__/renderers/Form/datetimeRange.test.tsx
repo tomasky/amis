@@ -225,3 +225,58 @@ test('InputDateTimeRange Picker selects date or time for the first time', async 
   timeStr = start?.value?.split(/\s+/)?.[1];
   expect(timeStr.split?.(':')?.[0] === '00').toEqual(true);
 }, 5000);
+
+test.each([
+  ['hours', 0, 0],
+  ['minutes', 1, 0],
+  ['seconds', 2, 1]
+])(
+  'InputDateTimeRange keeps the first selected 00 %s',
+  async (unit, index, listIndex) => {
+    const originalNow = moment.now;
+    moment.now = () => new Date(2024, 5, 15, 13, 14, 15).valueOf();
+
+    try {
+      const {container} = render(
+        amisRender(
+          {
+            type: 'form',
+            body: [
+              {
+                type: 'input-datetime-range',
+                name: 'begin',
+                extraName: 'end',
+                valueFormat: 'YYYY-MM-DD HH:mm:ss',
+                displayFormat: 'YYYY-MM-DD HH:mm:ss'
+              }
+            ],
+            actions: []
+          },
+          {},
+          makeEnv({})
+        )
+      );
+
+      const start = screen.getByPlaceholderText('开始时间') as HTMLInputElement;
+      fireEvent.click(start);
+      await wait(200);
+
+      const lists = container.querySelectorAll(
+        unit === 'hours'
+          ? '.cxd-DateRangePicker-start .cxd-CalendarInput-sugsHours'
+          : '.cxd-DateRangePicker-start .cxd-CalendarInput-sugsTimes'
+      );
+      const options = lists[listIndex]?.querySelectorAll(
+        '.cxd-CalendarInput-sugsItem'
+      );
+      const zero = options?.[0] as HTMLElement;
+      expect(zero?.textContent).toBe('00');
+      fireEvent.click(zero);
+      await wait(200);
+
+      expect(start.value.split(' ')[1].split(':')[index]).toBe('00');
+    } finally {
+      moment.now = originalNow;
+    }
+  }
+);
