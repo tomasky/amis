@@ -709,9 +709,7 @@ export class Action extends React.Component<ActionProps, ActionState> {
   render() {
     const {
       type,
-      icon,
       iconClassName,
-      rightIcon,
       rightIconClassName,
       loadingClassName,
       primary,
