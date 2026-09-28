@@ -1,5 +1,5 @@
 import React from 'react';
-import {ClassNamesFn, RendererEvent, autobind} from 'amis-core';
+import {ClassNamesFn, OnEventProps, RendererEvent, autobind} from 'amis-core';
 
 import {SchemaNode, ActionObject} from 'amis-core';
 import TableRow from './TableRow';
@@ -13,7 +13,8 @@ import type {IColumn, IRow, ITableStore, TestIdBuilder} from 'amis-core';
 export interface TableBodyProps extends LocaleProps {
   store: ITableStore;
   className?: string;
-  rowsProps?: any;
+  dispatchEvent?: Function;
+  onEvent?: OnEventProps;
   tableClassName?: string;
   classnames: ClassNamesFn;
   columns: Array<IColumn>;
@@ -363,7 +364,8 @@ export class TableBody extends React.Component<TableBodyProps> {
       render,
       rows,
       columns,
-      rowsProps,
+      dispatchEvent,
+      onEvent,
       prefixRow,
       affixRow,
       translate: __
@@ -374,7 +376,7 @@ export class TableBody extends React.Component<TableBodyProps> {
         {rows.length ? (
           <>
             {this.renderSummary('prefix', prefixRow)}
-            {this.renderRows(rows, columns, rowsProps)}
+            {this.renderRows(rows, columns, {dispatchEvent, onEvent})}
             {this.renderSummary('affix', affixRow)}
           </>
         ) : null}

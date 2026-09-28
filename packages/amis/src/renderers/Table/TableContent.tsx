@@ -235,6 +235,7 @@ export class TableContent extends React.PureComponent<TableContentProps> {
             ) : null}
             <tr className={hideHeader ? 'fake-hide' : ''}>
               {columns.map(column =>
+                columnsGroup.length > 0 &&
                 columnsGroup.find(group => ~group.has.indexOf(column))
                   ?.rowSpan === 2
                   ? null
@@ -298,10 +299,9 @@ export class TableContent extends React.PureComponent<TableContentProps> {
               affixRow={affixRow}
               data={data}
               testIdBuilder={testIdBuilder}
-              rowsProps={{
-                dispatchEvent,
-                onEvent
-              }}
+              // 保持引用稳定，loading 等状态变化时无需重建整张行列表。
+              dispatchEvent={dispatchEvent}
+              onEvent={onEvent}
             />
           )}
         </table>
