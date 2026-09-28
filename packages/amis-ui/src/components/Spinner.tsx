@@ -104,7 +104,12 @@ const store = SpinnerSharedStore.create({});
 
 export class Spinner extends React.Component<
   SpinnerProps,
-  {spinning: boolean; showMarker: boolean; idDarkBg: boolean}
+  {
+    spinning: boolean;
+    renderSpinning: boolean;
+    showMarker: boolean;
+    idDarkBg: boolean;
+  }
 > {
   static defaultProps = {
     show: true,
@@ -122,11 +127,14 @@ export class Spinner extends React.Component<
 
   state = {
     spinning: false,
+    renderSpinning: false,
     showMarker: true,
     idDarkBg: false
   };
 
   parent: HTMLElement | null = null;
+
+  delayTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * 解决同级（same parent node） spinner 的 show 不全为 true 时
@@ -178,8 +186,38 @@ export class Spinner extends React.Component<
   componentWillUnmount() {
     // 卸载 reaction
     this.loadingChecker();
+    // 清理延迟显示的定时器
+    if (this.delayTimer) {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = null;
+    }
     // 删除 当前 parent 元素
     store.remove(this.parent!);
+  }
+
+  /**
+   * 延迟显示，delay 表示真正开始显示前的等待时间
+   */
+  toggleRenderSpinning(spinning: boolean) {
+    if (this.delayTimer) {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = null;
+    }
+
+    if (!spinning) {
+      this.setState({renderSpinning: false});
+      return;
+    }
+
+    const delay = this.props.delay || 0;
+    if (delay > 0) {
+      this.delayTimer = setTimeout(() => {
+        this.delayTimer = null;
+        this.setState({renderSpinning: true});
+      }, delay);
+    } else {
+      this.setState({renderSpinning: true});
+    }
   }
 
   /**
@@ -189,9 +227,10 @@ export class Spinner extends React.Component<
     () => store.spinningContainers.size,
     () => {
       if (this.parent) {
-        this.setState({
-          spinning: store.checkLoading(this.parent) && this.loadingTriggered
-        });
+        const spinning =
+          store.checkLoading(this.parent) && this.loadingTriggered;
+        this.setState({spinning});
+        this.toggleRenderSpinning(spinning);
       }
     }
   );
@@ -225,7 +264,7 @@ export class Spinner extends React.Component<
         <Transition
           mountOnEnter
           unmountOnExit
-          in={this.state.spinning}
+          in={this.state.renderSpinning}
           timeout={timeout}
         >
           {(status: string) => {

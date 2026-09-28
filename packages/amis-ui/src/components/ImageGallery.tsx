@@ -282,15 +282,13 @@ export class ImageGallery extends React.Component<
           break;
         case ImageActionKey.ZOOM_IN:
           this.setState(prevState => ({
-            scale: prevState.scale + 0.5,
-            tx: 0,
-            ty: 0
+            scale: prevState.scale + 0.5
           }));
           break;
         case ImageActionKey.ZOOM_OUT:
           this.setState(prevState => {
             return prevState.scale - 0.5 > 0
-              ? {scale: prevState.scale - 0.5, tx: 0, ty: 0}
+              ? {scale: prevState.scale - 0.5}
               : null;
           });
           break;

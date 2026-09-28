@@ -492,6 +492,7 @@ export default class Form extends React.Component<FormProps, object> {
     this.handleDrawerConfirm = this.handleDrawerConfirm.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleFormKeyDown = this.handleFormKeyDown.bind(this);
     this.validate = this.validate.bind(this);
     this.submit = this.submit.bind(this);
     this.addHook = this.addHook.bind(this);
@@ -1151,6 +1152,14 @@ export default class Form extends React.Component<FormProps, object> {
     //   }
     // });
     (formLazyChange === false ? this.emitChange : this.lazyEmitChange)(submit);
+  }
+
+  handleFormKeyDown(e: React.KeyboardEvent<any>) {
+    // 长按回车时 keydown 会以 repeat=true 反复触发，进而通过隐式表单提交反复发请求，
+    // 这里拦截重复的回车，避免重复提交。
+    if (e.key === 'Enter' && e.repeat) {
+      e.preventDefault();
+    }
   }
 
   handleFormSubmit(e: React.UIEvent<any>) {
@@ -2027,6 +2036,7 @@ export default class Form extends React.Component<FormProps, object> {
             })
         )}
         onSubmit={this.handleFormSubmit}
+        onKeyDown={this.handleFormKeyDown}
         data-id={id}
         noValidate
       >

@@ -34,8 +34,8 @@
     }
 
     .#{$ns}Carousel-item {
-      .title,
-      .description {
+      .#{$ns}Image-title,
+      .#{$ns}Image-caption {
         color: var(--Carousel--light-control);
       }
     }
@@ -51,8 +51,8 @@
     }
 
     .#{$ns}Carousel-item {
-      .title,
-      .description {
+      .#{$ns}Image-title,
+      .#{$ns}Image-caption {
         color: var(--Carousel--dark-control);
       }
     }
@@ -106,7 +106,7 @@
         transform: translateX(100%);
       }
 
-      .title {
+      .#{$ns}Image-title {
         position: absolute;
         bottom: var(--Carousel-imageTitle-bottom);
         text-align: center;
@@ -114,7 +114,7 @@
         opacity: 0.8;
       }
 
-      .description {
+      .#{$ns}Image-caption {
         position: absolute;
         bottom: var(--Carousel-imageDescription-bottom);
         text-align: center;

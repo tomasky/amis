@@ -668,7 +668,7 @@ export default class Dialog extends React.Component<DialogProps> {
               })
             )}
           >
-            {showCloseButton !== false && !store.loading ? (
+            {showCloseButton !== false && !(store.saving || store.fetching) ? (
               <a
                 data-tooltip={__('Dialog.close')}
                 data-position="left"
@@ -709,7 +709,7 @@ export default class Dialog extends React.Component<DialogProps> {
               })
             )}
           >
-            {showCloseButton !== false && !store.loading ? (
+            {showCloseButton !== false && !(store.saving || store.fetching) ? (
               <a
                 data-tooltip={__('Dialog.close')}
                 onClick={this.handleSelfClose}
@@ -729,7 +729,7 @@ export default class Dialog extends React.Component<DialogProps> {
               btnDisabled: store.loading
             })}
           </div>
-        ) : showCloseButton !== false && !store.loading ? (
+        ) : showCloseButton !== false && !(store.saving || store.fetching) ? (
           <a
             data-tooltip={__('Dialog.close')}
             onClick={this.handleSelfClose}
