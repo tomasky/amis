@@ -438,12 +438,12 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [12250](https://github.com/baidu/amis/issues/12250) | 弹窗中通过onEvent发送ajax请求时，弹窗的关闭按钮无法点击 | 源码现存(高确信) ✅已修复(本轮) | Dialog.tsx:671/712/732 关闭按钮渲染条件由 `!store.loading` 改为 `!(store.saving || store.fetching)`，onEvent 的 ajax 只置 busying，不再隐藏关闭按钮 |
-| [11128](https://github.com/baidu/amis/issues/11128) | actionType: 'dialog'配置data时，dialog层配的data无效 | 源码现存(高确信) ⏭️跳过(本轮) | actionType dialog 的 data 已由 iRenderer 应用，非 bug → 跳过 | Dialog.tsx:1037-1052 action.actionType==='dialog' calls store.openDialog(data,...) passing only action data |
+| [11128](https://github.com/baidu/amis/issues/11128) | actionType: 'dialog'配置data时，dialog层配的data无效 | 语义待定(未改动) | `iRenderer.ts` 使用 `action.data ?? action.dialog.data`，两者同时配置时默认以前者覆盖后者；原 issue 的维护者评论指出默认 override 行为不宜改变，合并需明确配置契约。 |
 | [12048](https://github.com/baidu/amis/issues/12048) | actionType触发submit提交会导致dialog弹窗变成空白，然后关闭 | 源码待定(需复现) | Dialog.tsx:993-1021 confirm/submit path triggers onClose; no blank-flash guard visible |
 | [12022](https://github.com/baidu/amis/issues/12022) | 配置了二次确认的按钮，其action中有dialog存在时 | 源码待定(需复现) | Action double-execution with confirm+dialog not determinable from Dialog/Drawer renderers |
 | [11441](https://github.com/baidu/amis/issues/11441) | dialog组件setValue page之后，dialog弹窗读取不到最新值 | 源码待定(需复现) | Dialog.tsx:815 shouldSyncSuperStore + trackExpression support |
 | [11338](https://github.com/baidu/amis/issues/11338) | 在弹框内配置确定事件，如果目标组件选择弹框外的页面上的组件，无法回显 | 源码待定(需复现) | Confirm-event echo for external target is amis-editor event-config behavior |
-| [11204](https://github.com/baidu/amis/issues/11204) | drawer的close選項無效 | 源码待定(需复现) | Drawer.tsx:869-881 confirm -> tryChildrenToHandle; tryChildrenToHandle checks action.close!==false |
+| [11204](https://github.com/baidu/amis/issues/11204) | drawer的close選項無效 | 确认相关缺陷 ✅已修复(本轮) | Drawer 的 confirm 动作在无子组件接管时直接调用 `onClose()`，忽略 `close:false`；现按该配置决定是否关闭。原 issue 缺少可取的 schema，无法确认是否同一场景。 |
 | [11032](https://github.com/baidu/amis/issues/11032) | 弹窗中使用crud并开启显示切换页码的功能，当点击切换页码，弹窗会消失 | 源码待定(需复现) | .has-popover CSS in amis-ui/scss/base/_common.scss; applied to inner controls not dialog root |
 | [10710](https://github.com/baidu/amis/issues/10710) | 弹窗的数据，在提交的时候setValue给了page组件，再次打开的时候，弹窗没有读到数据 | 源码待定(需复现) | Dialog.tsx:815 shouldSyncSuperStore syncs when dialogOpen && data changed |
 | [10422](https://github.com/baidu/amis/issues/10422) | 当编辑弹窗中添加多个list-text只能获取到一个的值 | 源码待定(需复现) | Multiple list-select handled by form/list-select, not dialog renderer |
@@ -453,7 +453,7 @@
 | [9444](https://github.com/baidu/amis/issues/9444) | 弹窗里点击按钮关闭当前弹窗并弹出新弹窗，会导致新弹窗意外关闭 | 源码待定(需复现) | Dialog.tsx:566 closeOnOutside={!store.dialogOpen && closeOnOutside} guards nested |
 | [9117](https://github.com/baidu/amis/issues/9117) | CRUD控件使用【添加事件】按钮新增点事件，并配置为打开已有的编辑框，保存时报错：index.js:6 Uncaught (in promise) TypeEr… | 源码待定(需复现) | 'dialog-ref-1' string not present in packages/amis or amis-ui dialog source |
 | [8933](https://github.com/baidu/amis/issues/8933) | 【bug】crud在点击下一页之后再点上一页 column下的开关 dialog确认框获取到的还是旧行的数据 | 源码待定(需复现) | Dialog.tsx:320 store.reset() on handleExited resets form data |
-| [8895](https://github.com/baidu/amis/issues/8895) | 【bug】操作并下一个 功能把官方示例dialog改成drawer抽屉弹窗后失效 获取不到hasNext hasPrev | 源码待定(需复现) | Drawer.tsx:827-962 DrawerRenderer.handleAction has no 'next'/'prev' case |
+| [8895](https://github.com/baidu/amis/issues/8895) | 【bug】操作并下一个 功能把官方示例dialog改成drawer抽屉弹窗后失效 获取不到hasNext hasPrev | 源码确认 ✅已修复(本轮) | CRUD 原来仅为 Dialog 注入相邻行信息并处理翻页，Drawer 也缺少 `next`/`prev` 动作分支；现补齐整条路径，加入上一条/下一条回归测试。 |
 | [8173](https://github.com/baidu/amis/issues/8173) | input-text组件使用autoComplete属性时 点击了选项 选项组弹框不消失 需要点击空白处才能消失 | 源码待定(需复现) | autoComplete handled in amis-ui InputBox/autoComplete (not in Dialog/Drawer) |
 | [7060](https://github.com/baidu/amis/issues/7060) | drawer下配置一个button, button中配置一个dialog， 当给button配置close："xx", 点击button时，drawer和dia… | 源码待定(需复现) | Drawer.tsx:882-892 dialog action opens nested dialog without closing drawer |
 | [6970](https://github.com/baidu/amis/issues/6970) | dialog嵌套锚点导航 在size为full时，弹框页面下半部分全空白 | 源码待定(需复现) | Dialog.tsx:536 render uses Wrapper with size full; anchor-nav layout not in dialog source |
@@ -499,7 +499,7 @@
 | [11184](https://github.com/baidu/amis/issues/11184) | 日期时间组件显示成文本框 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:1085-1103 |
 | [10993](https://github.com/baidu/amis/issues/10993) | 时间范围组件，点击确定后第一次点击其他区域，失去焦点效果失效 | 源码待定(需复现) | packages/amis-ui/src/components/DateRangePicker.tsx:779,2097 |
 | [10580](https://github.com/baidu/amis/issues/10580) | input-group 包裹的 input-text 设置"validateOnChange": true, 每次值发生改变没有触发 input-group 的… | 源码待定(需复现) | packages/amis/src/renderers/Form/InputGroup.tsx:174 validate() |
-| [10373](https://github.com/baidu/amis/issues/10373) | 移动端input-datetime组件设置timeConstraints无效 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:507 - timeConstraints consumed on PC; mobile input-datetime constraints i… |
+| [10373](https://github.com/baidu/amis/issues/10373) | 移动端input-datetime组件设置timeConstraints无效 | 当前代码已有处理(需原环境复现) | `DatePicker.tsx` 的两个移动端 Calendar 分支均传递 `timeConstraints`，Calendar/TimeView 已消费该配置；未找到当前代码中的遗漏。 |
 | [10360](https://github.com/baidu/amis/issues/10360) | validateApi 验证 联动数据时, 即使设置了 ``"validateOnChange": true,`` , 也只会验证第一次时候的数据 | 源码待定(需复现) | validateApi/validateOnChange linkage - runtime form behavior; not date-specific and needs repro at 3.5.2 |
 | [10120](https://github.com/baidu/amis/issues/10120) | input-time类型控件值来自字段value而不是上层作用域data中字段值时，会差8小时 | 源码待定(需复现) | packages/amis-ui/src/components/DatePicker.tsx:651-658 - utc branch; input-time 8h offset with value vs parent-scope nee… |
 | [10032](https://github.com/baidu/amis/issues/10032) | InputDateRange 日期范围移动端BUG | 源码待定(需复现) | packages/amis-ui/src/components/calendar/YearsView.tsx:154-155 - desktop year range is currentYear±100 (covers 1964-2133… |

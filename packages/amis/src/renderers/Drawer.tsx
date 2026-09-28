@@ -164,6 +164,7 @@ export interface DrawerProps
     Omit<DrawerSchema, 'className' | 'data'>,
     SpinnerExtraProps {
   onClose: () => void;
+  onExited?: () => void;
   onConfirm: (
     values: Array<object>,
     action: ActionObject,
@@ -469,6 +470,7 @@ export default class Drawer extends React.Component<DrawerProps> {
         store.setSchema('');
       }
     }
+    this.props.onExited?.();
   }
 
   @autobind
@@ -990,7 +992,24 @@ export class DrawerRenderer extends Drawer {
         await rendererEvent.allDone();
       }
       store.setCurrentAction(action, this.props.resolveDefinitions);
-      this.tryChildrenToHandle(action, data) || onClose();
+      if (!this.tryChildrenToHandle(action, data) && action.close !== false) {
+        onClose();
+      }
+    } else if (action.actionType === 'next' || action.actionType === 'prev') {
+      store.setCurrentAction(action, this.props.resolveDefinitions);
+      if (action.type === 'submit') {
+        this.tryChildrenToHandle(
+          {
+            ...action,
+            actionType: 'submit',
+            close: true
+          },
+          data,
+          action
+        ) || this.handleSelfClose();
+      } else {
+        this.props.onConfirm([data], action, data, []);
+      }
     } else if (action.actionType === 'drawer') {
       store.setCurrentAction(action, this.props.resolveDefinitions);
       return new Promise<any>(resolve => {

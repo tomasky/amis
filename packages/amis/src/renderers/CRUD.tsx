@@ -512,6 +512,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
   timer: ReturnType<typeof setTimeout>;
   mounted: boolean;
+  drawerClosing = false;
   /** 父容器, 主要用于定位CRUD内部popover的挂载点 */
   parentContainer: Element | null;
 
@@ -533,6 +534,9 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     this.handleBulkGo = this.handleBulkGo.bind(this);
     this.handleDialogConfirm = this.handleDialogConfirm.bind(this);
     this.handleDialogClose = this.handleDialogClose.bind(this);
+    this.handleDrawerConfirm = this.handleDrawerConfirm.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleDrawerExited = this.handleDrawerExited.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleSaveOrder = this.handleSaveOrder.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -772,13 +776,15 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       return;
     }
 
-    if (action.actionType === 'dialog') {
+    if (action.actionType === 'dialog' || action.actionType === 'drawer') {
       store.setCurrentAction(action, this.props.resolveDefinitions);
       const idx: number = (ctx as any).index;
-      const length = store.items.length;
+      const length = store.data.items.length;
       stopAutoRefreshWhenModalIsOpen && clearTimeout(this.timer);
       return new Promise<any>(resolve => {
-        store.openDialog(
+        const openModal =
+          action.actionType === 'drawer' ? store.openDrawer : store.openDialog;
+        openModal(
           ctx,
           {
             hasNext: idx < length - 1,
@@ -1137,6 +1143,25 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     ctx: any,
     components: Array<any>
   ) {
+    return this.handleModalConfirm(values, action, ctx, components, 'dialog');
+  }
+
+  handleDrawerConfirm(
+    values: object[],
+    action: ActionObject,
+    ctx: any,
+    components: Array<any>
+  ) {
+    return this.handleModalConfirm(values, action, ctx, components, 'drawer');
+  }
+
+  handleModalConfirm(
+    values: object[],
+    action: ActionObject,
+    ctx: any,
+    components: Array<any>,
+    modalType: 'dialog' | 'drawer'
+  ) {
     const {
       store,
       pageField,
@@ -1147,7 +1172,12 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     } = this.props;
     const interval = this.resolveInterval(intervalProp);
 
-    store.closeDialog(true, values);
+    if (modalType === 'drawer') {
+      this.drawerClosing = true;
+      store.closeDrawer(true, values);
+    } else {
+      store.closeDialog(true, values);
+    }
     const dialogAction = store.action as ActionObject;
 
     if (stopAutoRefreshWhenModalIsOpen && interval) {
@@ -1231,6 +1261,14 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   }
 
   handleDialogClose(confirmed = false) {
+    this.handleModalClose('dialog', confirmed);
+  }
+
+  handleDrawerClose(confirmed = false) {
+    this.handleModalClose('drawer', confirmed);
+  }
+
+  handleModalClose(modalType: 'dialog' | 'drawer', confirmed = false) {
     const {
       store,
       stopAutoRefreshWhenModalIsOpen,
@@ -1238,7 +1276,12 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       interval: intervalProp
     } = this.props;
     const interval = this.resolveInterval(intervalProp);
-    store.closeDialog(confirmed);
+    if (modalType === 'drawer') {
+      this.drawerClosing = true;
+      store.closeDrawer(confirmed);
+    } else {
+      store.closeDialog(confirmed);
+    }
 
     if (stopAutoRefreshWhenModalIsOpen && interval) {
       this.timer = setTimeout(
@@ -1246,6 +1289,11 @@ export default class CRUD extends React.Component<CRUDProps, any> {
         Math.max(interval, 1000)
       );
     }
+  }
+
+  handleDrawerExited() {
+    this.drawerClosing = false;
+    this.forceUpdate();
   }
 
   openFeedback(dialog: any, ctx: any) {
@@ -2865,6 +2913,23 @@ export default class CRUD extends React.Component<CRUDProps, any> {
             show: store.dialogOpen
           }
         )}
+        {store.drawerOpen || this.drawerClosing
+          ? render(
+              'drawer',
+              {
+                ...store.drawerSchema,
+                type: 'drawer'
+              },
+              {
+                key: 'drawer',
+                data: store.drawerData,
+                onConfirm: this.handleDrawerConfirm,
+                onClose: this.handleDrawerClose,
+                onExited: this.handleDrawerExited,
+                show: store.drawerOpen
+              }
+            )
+          : null}
       </div>
     );
   }
