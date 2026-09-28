@@ -137,6 +137,7 @@ exports[`EventAction:inputRange 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_data"
                 novalidate=""
               >
                 <input

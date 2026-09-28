@@ -821,6 +821,7 @@ exports[`Renderer:input-table init display 1`] = `
     >
       <form
         class="cxd-Form cxd-Form--normal"
+        data-id="u:1affe4fb299e"
         novalidate=""
       >
         <input

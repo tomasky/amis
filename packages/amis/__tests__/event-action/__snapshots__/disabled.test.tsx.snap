@@ -86,6 +86,7 @@ exports[`EventAction:disabled 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="ui:form_disable"
                 novalidate=""
               >
                 <input

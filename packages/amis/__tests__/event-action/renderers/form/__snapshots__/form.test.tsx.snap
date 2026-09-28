@@ -46,6 +46,7 @@ exports[`doAction:form clear 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_clear"
                 novalidate=""
               >
                 <input
@@ -624,6 +625,7 @@ exports[`doAction:form reset 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_reset"
                 novalidate=""
               >
                 <input
@@ -785,6 +787,7 @@ exports[`doAction:form reset 2`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_reset"
                 novalidate=""
               >
                 <input
@@ -944,6 +947,7 @@ exports[`doAction:form setValue 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_setvalue"
                 novalidate=""
               >
                 <input
@@ -1100,6 +1104,7 @@ exports[`doAction:form static&nonstatic 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal cxd-Form--isStatic"
+                data-id="form_static"
                 novalidate=""
               >
                 <input
@@ -1213,6 +1218,7 @@ exports[`doAction:form static&nonstatic 2`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_static"
                 novalidate=""
               >
                 <input
@@ -1376,6 +1382,7 @@ exports[`doAction:form submit 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_submit"
                 novalidate=""
               >
                 <input
@@ -1583,6 +1590,7 @@ exports[`doAction:form submit 2`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_submit"
                 novalidate=""
               >
                 <input
@@ -1799,6 +1807,7 @@ exports[`doAction:form submit 3`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_submit"
                 novalidate=""
               >
                 <input
@@ -2003,6 +2012,7 @@ exports[`doAction:form validate 1`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_validate"
                 novalidate=""
               >
                 <input
@@ -2221,6 +2231,7 @@ exports[`doAction:form validate 2`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_validate"
                 novalidate=""
               >
                 <input
@@ -2434,6 +2445,7 @@ exports[`doAction:form validate 3`] = `
             >
               <form
                 class="cxd-Form cxd-Form--normal"
+                data-id="form_validate"
                 novalidate=""
               >
                 <input

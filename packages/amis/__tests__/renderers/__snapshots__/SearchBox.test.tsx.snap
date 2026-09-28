@@ -16,6 +16,28 @@ exports[`Renderer:Searchbox 1`] = `
           role="page-body"
         >
           <div
+            class="cxd-Alert cxd-Alert--danger"
+          >
+            <div
+              class="cxd-Alert-content"
+            >
+              <div
+                class="cxd-Alert-desc"
+              >
+                Cannot read properties of undefined (reading 'then')
+              </div>
+            </div>
+            <button
+              class="cxd-Alert-close"
+              type="button"
+            >
+              <icon-mock
+                classname="icon icon-close"
+                icon="close"
+              />
+            </button>
+          </div>
+          <div
             class="cxd-SearchBox is-active"
           >
             <input
