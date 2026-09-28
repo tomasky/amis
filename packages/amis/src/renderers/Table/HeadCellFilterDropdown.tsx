@@ -68,7 +68,7 @@ export class HeadCellFilterDropDown extends React.Component<
   }
 
   componentDidMount() {
-    const {filterable, data} = this.props;
+    const {filterable, superData} = this.props;
     const {source, options} = filterable || {};
 
     if (source && isPureVariable(source)) {
@@ -80,7 +80,7 @@ export class HeadCellFilterDropDown extends React.Component<
       this.setState({
         filterOptions: this.alterOptions(datasource)
       });
-    } else if (source && isEffectiveApi(source, data)) {
+    } else if (source && isEffectiveApi(source, superData)) {
       this.fetchOptions();
     } else if (options?.length > 0) {
       this.setState({
@@ -104,8 +104,8 @@ export class HeadCellFilterDropDown extends React.Component<
         this.sourceInvalid = isApiOutdated(
           prevProps.filterable.source,
           props.filterable.source,
-          prevProps.data,
-          props.data
+          prevProps.superData,
+          props.superData
         );
       } else if (props.filterable.options) {
         this.setState({
@@ -150,15 +150,15 @@ export class HeadCellFilterDropDown extends React.Component<
   }
 
   async fetchOptions() {
-    const {env, filterable, data} = this.props;
-    if (!isEffectiveApi(filterable.source, data)) {
+    const {env, filterable, superData} = this.props;
+    if (!isEffectiveApi(filterable.source, superData)) {
       return;
     }
 
     const api = normalizeApi(filterable.source);
     api.cache = 3000; // 开启 3s 缓存，因为固顶位置渲染1次会额外多次请求。
 
-    const ret = await env.fetcher(api, data);
+    const ret = await env.fetcher(api, superData);
     let options = (ret.data && ret.data.options) || [];
     this.setState({
       filterOptions: ret && ret.data && this.alterOptions(options)

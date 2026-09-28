@@ -244,6 +244,61 @@ async function getMap(
   return map;
 }
 
+export function getMappedExcelCellValue(
+  value: any,
+  map: Record<string, any>,
+  column: any,
+  rowData: any
+) {
+  const labelField = column.pristine.labelField || 'label';
+  const values = Array.isArray(value) ? value : [value];
+  const mapped = values.map(item => {
+    if (typeof item === 'undefined' || !map || !(map[item] ?? map['*'])) {
+      return removeHTMLTag(item);
+    }
+
+    const viewValue =
+      map[item] ??
+      (item === true && map['1']
+        ? map['1']
+        : item === false && map['0']
+        ? map['0']
+        : map['*']);
+
+    let label = viewValue;
+    if (isObject(viewValue)) {
+      if (labelField === undefined || labelField === '') {
+        if (!viewValue.hasOwnProperty('type')) {
+          label = viewValue['label'];
+        }
+      } else {
+        label = viewValue[labelField];
+      }
+
+      if (label === undefined || label === null) {
+        label =
+          (viewValue.labelMap &&
+            (viewValue.labelMap[item] ?? viewValue.labelMap['*'])) ??
+          viewValue.label ??
+          item;
+      }
+    }
+
+    const text = removeHTMLTag(label);
+    return isPureVariable(text)
+      ? resolveVariableAndFilter(text, rowData, '| raw')
+      : filter(text, rowData);
+  });
+
+  return Array.isArray(value) ? mapped.join(', ') : mapped[0];
+}
+
+export function getExcelColumnValue(rowData: any, name: string) {
+  return isPureVariable(name)
+    ? resolveVariableAndFilter(name, rowData, '| raw')
+    : getVariable(rowData, name);
+}
+
 /**
  * 导出 Excel
  * @param ExcelJS ExcelJS 对象
@@ -413,7 +468,7 @@ export async function exportExcel(
     for (const column of filteredColumns) {
       columIndex += 1;
       const name = column.name!;
-      const value = getVariable(rowData, name);
+      const value = getExcelColumnValue(rowData, name);
       if (typeof value === 'undefined' && !column.pristine.tpl) {
         continue;
       }
@@ -507,7 +562,6 @@ export async function exportExcel(
         let map = await getMap(remoteMappingCache, env, column, data, rowData);
 
         const valueField = column.pristine.valueField || 'value';
-        const labelField = column.pristine.labelField || 'label';
 
         if (Array.isArray(map)) {
           map = map.reduce((res, now) => {
@@ -532,54 +586,12 @@ export async function exportExcel(
           }, {});
         }
 
-        if (typeof value !== 'undefined' && map && (map[value] ?? map['*'])) {
-          const viewValue =
-            map[value] ??
-            (value === true && map['1']
-              ? map['1']
-              : value === false && map['0']
-              ? map['0']
-              : map['*']); // 兼容平台旧用法：即 value 为 true 时映射 1 ，为 false 时映射 0
-
-          let label = viewValue;
-          if (isObject(viewValue)) {
-            if (labelField === undefined || labelField === '') {
-              if (!viewValue.hasOwnProperty('type')) {
-                // 映射值是object
-                // 没配置labelField
-                // object 也没有 type，不能作为schema渲染
-                // 默认取 label 字段
-                label = viewValue['label'];
-              }
-            } else {
-              label = viewValue[labelField || 'label'];
-            }
-
-            // 映射值是组件 schema（比如 status 的 labelMap）时上面取不到 label，
-            // 这里用 labelMap 兵底，避免导出为空
-            if (label === undefined || label === null) {
-              label =
-                (viewValue.labelMap &&
-                  (viewValue.labelMap[value] ??
-                    viewValue.labelMap['*'])) ??
-                viewValue.label ??
-                value;
-            }
-          }
-
-          let text = removeHTMLTag(label);
-
-          /** map可能会使用比较复杂的html结构，富文本也无法完全支持，直接把里面的变量解析出来即可 */
-          if (isPureVariable(text)) {
-            text = resolveVariableAndFilter(text, rowData, '| raw');
-          } else {
-            text = filter(text, rowData);
-          }
-
-          sheetRow.getCell(columIndex).value = text;
-        } else {
-          sheetRow.getCell(columIndex).value = removeHTMLTag(value);
-        }
+        sheetRow.getCell(columIndex).value = getMappedExcelCellValue(
+          value,
+          map,
+          column,
+          rowData
+        );
       } else if (type === 'date' || (type as any) === 'static-date') {
         let viewValue;
         const {

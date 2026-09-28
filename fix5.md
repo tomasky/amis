@@ -53,7 +53,7 @@
 | [6393](https://github.com/baidu/amis/issues/6393) | crud 结合 service使用时，通过service获取表格数据时，total无效 | 源码现存(高确信) ⏭️跳过(本轮) | service+crud total 解析贯穿 fetch/normalize 管线，面大 → 跳过 | packages/amis-core/src/store/crud.ts:686-700 |
 | [5730](https://github.com/baidu/amis/issues/5730) | CRUD 组件第一次查询调用 updateLocation 方法 replace 参数时不应传入 true 会导致页面二次刷新 | 源码现存(高确信) ⏭️跳过(本轮) | v680 该行号对应的是 filter 提交路径的 updateLocation(location,true)，并非首次查询；无法静态确认二次刷新根因，master 未针对性修复 → 跳过 |
 | [4908](https://github.com/baidu/amis/issues/4908) | CURD  如果后端接口返回结构体中包含 page字段为null, 且perPage值小于总数据条数，将触发前端页面卡死 | 源码现存(高确信) ⏭️跳过(本轮) | page:null 导致死循环需分页/adaptor 兜底，需运行时复现 → 跳过 | packages/amis-core/src/store/crud.ts:472 |
-| [4873](https://github.com/baidu/amis/issues/4873) | crud字段filterable中的source无法获取父级变量 | 源码现存(高确信) ⏭️跳过(本轮) | fetchOptions 用 `env.fetcher(api, data)`，data 为行/单元格作用域，要拿到 CRUD 父级作用域需把 scope 透传进 HeadCellFilterDropdown，涉及多层传参 → 跳过 |
+| [4873](https://github.com/baidu/amis/issues/4873) | crud字段filterable中的source无法获取父级变量 | 源码现存(高确信) ✅已修复(本轮) | `superData` 已由 Table 传入；列筛选 API 的有效性检查、过期判断和请求统一使用该上下文，筛选值仍读取 query。仅在筛选 API 路径执行。 |
 | [4551](https://github.com/baidu/amis/issues/4551) | crud的initFetch置为false时不管有没有filter都不会拉数据 | 源码现存(高确信) ⏭️跳过(本轮) | initFetch:false 即不首查为文档语义，非 bug → 跳过 | packages/amis/src/renderers/CRUD.tsx:1185 |
 | [1518](https://github.com/baidu/amis/issues/1518) | CRUD api中存在数据变量时，表格中的排序，过滤构建的url异常 | 源码现存(高确信) ⏭️跳过(本轮) | api data 含变量导致 URL 异常，涉及 attachDataToQuery/qsstringify，面大 → 跳过 | packages/amis-core/src/utils/api.ts:300-303 |
 | [17347](https://github.com/baidu/amis/issues/17347) | CRUD 批量编辑后刷新分页失效 | 源码待定(需复现) | packages/amis/src/renderers/CRUD.tsx:1408 |
@@ -119,7 +119,7 @@
 | [12389](https://github.com/baidu/amis/issues/12389) | Office Viewer 组件 表格行循环，如果行中变量名在父层作用域有同名变量时，会取父层变量值，应该取循环本层的变量值才对 | 源码现存(高确信) ✅已修复(本轮) | OfficeViewer.tsx:148-152 evalVar 用 `createObject(data, localData)`，own 属性 localData（组件/父层 data）反而覆盖了行内 data；改为 `createObject(localData, data)` 使行内数据优先 |
 | [12006](https://github.com/baidu/amis/issues/12006) | 【bug】crud2 筛选条件的数据填充到了表格里 | 源码现存(高确信) ⏭️跳过(本轮) | Table2/index.tsx:962-963 计算出的 `finalCanAccessSuperData` 仅出现在注释代码里，普通文本列取值始终走 `item.locals`（含筛选/super data）。修复需把该标志透传进 amis-ui Table 的单元格取值逻辑（多组件共用），改动面大、回归风险高 → 本轮跳过 |
 | [12001](https://github.com/baidu/amis/issues/12001) | 【BUG】inputTable组件在编辑模式下时，原来列中的按钮会变为输入框 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Form/InputTable.tsx:1766-1782 |
-| [11837](https://github.com/baidu/amis/issues/11837) | input-table中使用mapping映射多个时，导出Excel内容错误 | 源码现存(高确信) ⏭️跳过(本轮) | exportExcel mapping 多 key 映射路径复杂，面大 → 跳过 | packages/amis/src/renderers/Table/exportExcel.ts:541 |
+| [11837](https://github.com/baidu/amis/issues/11837) | input-table中使用mapping映射多个时，导出Excel内容错误 | 源码现存(高确信) ✅已修复(本轮) | Excel 导出时解析 `${type|split}` 列表达式，并逐项映射数组值后拼接；只在导出路径执行。 |
 | [11820](https://github.com/baidu/amis/issues/11820) | picker表格选择 修改已选中的数据 上面已选择标签跟随变化 但数据域中还是旧值 | 源码现存(高确信) ⏭️跳过(本轮) | Picker.tsx:505-525 `handleSelect` 用交集比较（配了 valueField 时只比 value），前后数量一致即判为重复事件直接 return。放宽去重条件会破坏其抑制 CRUD 连续多次事件的机制，可能引发事件循环，无运行时验证不敢改 → 本轮跳过 |
 | [11803](https://github.com/baidu/amis/issues/11803) | InputTable组件自定义按钮在编辑状态不会被隐藏 | 源码现存(高确信) ⏭️跳过(本轮) | 与 #10271 同源，operation 列按钮的编辑态显隐与 create 模式、needConfirm 交织，缺乏明确复现与安全边界，master 未修复 → 跳过 |
 | [11596](https://github.com/baidu/amis/issues/11596) | 使用table2表格,工具栏添加右对齐的按钮，按钮执行“清除选中项”事件 无效 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/CRUD2.tsx:1181-1195 |
@@ -526,11 +526,11 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [21084](https://github.com/baidu/amis/issues/21084) | 事件，执行动作，目标组件选择输入组件id，保存后刷新，再次进去绑定的事件配置面板中，组件id丢失 | 源码现存(高确信) ⏭️跳过(本轮) | 目标组件 id 持久化需重构，v680 无对应文件 → 跳过 | packages/amis-editor/src/renderer/event-control/eventControlConfigHelper.ts:388,616 and helper.tsx:211 still use __cmptI… |
-| [12114](https://github.com/baidu/amis/issues/12114) | amis-editor  向前添加组件必导致错误 bug | 源码现存(高确信) ⏭️跳过(本轮) | resize-sensor 结构重构，非一行 → 跳过 | packages/amis-core/src/utils/resize-sensor.ts:214 resizeSensorV2 calls element.getBoundingClientRect() with no null guar… |
+| [12114](https://github.com/baidu/amis/issues/12114) | amis-editor  向前添加组件必导致错误 bug | 原记录根因不成立(需复现) | `resizeSensorV2` 在访问 `getBoundingClientRect()` 前已有空元素检查；不能据此认定为缺少 null 守卫，需原操作栈定位。 |
 | [11897](https://github.com/baidu/amis/issues/11897) | 编辑器源码中使用amisRender渲染的schema都无法根据主题渲染 | 源码现存(高确信) ⏭️跳过(本轮) | amisRender 主题透传遍布多处 → 跳过 | packages/amis-editor/src/renderer/event-control/index.tsx:1417; TransferTableControl.tsx:489; TimelineItemControl.tsx:41… |
 | [11808](https://github.com/baidu/amis/issues/11808) | 编辑器左侧全局变量弹窗无法指定主题 | 源码现存(高确信) ⏭️跳过(本轮) | GlobalVarManagerPanel 在 v680 不存在 → 跳过 | packages/amis-editor/src/renderer/global-var-control/GlobalVarManagerPanel.tsx:310 ConfirmBox rendered with no theme/cla… |
 | [11735](https://github.com/baidu/amis/issues/11735) | amis-eidtor 容器固定宽高时，拖拽未对 % 等单位特殊处理 | 源码现存(高确信) ⏭️跳过(本轮) | Container 拖拽单位处理，需读原单位，面大 → 跳过 | packages/amis-editor/src/plugin/Container.tsx:268 drag resize hardcodes `${width}px`, no unit handling for %/em/vw/vh. |
-| [11694](https://github.com/baidu/amis/issues/11694) | diff-editor 的左侧值diffValue无法动态更新 | 源码现存(高确信) ⏭️跳过(本轮) | DiffEditor diffValue 动态绑定机制，面大 → 跳过 | packages/amis-editor/src/plugin/Form/DiffEditor.tsx:178 diffValue only read at config time (valueFormula), no dynamic bi… |
+| [11694](https://github.com/baidu/amis/issues/11694) | diff-editor 的左侧值diffValue无法动态更新 | 当前代码已有处理(需原场景复现) | `packages/amis/src/renderers/Form/DiffEditor.tsx` 的 `componentDidUpdate` 在 `diffValue` 或 `data` 变化时更新左侧编辑器模型；原记录仅检查编辑器插件配置，漏看了运行时逻辑。 |
 | [11428](https://github.com/baidu/amis/issues/11428) | amis editor重做(redo)操作只能进行一次 | 源码现存(高确信) ⏭️跳过(本轮) | redo/undo 历史状态耦合，风险高 → 跳过 | packages/amis-editor-core/src/store/editor.ts:2289 traceableSetSchema still splices future history on every call (idx+1.… |
 | [11034](https://github.com/baidu/amis/issues/11034) | editor中List2组件buildDataSchemas方法不关注root scope数据 | 源码现存(高确信) ✅已修复(本轮) | List2.tsx buildDataSchemas 改为 switchTo(scope.parent) 后用 dataSchema.getSchemaByPath，与 master be917022f 一致，支持 root scope |
 | [10820](https://github.com/baidu/amis/issues/10820) | 编辑器内拖拽问题 | 源码现存(高确信) ⏭️跳过(本轮) | dnd 大幅重构，无安全隔离移植 → 跳过 | packages/amis-editor-core/src/dnd/index.ts:107-116,121-125 |
