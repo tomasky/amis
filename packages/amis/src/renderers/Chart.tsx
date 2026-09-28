@@ -230,6 +230,8 @@ export class Chart extends React.Component<ChartProps> {
   mounted: boolean;
   reloadCancel?: Function;
   onChartMount?: ((chart: any, echarts: any) => void) | undefined;
+  /** receive 主动 reload 后，跳过 componentDidUpdate 里因 data 变化触发的重复 reload，避免联动发两次请求 */
+  skipNextApiReload?: boolean;
 
   constructor(props: ChartProps) {
     super(props);
@@ -265,7 +267,14 @@ export class Chart extends React.Component<ChartProps> {
   componentDidUpdate(prevProps: ChartProps) {
     const props = this.props;
 
-    if (isApiOutdated(prevProps.api, props.api, prevProps.data, props.data)) {
+    // receive 已经主动 reload 过一次，这里跳过因同一次 data 变化触发的重复请求（#11841）
+    const skipApiReload = this.skipNextApiReload;
+    this.skipNextApiReload = false;
+
+    if (
+      !skipApiReload &&
+      isApiOutdated(prevProps.api, props.api, prevProps.data, props.data)
+    ) {
       this.reload();
     } else if (props.source && isPureVariable(props.source)) {
       const prevRet = prevProps.source
@@ -552,6 +561,9 @@ export class Chart extends React.Component<ChartProps> {
   receive(data: object, subPath?: string, replace?: boolean) {
     const store = this.props.store;
 
+    // store.updateData 会触发重渲染，componentDidUpdate 里的 isApiOutdated 会再 reload 一次，
+    // 联动场景下会导致发两次请求，这里标记跳过下一次 didUpdate 的 api reload（#11841）
+    this.skipNextApiReload = true;
     store.updateData(data, undefined, replace);
     this.reload();
   }

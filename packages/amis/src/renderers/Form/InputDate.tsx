@@ -462,6 +462,25 @@ export default class DateControl extends React.PureComponent<
       );
     }
 
+    // value 使用公式表达式（如 DATEMODIFY 等函数）且结果发生变化时，
+    // 结果可能是 Date/moment 对象，需要按 valueFormat 归一化后回写，
+    // 否则提交时会变成 ISO 字符串，与配置的 valueFormat 不一致 Close: #11734
+    if (
+      props.changeMotivation === 'formulaChanged' &&
+      props.value &&
+      (prevProps.value !== props.value ||
+        prevProps.changeMotivation !== props.changeMotivation)
+    ) {
+      const date = normalizeDate(
+        props.value,
+        props.valueFormat || props.format
+      );
+      const normalized = date?.format(props.valueFormat || props.format);
+      if (normalized && normalized !== props.value) {
+        props.setPrinstineValue(normalized);
+      }
+    }
+
     if (
       prevProps.minDate !== props.minDate ||
       prevProps.maxDate !== props.maxDate ||

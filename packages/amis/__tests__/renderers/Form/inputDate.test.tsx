@@ -587,3 +587,63 @@ test('Renderer:inputDate setValue actions with special words', async () => {
   expect(inputDate).toBeInTheDocument();
   expect((inputDate as any)?.value).toEqual(today.format('YYYY-MM-DD'));
 });
+
+test('Renderer:inputDate formula value should be normalized to valueFormat (#11734)', async () => {
+  const onSubmit = jest.fn();
+  const {getByText} = render(
+    amisRender(
+      {
+        type: 'form',
+        wrapWithPanel: false,
+        onSubmit,
+        controls: [
+          {
+            type: 'input-date',
+            name: 'purchasing_date',
+            valueFormat: 'YYYY-MM-DD',
+            displayFormat: 'YYYY-MM-DD'
+          },
+          {
+            type: 'input-date',
+            name: 'due_date',
+            valueFormat: 'YYYY-MM-DD',
+            displayFormat: 'YYYY-MM-DD',
+            value: "${DATEMODIFY(purchasing_date, 5, 'years')}"
+          },
+          {
+            type: 'button',
+            label: '设置值',
+            onEvent: {
+              click: {
+                actions: [
+                  {
+                    actionType: 'setValue',
+                    componentId: 'theForm',
+                    args: {
+                      value: {purchasing_date: '2025-01-15'}
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {type: 'submit', label: 'Submit'}
+        ],
+        id: 'theForm'
+      },
+      {},
+      makeEnv({})
+    )
+  );
+
+  fireEvent.click(getByText('设置值'));
+  await wait(500);
+
+  fireEvent.click(getByText('Submit'));
+  await waitFor(() => {
+    expect(onSubmit).toBeCalledTimes(1);
+  });
+
+  expect(onSubmit.mock.calls[0][0].purchasing_date).toBe('2025-01-15');
+  expect(onSubmit.mock.calls[0][0].due_date).toBe('2030-01-15');
+});
