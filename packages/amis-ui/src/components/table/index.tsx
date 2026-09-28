@@ -1003,7 +1003,6 @@ export class Table extends React.PureComponent<TableProps, TableState> {
       draggable,
       rowClassName,
       keyField,
-      columns,
       lazyRenderAfter,
       classPrefix,
       classnames: cx,
@@ -1050,7 +1049,7 @@ export class Table extends React.PureComponent<TableProps, TableState> {
         data={data}
         rowIndex={rowIndex}
         levels={levels.join(',')}
-        columns={columns}
+        tdColumns={this.tdColumns}
         selectable={!!rowSelection}
         rowSelectionFixed={!!rowSelection?.fixed}
         rowSelectionType={rowSelection?.type || 'checkbox'}

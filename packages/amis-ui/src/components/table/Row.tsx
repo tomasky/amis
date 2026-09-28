@@ -10,20 +10,15 @@ import {ThemeProps, isObject, autobind, isClickOnInput} from 'amis-core';
 
 import CheckBox from '../Checkbox';
 import {Icon} from '../icons';
-import {ColumnProps, TdProps} from './index';
+import {TdProps} from './index';
 import Cell from './Cell';
-import {
-  getBuildColumns,
-  updateFixedRow,
-  hasFixedColumn,
-  levelsSplit
-} from './util';
+import {updateFixedRow, hasFixedColumn, levelsSplit} from './util';
 import type {TestIdBuilder} from 'amis-core';
 
 export interface Props extends ThemeProps {
   data: any;
   rowIndex: number;
-  columns: ColumnProps[];
+  tdColumns: TdProps[];
   expandable: boolean;
   expandableFixed?: boolean;
   indentSize: number;
@@ -182,7 +177,7 @@ class BodyRow extends React.PureComponent<Props> {
       rowClassName,
       lineHeight,
       levels,
-      columns,
+      tdColumns,
       data,
       isExpandable,
       rowIndex,
@@ -211,7 +206,6 @@ class BodyRow extends React.PureComponent<Props> {
       ...rest
     } = this.props;
 
-    const {tdColumns} = getBuildColumns(columns);
     this.tdColumns = tdColumns;
 
     const level = levelsSplit(levels).length;
@@ -411,8 +405,7 @@ export default class LazyRow extends React.PureComponent<
 
   render() {
     const visible = this.state.visible;
-    const {columns, lazyRenderAfter, rowIndex, classnames: cx} = this.props;
-    const {tdColumns} = getBuildColumns(columns);
+    const {tdColumns, lazyRenderAfter, rowIndex, classnames: cx} = this.props;
 
     return (
       <InView
@@ -425,7 +418,7 @@ export default class LazyRow extends React.PureComponent<
             <BodyRow {...this.props} />
           ) : (
             <tr ref={ref}>
-              {tdColumns.map((column: ColumnProps, index: number) => {
+              {tdColumns.map((column: TdProps, index: number) => {
                 return (
                   <td key={`empty-cell-${index}`}>
                     <div className={cx('Table-emptyBlock')}>&nbsp;</div>

@@ -309,19 +309,19 @@ export function getSortData(
   childrenColumnName: string,
   sort?: SortProps
 ): Array<any> {
-  const cloneData = data.slice();
   if (!sort?.orderBy) {
-    return cloneData;
+    return data;
   }
   const column = columns.find(column => column.name === sort.orderBy);
   if (!column) {
-    return cloneData;
+    return data;
   }
   if (typeof column.sorter !== 'function') {
-    return cloneData;
+    return data;
   }
   const sortOrder = sort.orderDir;
-  return cloneData
+  return data
+    .slice()
     .sort((record1, record2) => {
       const compareResult =
         typeof column.sorter === 'function'
@@ -338,7 +338,7 @@ export function getSortData(
         return {
           ...record,
           [childrenColumnName]: getSortData(
-            data,
+            subRecords,
             columns,
             childrenColumnName,
             sort

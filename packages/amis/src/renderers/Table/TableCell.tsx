@@ -12,6 +12,35 @@ import {isPureVariable, resolveVariableAndFilter} from 'amis-core';
 
 import type {TestIdBuilder} from 'amis-core';
 
+const backgroundScaleBounds = new WeakMap<
+  any[],
+  Map<string, {min: number; max: number}>
+>();
+
+function getBackgroundScaleBounds(rows: any[], field: string) {
+  let columns = backgroundScaleBounds.get(rows);
+  const cached = columns?.get(field);
+  if (cached) {
+    return cached;
+  }
+
+  let min = Infinity;
+  let max = -Infinity;
+  for (const row of rows) {
+    const value = row[field];
+    min = Math.min(min, value);
+    max = Math.max(max, value);
+  }
+
+  const bounds = {min, max};
+  if (!columns) {
+    columns = new Map();
+    backgroundScaleBounds.set(rows, columns);
+  }
+  columns.set(field, bounds);
+  return bounds;
+}
+
 export interface TableCellProps extends RendererProps {
   wrapperComponent?: React.ElementType;
   column: any;
@@ -143,11 +172,19 @@ export class TableCell extends React.Component<TableCellProps> {
         max = resolveVariableAndFilter(max, data, '| raw');
       }
 
-      if (typeof min === 'undefined') {
-        min = Math.min(...data.rows.map((r: any) => r[column.name]));
-      }
-      if (typeof max === 'undefined') {
-        max = Math.max(...data.rows.map((r: any) => r[column.name]));
+      if (typeof min === 'undefined' || typeof max === 'undefined') {
+        if (!Array.isArray(data.rows)) {
+          throw new Error(
+            'Table backgroundScale requires data.rows to be an array'
+          );
+        }
+        const bounds = getBackgroundScaleBounds(data.rows, column.name);
+        if (typeof min === 'undefined') {
+          min = bounds.min;
+        }
+        if (typeof max === 'undefined') {
+          max = bounds.max;
+        }
       }
 
       const colorScale = new ColorScale(
