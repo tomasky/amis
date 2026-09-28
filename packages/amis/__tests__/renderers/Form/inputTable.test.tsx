@@ -128,9 +128,9 @@ test('Renderer: input-table with default value column', async () => {
   await wait(1000);
 
   fireEvent.click(getByText('Submit'));
-  await wait(200);
-
-  expect(onSubmitCallbackFn).toHaveBeenCalledTimes(1);
+  await waitFor(() => {
+    expect(onSubmitCallbackFn).toHaveBeenCalledTimes(1);
+  });
   expect(onSubmitCallbackFn.mock.calls[0][0]).toEqual(
     expect.objectContaining({
       table: [
@@ -296,6 +296,14 @@ test('Renderer:input-table with combo column', async () => {
 // 单元格：表单校验
 test('Renderer:input-table verifty', async () => {
   const onSubmit = jest.fn();
+  const fetcher = jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      data: {
+        status: 0,
+        data: {}
+      }
+    })
+  );
   const {container, findByText, findByPlaceholderText} = render(
     amisRender(
       {
@@ -340,7 +348,7 @@ test('Renderer:input-table verifty', async () => {
         ]
       },
       {onSubmit},
-      makeEnv({})
+      makeEnv({fetcher})
     )
   );
 
@@ -363,8 +371,9 @@ test('Renderer:input-table verifty', async () => {
   const selectItem = await findByText('s2');
   selectItem.click();
 
-  await wait(100);
-  expect(onSubmit).toBeCalledTimes(1);
+  await waitFor(() => {
+    expect(onSubmit).toBeCalledTimes(1);
+  });
 }, 10000);
 
 // 单元格：下拉删除

@@ -263,11 +263,12 @@ test('Renderer:combo with minLength & maxLength', async () => {
   expect(submitBtn).toBeInTheDocument();
   fireEvent.click(submitBtn);
 
-  await wait(100);
+  await waitFor(() => {
+    expect(
+      container.querySelector('form.cxd-Form > .cxd-Form-item')!
+    ).toHaveClass('is-error');
+  });
   expect(onSubmit).not.toBeCalled();
-  expect(
-    container.querySelector('form.cxd-Form > .cxd-Form-item')!
-  ).toHaveClass('is-error');
 
   replaceReactAriaIds(container);
   expect(container).toMatchSnapshot('minLength error');
@@ -281,10 +282,11 @@ test('Renderer:combo with minLength & maxLength', async () => {
   await wait(10);
   fireEvent.click(addBtn);
 
-  await wait(100);
-  expect(
-    container.querySelector('button.cxd-Combo-addBtn')!
-  ).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(
+      container.querySelector('button.cxd-Combo-addBtn')!
+    ).not.toBeInTheDocument();
+  });
 });
 
 // 4. flat 打平

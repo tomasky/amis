@@ -102,8 +102,11 @@ test('Renderer:chained-select', async () => {
   expect(getByText('D 2')).toBeInTheDocument();
   fireEvent.click(getByText('D 2'));
 
-  await wait(100);
-  expect(fetcher).toBeCalledTimes(4);
+  await waitFor(() => {
+    expect(fetcher).toBeCalledTimes(4);
+    // 等待新一级下拉加载完成并渲染出占位文案
+    expect(getByText('请选择')).toBeInTheDocument();
+  });
   expect(fetcher.mock.calls[3][0].query).toMatchObject({
     parentId: 'd',
     level: 3,
