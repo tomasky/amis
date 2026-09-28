@@ -355,8 +355,9 @@ export class TreeSelector extends React.Component<
         } else if (foldedField && typeof node[foldedField] !== 'undefined') {
           ret = !node[foldedField];
         } else {
+          // initiallyOpen 为 true 时全部展开；为 false 时按 unfoldedLevel 控制层级
           ret = !!props.initiallyOpen && !initFoldedLevel;
-          if (!ret && level <= (expandLevel as number)) {
+          if (!ret && level < (expandLevel as number)) {
             ret = true;
           }
         }

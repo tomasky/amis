@@ -1003,10 +1003,10 @@ export default class FormTable extends React.Component<TableProps, TableState> {
     if (isNew) {
       items = spliceTree(items, indexes, 1);
     } else {
-      /** 恢复编辑前的值 */
+      /** 恢复编辑前的值，仅当最近一次修改的就是当前正在编辑的行时才回溯 */
       if (
         lastModifiedRow &&
-        ~lastModifiedRow?.index &&
+        lastModifiedRow.index === this.state.editIndex &&
         isObject(lastModifiedRow?.data)
       ) {
         items = spliceTree(items, indexes, 1, {

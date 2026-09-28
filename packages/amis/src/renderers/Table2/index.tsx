@@ -652,10 +652,11 @@ export default class Table2 extends React.Component<Table2Props, object> {
         rows.forEach((row: any, index: number) => {
           const flag = evalExpression(
             props.rowSelection?.selectedRowKeysExpr || '',
-            {
+            // 合并组件数据域，使表达式可以引用外层/页面变量
+            createObject(props.data, {
               record: row,
               rowIndex: index
-            }
+            })
           );
           if (flag) {
             selectedRowKeys.push(row[keyField]);
@@ -676,10 +677,11 @@ export default class Table2 extends React.Component<Table2Props, object> {
       rows.forEach((row: any, index: number) => {
         const flag = evalExpression(
           props.expandable?.expandedRowKeysExpr || '',
-          {
+          // 合并组件数据域，使表达式可以引用外层/页面变量
+          createObject(props.data, {
             record: row,
             rowIndex: index
-          }
+          })
         );
         if (flag) {
           expandedRowKeys.push(row[expandableKeyField]);
