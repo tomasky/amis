@@ -1259,7 +1259,7 @@ exports[`5. Renderer:crud cards 1`] = `
                 class="cxd-Cards-body cxd-Grid"
               >
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1327,7 +1327,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1395,7 +1395,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1463,7 +1463,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1531,7 +1531,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1599,7 +1599,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1667,7 +1667,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1735,7 +1735,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1803,7 +1803,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"
@@ -1871,7 +1871,7 @@ exports[`5. Renderer:crud cards 1`] = `
                   </div>
                 </div>
                 <div
-                  class="cxd-Grid-col--xs12 cxd-Grid-col--sm6 cxd-Grid-col--md4 cxd-Grid-col--lg3"
+                  class="cxd-Grid-col--sm6"
                 >
                   <div
                     class="cxd-Card cxd-Card--link"

@@ -87,7 +87,7 @@ exports[`Renderer:tabsTransfer 1`] = `
                                   role="tablist"
                                 >
                                   <li
-                                    class="cxd-Tabs-link is-active"
+                                    class="cxd-Tabs-link is-active cxd-TabsTransfer-tab"
                                   >
                                     <a
                                       title="成员"
@@ -100,7 +100,7 @@ exports[`Renderer:tabsTransfer 1`] = `
                                     </a>
                                   </li>
                                   <li
-                                    class="cxd-Tabs-link"
+                                    class="cxd-Tabs-link cxd-TabsTransfer-tab"
                                   >
                                     <a
                                       title="用户"
@@ -697,7 +697,7 @@ exports[`Renderer:tabsTransfer with deferApi 1`] = `
                                   role="tablist"
                                 >
                                   <li
-                                    class="cxd-Tabs-link is-active"
+                                    class="cxd-Tabs-link is-active cxd-TabsTransfer-tab"
                                   >
                                     <a
                                       title="成员"
@@ -710,7 +710,7 @@ exports[`Renderer:tabsTransfer with deferApi 1`] = `
                                     </a>
                                   </li>
                                   <li
-                                    class="cxd-Tabs-link"
+                                    class="cxd-Tabs-link cxd-TabsTransfer-tab"
                                   >
                                     <a
                                       title="用户"
