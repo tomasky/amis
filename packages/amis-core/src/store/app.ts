@@ -11,6 +11,7 @@ import {
 } from '../utils/helper';
 import {ServiceStore} from './service';
 import {filter, isVisible, resolveVariableAndFilter} from '../utils';
+import isEqual from 'lodash/isEqual';
 
 export const AppStore = ServiceStore.named('AppStore')
   .props({
@@ -141,8 +142,11 @@ export const AppStore = ServiceStore.named('AppStore')
       },
       params?: any
     ) {
-      // 同一个页面直接返回。
-      if (self.activePage?.id === page.id) {
+      // 页面和路由参数都未变化时，无需重建页面或重复请求 schema。
+      if (
+        self.activePage?.id === page.id &&
+        isEqual(self.activePage.params || {}, params || {})
+      ) {
         return;
       }
 

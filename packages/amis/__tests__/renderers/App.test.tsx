@@ -7,7 +7,8 @@ import {
   cleanup,
   screen,
   waitFor,
-  within
+  within,
+  act
 } from '@testing-library/react';
 import {render as amisRender} from '../../src';
 import {makeEnv, wait} from '../helper';
@@ -101,4 +102,44 @@ test('Renderers:App locale', async () => {
   const inputLabel = container.querySelector('.cxd-Form-label');
   expect(inputLabel).toBeInTheDocument();
   expect(inputLabel!.textContent).toBe('开发环境');
+});
+
+test('App updates route params on the same page without refetching unchanged params', async () => {
+  let routeId = '1';
+  let routeChanged: (() => void) | undefined;
+  const fetcher = jest.fn(async (_api: any, _data: any) => ({
+    status: 200,
+    data: {
+      type: 'page',
+      body: {type: 'tpl', tpl: '${params.id}'}
+    }
+  }));
+  const {container} = render(
+    amisRender(
+      {
+        type: 'app',
+        pages: [{id: 'detail', url: '/item/:id', schemaApi: '/schema'}]
+      },
+      {},
+      makeEnv({
+        fetcher,
+        isCurrentUrl: () => ({params: {id: routeId}}),
+        watchRouteChange: callback => {
+          routeChanged = callback;
+          return () => {};
+        }
+      })
+    )
+  );
+
+  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(container).toHaveTextContent('1'));
+
+  act(() => routeChanged?.());
+  expect(fetcher).toHaveBeenCalledTimes(1);
+
+  routeId = '2';
+  act(() => routeChanged?.());
+  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(container).toHaveTextContent('2'));
 });

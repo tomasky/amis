@@ -663,7 +663,6 @@
       overflow-wrap: break-word;
       margin-right: 0;
       margin-bottom: 0;
-      font-size: var(--fontSizeLg);
 
       & + .#{$ns}Form-item-controlBox {
         max-width: calc(100% - 28%);
