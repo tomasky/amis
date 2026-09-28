@@ -28,7 +28,9 @@ import {
   getTreeAncestors,
   flattenTree,
   flattenTreeWithLeafNodes,
-  TestIdBuilder
+  TestIdBuilder,
+  calculateHeight,
+  resizeSensor
 } from 'amis-core';
 import {Option, Options, value2array} from './Select';
 import {themeable, ThemeProps, highlight} from 'amis-core';
@@ -171,6 +173,11 @@ interface TreeSelectorState {
 
   // 拖拽指示器
   dropIndicator?: IDropIndicator;
+
+  // 虚拟列表高度（heightAuto 场景下根据实际高度动态计算）
+  virtualHeight?: number;
+  // 单行高度（首次渲染时通过 styleGetter 测量）
+  itemHeight?: number;
 }
 
 export class TreeSelector extends React.Component<
@@ -214,11 +221,14 @@ export class TreeSelector extends React.Component<
     itemHeight: 32,
     enableDefaultIcon: true
   };
-  // 展开的节点
-  unfolded: WeakMap<Object, boolean> = new WeakMap();
+  // 展开的节点，key 为节点在树中的索引路径（indexes.join('-')），
+  // 改用路径而非对象引用作为 key，避免 options 被克隆（如 creatable 添加节点）后展开态丢失。Close: #11604
+  unfolded: Record<string, boolean> = {};
   // key: child option, value: parent option;
   relations: WeakMap<Option, Option> = new WeakMap();
   levels: WeakMap<Option, number> = new WeakMap();
+  // key: option 节点，value: 该节点在树中的索引路径，配合 unfolded 使用
+  nodePaths: WeakMap<Option, string> = new WeakMap();
 
   dragNode: Option | null;
   dropInfo: IDropInfo | null;
@@ -230,6 +240,8 @@ export class TreeSelector extends React.Component<
     y: 0
   };
   root = React.createRef<HTMLDivElement>();
+  virtualListRef: HTMLDivElement | null = null;
+  unSensor?: () => void;
 
   constructor(props: TreeSelectorProps) {
     super(props);
@@ -254,7 +266,9 @@ export class TreeSelector extends React.Component<
       isAdding: false,
       isEditing: false,
       editingItem: null,
-      dropIndicator: undefined
+      dropIndicator: undefined,
+      virtualHeight: 0,
+      itemHeight: 0
     };
 
     this.syncUnFolded(props, undefined, true);
@@ -267,6 +281,21 @@ export class TreeSelector extends React.Component<
     // onRef只有渲染器的情况才会使用
     this.props.onRef?.(this);
     enableNodePath && this.expandLazyLoadNodes();
+
+    // 监听容器高度变化，动态计算虚拟列表高度（heightAuto 场景）
+    let treeElement: HTMLElement = this.root.current!;
+    treeElement =
+      treeElement?.parentElement?.matches('.cxd-TreeControl') &&
+      treeElement.parentElement.childElementCount === 1
+        ? treeElement.parentElement
+        : treeElement;
+
+    this.unSensor = resizeSensor(
+      treeElement,
+      this.handleVirtualHeight,
+      false,
+      'height'
+    );
   }
 
   componentDidUpdate(prevProps: TreeSelectorProps) {
@@ -302,7 +331,13 @@ export class TreeSelector extends React.Component<
 
   componentWillUnmount(): void {
     // clear data
-    this.relations = this.unfolded = this.levels = new WeakMap() as any;
+    this.relations = this.levels = this.nodePaths = new WeakMap() as any;
+    this.unfolded = {};
+
+    if (this.unSensor) {
+      this.unSensor();
+      delete this.unSensor;
+    }
   }
 
   /**
@@ -331,8 +366,9 @@ export class TreeSelector extends React.Component<
     let unfolded = this.unfolded;
     const {deferField, foldedField, unfoldedField} = this.props;
 
-    eachTree(props.options, (node: Option, index, level) => {
-      if (unfolded.has(node) && !initFoldedLevel) {
+    eachTree(props.options, (node: Option, index, level, paths, indexes) => {
+      const unfoldedKey = indexes.concat(index).join('-');
+      if (unfolded[unfoldedKey] !== undefined && !initFoldedLevel) {
         return;
       }
 
@@ -361,7 +397,7 @@ export class TreeSelector extends React.Component<
             ret = true;
           }
         }
-        unfolded.set(node, ret);
+        unfolded[unfoldedKey] = ret;
       }
     });
 
@@ -379,12 +415,13 @@ export class TreeSelector extends React.Component<
       onDeferLoad?.(node);
       return;
     }
+    const path = this.nodePaths.get(node)!;
     // ！ hack: 在node上直接添加属性，options 在更新的时候旧的字段会保留
     if (node[deferField] && node.loaded) {
-      node[unfoldedField] = !unfolded.get(node);
+      node[unfoldedField] = !unfolded[path];
     }
 
-    unfolded.set(node, !unfolded.get(node));
+    unfolded[path] = !unfolded[path];
     this.flattenOptions();
     this.forceUpdate();
   }
@@ -392,10 +429,11 @@ export class TreeSelector extends React.Component<
   isUnfolded(node: any): boolean {
     const unfolded = this.unfolded;
     const parent = this.relations.get(node);
+    const path = this.nodePaths.get(node)!;
     if (parent) {
-      return !!unfolded.get(node) && this.isUnfolded(parent);
+      return !!unfolded[path] && this.isUnfolded(parent);
     }
-    return !!unfolded.get(node);
+    return !!unfolded[path];
   }
 
   @autobind
@@ -430,20 +468,21 @@ export class TreeSelector extends React.Component<
     const nodesValuePath: string[] = [];
     const selectedNodes = Array.isArray(value) ? value.concat() : [value];
     const selectedNodesPath = selectedNodes.map(node => {
-      const nodePath = getTreeAncestors(options, node, true)?.reduce(
-        (acc, node) => {
-          acc[labelField as string].push(node[labelField as string]);
-          acc[valueField as string].push(node[valueField as string]);
-          return acc;
-        },
-        {[labelField as string]: [], [valueField as string]: []}
-      );
-      const nodeValuePath = nodePath[valueField as string].join(pathSeparator);
+      // 用独立的两个数组收集 label 与 value 路径，避免 valueField 与 labelField
+      // 同名时（如都取 'label'）两个 key 撞成一个数组，导致路径重复。Close: #6229
+      const labelPath: string[] = [];
+      const valuePath: string[] = [];
+      getTreeAncestors(options, node, true)?.reduce((acc, item) => {
+        labelPath.push(item[labelField as string]);
+        valuePath.push(item[valueField as string]);
+        return acc;
+      }, {});
+      const nodeValuePath = valuePath.join(pathSeparator);
 
       nodesValuePath.push(nodeValuePath);
       return {
         ...node,
-        [labelField]: nodePath[labelField as string].join(pathSeparator),
+        [labelField]: labelPath.join(pathSeparator),
         [valueField]: nodeValuePath
       };
     });
@@ -905,7 +944,10 @@ export class TreeSelector extends React.Component<
         };
 
         if (node?.children?.length) {
-          this.unfolded.set(node, false);
+          const path = this.nodePaths.get(node);
+          if (path) {
+            this.unfolded[path] = false;
+          }
           this.flattenOptions();
           this.forceUpdate();
         }
@@ -957,12 +999,13 @@ export class TreeSelector extends React.Component<
 
     eachTree(
       props?.options || this.props.options,
-      (item, index, level, paths: Option[]) => {
+      (item, index, level, paths: Option[], indexes: Array<number>) => {
         const parent = paths[paths.length - 1];
         if (!isVisible(item)) {
           return;
         }
         this.levels.set(item, level);
+        this.nodePaths.set(item, indexes.concat(index).join('-'));
         parent && this.relations.set(item, parent);
         if (paths.length === 0) {
           // 父节点
@@ -1480,18 +1523,86 @@ export class TreeSelector extends React.Component<
   }
 
   @autobind
+  styleGetter(node: HTMLElement | null) {
+    node && this.setState({itemHeight: node?.offsetHeight || 0});
+  }
+
+  @autobind
+  virtualListRefSetter(ref: HTMLDivElement | null) {
+    this.virtualListRef = ref;
+    ref && this.handleVirtualHeight();
+  }
+
+  @autobind
+  handleVirtualHeight() {
+    const {virtualThreshold} = this.props;
+    const {flattenedOptions, itemHeight} = this.state;
+
+    if (virtualThreshold && flattenedOptions.length > virtualThreshold) {
+      // tree 对应元素
+      let treeElement: HTMLElement = this.root.current!;
+
+      if (
+        !this.virtualListRef ||
+        (!treeElement.offsetHeight && !treeElement.offsetWidth)
+      ) {
+        return;
+      }
+
+      treeElement =
+        treeElement?.parentElement?.matches('.cxd-TreeControl') &&
+        treeElement.parentElement.childElementCount === 1
+          ? treeElement.parentElement
+          : treeElement;
+
+      const styles = getComputedStyle(treeElement);
+      let offsetHeight = 0;
+      if (styles.flexGrow !== '0') {
+        // 当配置成了动态高度时（heightAuto），根据实际高度来
+        offsetHeight = treeElement.offsetHeight;
+      } else {
+        offsetHeight =
+          itemHeight * Math.min(flattenedOptions.length, virtualThreshold);
+      }
+      const virtualElement = this.virtualListRef!;
+
+      // 通常时外围设置了 maxHeight
+      if (
+        virtualElement.offsetHeight &&
+        virtualElement.offsetHeight > treeElement.offsetHeight
+      ) {
+        offsetHeight = treeElement.offsetHeight;
+      }
+
+      // 虚拟列表 对应元素
+      // todo 去支持外部滚动也支持虚拟滚动的场景，目前不支持，所以只能让高度最大，其实就没启动虚拟滚动
+      // 目前只有没有配置  heightAuto 的时候
+      // 或者配置了 flexGrow 的时候，才会有虚拟滚动的效果
+
+      const virtualHeight =
+        offsetHeight - calculateHeight(treeElement, virtualElement);
+
+      this.setState({virtualHeight: virtualHeight});
+    }
+  }
+
+  @autobind
   renderList(list: Options, value: any[]) {
-    const {virtualThreshold, itemHeight = 32} = this.props;
+    const {virtualThreshold} = this.props;
+    const {virtualHeight, itemHeight} = this.state;
     if (virtualThreshold && list.length > virtualThreshold) {
-      return (
-        <VirtualList
-          height={list.length > 8 ? 266 : list.length * itemHeight}
-          itemCount={list.length}
-          prefix={this.renderCheckAll()}
-          itemSize={itemHeight}
-          //! hack: 让 VirtualList 重新渲染
-          renderItem={this.renderItem.bind(this)}
-        />
+      return itemHeight ? (
+        <div ref={this.virtualListRefSetter}>
+          <VirtualList
+            height={virtualHeight}
+            itemCount={list.length}
+            prefix={this.renderCheckAll()}
+            itemSize={itemHeight}
+            renderItem={this.renderItem.bind(this)}
+          />
+        </div>
+      ) : (
+        this.renderItem({index: 0, ref: this.styleGetter})
       );
     }
 

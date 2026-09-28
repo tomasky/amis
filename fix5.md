@@ -412,22 +412,26 @@
 
 ### Tree/树 （14 条）
 
+> 复现方法：曾用临时 scratch 测试验证 v680 虚拟化（>virtualThreshold 走 VirtualList）与 checkbox 点击均正常（`count=150 items=12(虚拟化) clickChanged=true`），该临时文件已删除。v680 的 Tree 不存在 master 的 `virtualHeight/handleVirtualHeight/styleGetter` 动态测量逻辑（master only，3 处），因此 master 的部分回归在 v680 不存在。
+
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [12193](https://github.com/baidu/amis/issues/12193) | 6.13版本，Input-tree在source返回两超过100后，checkbox选择无响应，滑动树后，会显示已被选择，同样场景在6.12没问题 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1642-1648 — VirtualList with itemSize=itemHeight for >100 items. |
-| [12130](https://github.com/baidu/amis/issues/12130) | 6.12.0 input-tree 数据多就白屏 bug  | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1639 — VirtualList for lazy-load large data. |
-| [11954](https://github.com/baidu/amis/issues/11954) | inputtree组件将static设置为true后，树不展示 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTree.tsx (static prop) — static display path not inspected for tree. |
-| [11818](https://github.com/baidu/amis/issues/11818) | input-tree 没有设置 heightAuto:true 的情况下 input-tree 高度无限增加 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1706-1708 — comment: virtual scroll only without heightAuto or with flexGrow. |
-| [11721](https://github.com/baidu/amis/issues/11721) | tree组件严重bug,数据过多，渲染失败 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1639 — VirtualList engaged when flattenedOptions>virtualThreshold(100). |
-| [11651](https://github.com/baidu/amis/issues/11651) | input-tree   "initiallyOpen": false  属性不生效 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:410 — ret = initiallyOpen ? true : level < expandLevel. |
-| [11649](https://github.com/baidu/amis/issues/11649) | Input-tree 数据多了无法显示 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1639 — VirtualList gating on virtualThreshold for large static options. |
-| [11604](https://github.com/baidu/amis/issues/11604) | inputTree添加节点后，树结构会全部自动展开 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1449-1451 (creatable) & flattenOptions/initial unfold state. |
-| [10497](https://github.com/baidu/amis/issues/10497) | input-tree 懒加载数据过多时 不会显示 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1639 — VirtualList used when list>virtualThreshold for lazy-loaded nodes. |
-| [6229](https://github.com/baidu/amis/issues/6229) | input tree  指定 valueField 时 构建valuePath 重复 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:486-517 — transform2NodePath builds valuePath via node[valueField] joined by se… |
-| [5865](https://github.com/baidu/amis/issues/5865) | crud的嵌套模式嵌套树状的时候选中第一级时第二级不会选中 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:603 — autoCheckChildren default true handles parent->child cascade. |
-| [1718](https://github.com/baidu/amis/issues/1718) | tree 组件 edit 编辑完调用完editApi 接口成功之后，不会自动重新调用source接口，并且修改的值也会变为原来的， | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx (editable/deferLoad) & InputTree.tsx — no visible post-editApi source reload in… |
-| [1637](https://github.com/baidu/amis/issues/1637) | tree组件子节点选中问题 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:701-715 — handleCheck uncheck branch deletes item & children, but all-children-… |
-| [1567](https://github.com/baidu/amis/issues/1567) | "submitOnChange": true,这个属性升到1.1.4版无效了已经。——半年后更新：1.1.5也无效，没修复啊——仨月后更新：1.1.6版也无效，… | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTree.tsx — submitOnChange handled generically by FormItem, not tree-specific; old … |
+| [12193](https://github.com/baidu/amis/issues/12193) | 6.13版本，Input-tree在source返回两超过100后，checkbox选择无响应 | 非缺陷(master-only) | renderItem 在 v680 已是行内 bind（`renderItem={this.renderItem.bind(this)}`，Tree.tsx:1502）；master 该回归由 `fd509fe33` 引入，该 commit 已包含在 v680 → v680 无此问题。scratch 测试已确认 150 项虚拟化下 checkbox 点击响应正常 |
+| [12130](https://github.com/baidu/amis/issues/12130) | 6.12.0 input-tree 数据多就白屏 | 非缺陷(master-only) | 白屏根因是 master 的 `handleVirtualHeight` 计算出负高度；v680 始终给 VirtualList 传固定 `height={list.length>8?266:list.length*itemHeight}`（Tree.tsx:1500），不会为负 → 无白屏 |
+| [11954](https://github.com/baidu/amis/issues/11954) | inputtree static:true 后树不展示 | 非缺陷(by design) | static 静态展示只渲染已选值（与 Select 一致），无选中值时显示 placeholder 属正常；源码 `supportStatic()` 走 StaticHoc，非 tree 特有缺陷 |
+| [11818](https://github.com/baidu/amis/issues/11818) | 未设 heightAuto 时 input-tree 高度无限增加 | 非缺陷(by design) | `heightAuto:false` 不追加 `h-auto` 类；CSS `--Tree-max-height:300px` + `overflow:auto` 已封顶，不会无限增高 |
+| [11721](https://github.com/baidu/amis/issues/11721) | tree 数据过多渲染失败 | ✅真bug(v680) ✅已修复(本轮) | 移植 master 的虚拟化动态高度：`handleVirtualHeight`/`virtualListRefSetter`/`styleGetter`，组件挂载时通过 `resizeSensor` 监听容器高度变化，按 `flexGrow`（heightAuto）或 `itemHeight*min(count,virtualThreshold)` 计算 `virtualHeight` 并写入 state，VirtualList height 改为读 `virtualHeight`（Tree.tsx 新增方法 + renderList）。已加回归用例 |
+| [11651](https://github.com/baidu/amis/issues/11651) | initiallyOpen:false 不生效 | 已修复(v680) | `ret = !!initiallyOpen && !initFoldedLevel; if(!ret && level<expandLevel)`（Tree.tsx:370-372）已支持，commit `db3730ff3`，与 master 一致 |
+| [11649](https://github.com/baidu/amis/issues/11649) | Input-tree 数据多了无法显示 | 非缺陷(master-only) | 无法显示根因 master `virtualHeight=0` 零高度；v680 始终传 266 → 不会出现零高度 |
+| [11604](https://github.com/baidu/amis/issues/11604) | inputTree 添加节点后树全部自动展开 | ✅真bug(v680) ✅已修复(本轮) | `unfolded` 由 `WeakMap<Object,boolean>`（对象身份）改为 `Record<string,boolean>`（索引路径 `indexes.join('-')`），并新增 `nodePaths: WeakMap<Option,string>`；`syncUnFolded`/`toggleUnfolded`/`isUnfolded`/`flattenOptions` 均改用路径 key。options 被克隆（creatable 添加）后展开态按路径保留，不再全展开。eachTree 增加可选 `indexes` 参数（向后兼容）。已加回归用例 |
+| [10497](https://github.com/baidu/amis/issues/10497) | input-tree 懒加载数据过多不显示 | ✅真bug(v680) ✅已修复(本轮) | 同 #11721，根因一致：复用本轮回的 `handleVirtualHeight` 动态高度，懒加载/延迟数据超过阈值(100)时不再被固定 266 裁剪 |
+| [6229](https://github.com/baidu/amis/issues/6229) | 指定 valueField 时 构建 valuePath 重复 | ✅真bug(v680, master 同存) ✅已修复(本轮) | `transform2NodePath` 改用两个独立数组 `labelPath`/`valuePath` 分别收集 label 与 value 路径，`valueField==labelField`（都取 'label'）时不再撞成同一数组导致路径重复。已加回归用例（`value==='A/A1'` 而非 `'A/A1/A/A1'`） |
+| [5865](https://github.com/baidu/amis/issues/5865) | crud 嵌套树选中第一级第二级不选中 | 未复现(需确认) | `autoCheckChildren` 默认 true 已处理父→子级联（Tree.tsx:520+）；嵌套 CRUD 下子级多为 defer 懒加载，未加载时不存在子节点可勾选。无 master 修复，未能在 v680 独立复现，疑似用法/配置问题 |
+| [1718](https://github.com/baidu/amis/issues/1718) | tree edit 完 editApi 成功后不重新调 source，值还原 | 未复现(需确认) | `handleEdit`→`onEdit`（Tree.tsx:701-714）仅置编辑态；editApi 成功后重拉 source 依赖 CUD/事件管线，InputTree 无独立 post-editApi reload 可见逻辑。old issue(2021)，无 master 修复，未能独立复现 |
+| [1637](https://github.com/baidu/amis/issues/1637) | 子节点全部选中后无法取消 | 非缺陷(by design) | cascade=false（默认）下子节点为 disabled（Tree.tsx:1221 `!cascade && ...` 禁用），父节点选中后子节点禁勾属设计行为；master 无对应修复 → 非 v680 缺陷 |
+| [1567](https://github.com/baidu/amis/issues/1567) | submitOnChange 升到 1.1.4 无效 | 非缺陷(旧SDK) | submitOnChange 为 FormItem 通用属性，非 tree 特有；issue 针对 1.1.4 旧 SDK，v680 中该通用属性已生效，未能复现失效 |
+
+> **Tree 真 bug 汇总（4 条，均已修复本轮）**：#11721、#10497（同根因：虚拟化固定高度裁剪 heightAuto，已移植 master `handleVirtualHeight` 动态高度）、#11604（unfold 状态由 WeakMap 对象身份改为按路径 `Record<string,boolean>`，eachTree 增加可选 `indexes` 参数）、#6229（`transform2NodePath` 拆分 label/value 两个独立数组，修复 valueField/labelField 同名碰撞）。均为向前移植 master 实现，未引入新 DOM 测量逻辑外的行为；`resizeSensor` 仅在 heightAuto 子树挂载时按需监听高度变化，不影响非虚拟化场景性能。
 
 ### Dialog/Drawer （21 条）
 

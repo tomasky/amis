@@ -342,6 +342,61 @@ export function getStyleNumber(element: HTMLElement, styleName: string) {
   return parseFloat(getComputedStyle(element).getPropertyValue(styleName)) || 0;
 }
 
+// 计算除去某个元素后，父元素剩余部分的高度总和（padding、margin、border、height）
+export function calculateHeight(
+  element: HTMLElement,
+  excludeElement: HTMLElement
+) {
+  const parentRect = element.getBoundingClientRect();
+  const childRect = excludeElement.getBoundingClientRect();
+
+  const topDifference = Math.abs(childRect.top - parentRect.top);
+
+  let bottomDifference = 0;
+  let selfNode = excludeElement;
+  let parentNode = selfNode.parentElement;
+  while (parentNode) {
+    const paddingBottom = getStyleNumber(parentNode, 'padding-bottom');
+    const borderBottom = getStyleNumber(parentNode, 'border-bottom-width');
+
+    let nextSiblingHeight = 0;
+    let nextSibling = selfNode.nextElementSibling as HTMLElement;
+    while (nextSibling) {
+      const positon = getComputedStyle(nextSibling).position;
+      const className = nextSibling.className;
+      if (
+        positon !== 'absolute' &&
+        positon !== 'fixed' &&
+        !className.includes('Spinner') // 过滤掉Loading
+      ) {
+        const rect1 = selfNode.getBoundingClientRect();
+        const rect2 = nextSibling.getBoundingClientRect();
+
+        if (rect1.bottom <= rect2.top) {
+          nextSiblingHeight +=
+            nextSibling.offsetHeight +
+            getStyleNumber(nextSibling, 'margin-bottom');
+        }
+      }
+
+      nextSibling = nextSibling.nextElementSibling as HTMLElement;
+    }
+
+    const marginBottom = getStyleNumber(selfNode, 'margin-bottom');
+    bottomDifference +=
+      paddingBottom + borderBottom + marginBottom + nextSiblingHeight;
+
+    selfNode = parentNode;
+    parentNode = selfNode.parentElement;
+
+    if (element === selfNode) {
+      break;
+    }
+  }
+
+  return topDifference + bottomDifference;
+}
+
 /** 根据关键字高亮显示文本内容 */
 export function renderTextByKeyword(rendererText: string, curKeyword: string) {
   if (!rendererText || typeof rendererText !== 'string') {
