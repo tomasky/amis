@@ -1020,16 +1020,26 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
   handleFilterReset(values: object, action: any) {
     const {store, syncLocation, env, pageField, perPageField} = this.props;
+    const isClear =
+      action?.actionType === 'clear' ||
+      action?.actionType === 'clear-and-submit';
 
     // 排序状态不在 filter 表单的 values 里，重置时需要显式清空，
     // 否则重置后表格的排序图标不会被清除
     const resetQuery: any = {orderBy: ''};
-    Object.keys(values).forEach(key => (resetQuery[key] = ''));
+    if (!isClear) {
+      Object.keys(values).forEach(key => (resetQuery[key] = ''));
+    }
     store.updateQuery(
-      {
-        ...resetQuery,
-        ...store.pristineQuery
-      },
+      isClear
+        ? {
+            // 表单项用清空后的值覆盖默认筛选，未绑定的固定查询条件仍保留。
+            ...store.pristineQuery,
+            ...values,
+            ...resetQuery,
+            [pageField || 'page']: 1
+          }
+        : {...resetQuery, ...store.pristineQuery},
       syncLocation && env && env.updateLocation
         ? (location: any) => env.updateLocation(location)
         : undefined,
@@ -1047,7 +1057,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
         action.actionType
       )
     ) {
-      return;
+      return action.actionType === 'reset-and-submit' ? store.query : undefined;
     }
 
     this.search();

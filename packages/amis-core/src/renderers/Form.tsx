@@ -373,7 +373,7 @@ export interface FormProps
   lazyLoad?: boolean;
   simpleMode?: boolean;
   onInit?: (values: object, props: any) => any;
-  onReset?: (values: object, action?: any) => void;
+  onReset?: (values: object, action?: any) => object | void;
   onSubmit?: (values: object, action: any) => any;
   onChange?: (values: object, diff: object, props: any) => any;
   onFailed?: (reason: string, errors: any) => any;
@@ -1188,7 +1188,7 @@ export default class Form extends React.Component<FormProps, object> {
     const {onReset} = this.props;
 
     return (data: any) => {
-      onReset && onReset(data, action);
+      return onReset?.(data, action);
     };
   }
 
@@ -1211,7 +1211,6 @@ export default class Form extends React.Component<FormProps, object> {
       clearAfterSubmit,
       onAction,
       onSaved,
-      onReset,
       onFinished,
       onFailed,
       redirect,
@@ -1283,7 +1282,13 @@ export default class Form extends React.Component<FormProps, object> {
       store.setCurrentAction(action, this.props.resolveDefinitions);
 
       if (action.actionType === 'reset-and-submit') {
-        store.reset(this.handleReset(action));
+        let resetValues: object | void;
+        store.reset(data => {
+          resetValues = this.handleReset(action)(data);
+        });
+        if (resetValues) {
+          store.setValues(resetValues);
+        }
       } else if (action.actionType === 'clear-and-submit') {
         store.clear(this.handleReset(action));
       }
@@ -1468,10 +1473,10 @@ export default class Form extends React.Component<FormProps, object> {
         });
     } else if (action.type === 'reset' || action.actionType === 'reset') {
       store.setCurrentAction(action, this.props.resolveDefinitions);
-      store.reset(onReset);
+      store.reset(this.handleReset(action));
     } else if (action.actionType === 'clear') {
       store.setCurrentAction(action, this.props.resolveDefinitions);
-      store.clear(onReset);
+      store.clear(this.handleReset(action));
     } else if (action.actionType === 'validate') {
       store.setCurrentAction(action, this.props.resolveDefinitions);
       return this.validate(true, throwErrors, true, true);
