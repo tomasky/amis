@@ -193,7 +193,8 @@ const CityArea = memo<AreaProps>(props => {
         values[1] = code;
       }
 
-      if (code % 100 && allowDistrict) {
+      // 直辖市的部分县区直接作为第二级叶节点，不存在第三级区列表。
+      if (code % 100 && allowDistrict && values[1] !== code) {
         values[2] = code;
       }
       setValues(values);

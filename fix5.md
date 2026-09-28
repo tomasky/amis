@@ -366,17 +366,17 @@
 | [8259](https://github.com/baidu/amis/issues/8259) | quickEdit 中 input-image 开启 multiple 后 hideUploadButton 失效 | 非缺陷（配置语义） | 维护者说明 `hideUploadButton` 隐藏的是手动上传按钮，不是选择图片的入口。 |
 | [4201](https://github.com/baidu/amis/issues/4201) | 光标在输入框，按钮的快捷键无效，光标不在输入框时，按钮的快捷键有效  | 源码现存(高确信) ⏭️跳过(本轮) | hotkeys-js 的 filter 是全局 `hotkeys.filter`，无 per-binding filter；要让输入框内也响应只能全局改写 filter，会影响宿主应用所有快捷键 → 风险过高，跳过 |
 | [3889](https://github.com/baidu/amis/issues/3889) | InputTree懒加载不显示添加/编辑控件 | 源码现存(高确信) ⏭️跳过(本轮) | Tree 对未加载懒节点有意禁止新增，非 bug → 跳过 | packages/amis-ui/src/components/Tree.tsx:1450 |
-| [21268](https://github.com/baidu/amis/issues/21268) | input-city控件选择重庆下的县市后报错 | 源码待定(需复现) | CityArea.tsx:216-226 db.district[province][city] lookup |
+| [21268](https://github.com/baidu/amis/issues/21268) | input-city控件选择重庆下的县市后报错 | ✅已修复(v680) | CityArea 对作为第二级叶节点的重庆县区不再设置第三级值；回归用例验证修复前 `.map` 报错、修复后正常回显。 |
 | [12254](https://github.com/baidu/amis/issues/12254) | InputFile 文件上传 组件中的 downloadUrl 属性 返回结果异常 | 源码待定(需复现) | InputFile.tsx:627-636 downloadUrl template via handleApi |
 | [12208](https://github.com/baidu/amis/issues/12208) | input-excel 无法导入excel文件，出现错误 hook.js:608 Excel parsing error: Error: Can't read … | 源码待定(需复现) | InputExcel.tsx:483-501 FileReader.readAsArrayBuffer then XLSX.read |
-| [12204](https://github.com/baidu/amis/issues/12204) | input-text自动补全和单选的placeholder文字部分点击光标无法移入，input-text的多选可以点击光标可以移入 | 源码待定(需复现) | InputBox.tsx:129-140 Input rendered with placeholder |
-| [12045](https://github.com/baidu/amis/issues/12045) | Bug: input-text 加 options 和 placeholder 一起使用，placeholder文字区域不能点击 | 源码待定(需复现) | InputBox.tsx:129-140 Input rendered with placeholder |
+| [12204](https://github.com/baidu/amis/issues/12204) | input-text自动补全和单选的placeholder文字部分点击光标无法移入，input-text的多选可以点击光标可以移入 | 源码已修复(v680，待浏览器验证) | InputText 的独立 placeholder 覆盖输入框；改为不接收指针事件，让点击命中底下的 input。 |
+| [12045](https://github.com/baidu/amis/issues/12045) | Bug: input-text 加 options 和 placeholder 一起使用，placeholder文字区域不能点击 | 源码已修复(v680，待浏览器验证) | 与 #12204 同源；TextControl-placeholder 使用 `pointer-events: none`。 |
 | [11996](https://github.com/baidu/amis/issues/11996) | input-file选择完文件后，有时候会卡在那没响应 | 源码待定(需复现) | InputFile.tsx:854-873 upload fn dispatch |
 | [11953](https://github.com/baidu/amis/issues/11953) | InputRichText统计的字符有问题 | 源码待定(需复现) | RichText.tsx:16 imports froala char_counter plugin |
 | [11925](https://github.com/baidu/amis/issues/11925) | InputFile 组件在form组件内没有上传按钮，在form组件外正常显示。 | 源码待定(需复现) | InputFile.tsx:1484-1509 select Button always rendered regardless of form context |
 | [11646](https://github.com/baidu/amis/issues/11646) | inputree defer的节点 特定模式 value不正确 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTree.tsx |
 | [11600](https://github.com/baidu/amis/issues/11600) | 文件上传组件有bug | 源码待定(需复现) | packages/amis/src/renderers/Form/InputFile.tsx:1196 |
-| [11347](https://github.com/baidu/amis/issues/11347) | 输入框配置 placeholder: "Content" 被显示成了中文“内容” | 源码待定(需复现) | packages/amis/src/renderers/Form/InputText.tsx:217 |
+| [11347](https://github.com/baidu/amis/issues/11347) | 输入框配置 placeholder: "Content" 被显示成了中文“内容” | 非缺陷（国际化配置） | zh-CN locale 明确将 `Content` 映射为“内容”；占位符按国际化 key 解析。 |
 | [11259](https://github.com/baidu/amis/issues/11259) | filterable multiple 模式下， number 类型枚举过滤会导致页面崩溃 | 源码待定(需复现) | packages/amis/src/renderers/CRUD.tsx / BaseSelection |
 | [11036](https://github.com/baidu/amis/issues/11036) | 文本框点AddOn之后，添加了前或后附加按钮。但是关闭这个AddOn之后，附加按钮不消失。 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputText.tsx:1202 |
 | [11001](https://github.com/baidu/amis/issues/11001) | input-kv 组件数据异常 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputKV.tsx |
@@ -385,13 +385,13 @@
 | [10873](https://github.com/baidu/amis/issues/10873) | inputTree配置懒加载的行，鼠标hover后按钮不会展示 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1450 |
 | [10689](https://github.com/baidu/amis/issues/10689) | 城市选择器input-city编辑问题 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputCity.tsx:392 |
 | [10635](https://github.com/baidu/amis/issues/10635) | input-image类型字段在手机端多选状态下上传图片无法上传图片 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputImage.tsx (mobile) |
-| [10507](https://github.com/baidu/amis/issues/10507) | 复制带分隔符的文本到inputTag，max属性和去重会失效 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTag.tsx:239 |
+| [10507](https://github.com/baidu/amis/issues/10507) | 复制带分隔符的文本到inputTag，max属性和去重会失效 | 当前代码已有处理(需原环境复现) | InputTag 的 blur/Enter 路径均调用 `validateInputValue`，先合并去重再校验 max。 |
 | [9985](https://github.com/baidu/amis/issues/9985) | 【6.2.2】无法通过 url 带参传递给 input-text 组件进行赋值 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputText.tsx |
 | [9932](https://github.com/baidu/amis/issues/9932) | [bug]InputTree 组件，设置addControls后，新增事件产生的数据缺少parent信息 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTree.tsx:334 |
 | [9527](https://github.com/baidu/amis/issues/9527) | 通过数据接口获取值的单选框，在设置默认值后无法再选择其他选项 | 源码待定(需复现) | packages/amis/src/renderers/Form/Radios.tsx |
 | [9465](https://github.com/baidu/amis/issues/9465) | inputTree展开层级后高度不会自适应 | 源码待定(需复现) | packages/amis-ui/src/components/Tree.tsx:1706 |
 | [9354](https://github.com/baidu/amis/issues/9354) | "name": "model_operator[0].intranet_op", 导致列开关不受控 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx |
-| [9278](https://github.com/baidu/amis/issues/9278) | textarea使用static: true时格式丢失 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputText.tsx (Textarea static) |
+| [9278](https://github.com/baidu/amis/issues/9278) | textarea使用static: true时格式丢失 | 当前代码已有处理(需原环境复现) | Textarea.renderStatic 使用 multiline-text；样式以 `white-space: pre-line` 保留换行。 |
 | [8690](https://github.com/baidu/amis/issues/8690) | InputImage   上传图片之后，然后其他联动的选项切换之后这个图片大小的限制就变了，但是这个图片的大小校验就不会再次触发了 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputImage.tsx:~937 |
 | [8144](https://github.com/baidu/amis/issues/8144) | 手机端多行文本框显示异常 | 源码待定(需复现) | packages/amis-ui/src/components/Textarea.tsx |
 | [7691](https://github.com/baidu/amis/issues/7691) | 已经给input-file组件设置了"joinValues": false，但是在事件中不能通过event.data.file获取到接口返回的全部字段,只能获取… | 源码待定(需复现) | packages/amis/src/renderers/Form/InputFile.tsx:366 |
