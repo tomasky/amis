@@ -157,7 +157,7 @@
 | [11965](https://github.com/baidu/amis/issues/11965) | input-table 宽度超过父类宽度，并且设置input-table宽度不好使 | 源码待定(需复现) | packages/amis-ui/src/components/InputTable.tsx:227-234 |
 | [11934](https://github.com/baidu/amis/issues/11934) | input-table 组件的columns属性，若其中某列使用了引用的 select组件 ，则无法正确展示。 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:1513 |
 | [11876](https://github.com/baidu/amis/issues/11876) | crud嵌套表格，第二层级展开时执行新增子级，默认会将第二层级收起 | 源码待定(需复现) | packages/amis/src/renderers/Table2/index.tsx:1887-1947 |
-| [11842](https://github.com/baidu/amis/issues/11842) | inputTable 表单在 6.4.0 版本及其以后，无法对“value”:"${1+1}"中的表达式进行解析了 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:874-879 |
+| [11842](https://github.com/baidu/amis/issues/11842) | inputTable 表单在 6.4.0 版本及其以后，无法对“value”:"${1+1}"中的表达式进行解析了 | 已验证非缺陷 ⏭️跳过(本轮) | v680 实测：列 `value` 表达式在初始化与新增行时均正常求值（`${1==1?'aa':'bb'}` → `aa`）。issue 示例 data 中显式给了 `b:""`，按 amis 规则数据值优先于 `value` 默认值，属既有设计；另将 `input-table formula` 单测等待 400→800ms 与 master 对齐 (#11842) | packages/amis/src/renderers/Form/InputTable.tsx:874-879 |
 | [11768](https://github.com/baidu/amis/issues/11768) | Table 列样式 背景色不能填满表头 | 源码待定(需复现) | packages/amis/src/renderers/Table2/index.tsx:942-963 |
 | [11723](https://github.com/baidu/amis/issues/11723) | Table/CRUD底部展开加载数据时显示空BUG | 源码待定(需复现) | packages/amis/src/renderers/Table/TableContent.tsx:67 |
 | [11673](https://github.com/baidu/amis/issues/11673) | picker 的 table 模式，选中选项会触发两次change事件 | 源码待定(需复现) | packages/amis/src/renderers/Form/Picker.tsx:507-542 |
@@ -487,7 +487,7 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [12101](https://github.com/baidu/amis/issues/12101) | 日期范围选择shortcuts中的最近7天不包含今日 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/src/components/DateRangePicker.tsx:169-177 |
-| [11734](https://github.com/baidu/amis/issues/11734) | 日期值格式YYYY-MM-DD，DATEMODIFY后提交的格式错误 | 源码现存(高确信) ⏭️跳过(本轮) | DATEMODIFY 输出类型契约不明确，面大 → 跳过 | packages/amis-formula/src/evalutor.ts:1974 fnDATEMODIFY |
+| [11734](https://github.com/baidu/amis/issues/11734) | 日期值格式YYYY-MM-DD，DATEMODIFY后提交的格式错误 | 源码现存(高确信) ✅已修复(本轮) | InputDate.tsx:465-482 新增 componentDidUpdate 分支：`changeMotivation==='formulaChanged'` 且 value 变化时用 normalizeDate 按 valueFormat 归一化后 setPrinstineValue，避免 DATEMODIFY 返回的 Date 被提交成 ISO 字符串；已加回归用例 | packages/amis-formula/src/evalutor.ts:1974 fnDATEMODIFY |
 | [9422](https://github.com/baidu/amis/issues/9422) | Date 日期时间组件的updateFrequency不支持使用数据映射，报错Moment Timezone has no data for ${ } | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Date.tsx:149-150 - normalizeDate.clone().tz(displayTimeZone) with no empty/unresolved guard;… |
 | [12205](https://github.com/baidu/amis/issues/12205) | 日期输入组件国际化不正确 | 源码待定(需复现) | packages/amis-ui/src/components/calendar/Calendar.tsx:214-220,305 |
 | [11813](https://github.com/baidu/amis/issues/11813) | timeline样式异常 | 源码待定(需复现) | n/a |
@@ -616,7 +616,7 @@
 
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
-| [11841](https://github.com/baidu/amis/issues/11841) | Chart组件间联动，会同时发起两个请求 | 源码现存(高确信) ⏭️跳过(本轮) | Chart 联动双请求需 receive-origin 标记，面大 → 跳过 | packages/amis/src/renderers/Chart.tsx:561-566 (receive->reload) and :273-277 (componentDidUpdate->reload via isApiOutdat… |
+| [11841](https://github.com/baidu/amis/issues/11841) | Chart组件间联动，会同时发起两个请求 | 源码现存(高确信) ✅已修复(本轮) | Chart.tsx:564-566 receive 主动 reload 前置 `skipNextApiReload=true`，componentDidUpdate:270-280 读取并清除该标记以跳过同一次 data 变化触发的重复 isApiOutdated reload；已加联动用例（无修复时 chart 请求 2 次，修复后 1 次） | packages/amis/src/renderers/Chart.tsx:561-566 (receive->reload) and :273-277 (componentDidUpdate->reload via isApiOutdat… |
 | [7339](https://github.com/baidu/amis/issues/7339) | chart组件toolbox自定义事件无法绑定函数 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Chart.tsx:177-212 (recoverFunctionType key list omits 'onclick') |
 | [9448](https://github.com/baidu/amis/issues/9448) | chart组件制作graph类型（关系图时）itemStyle的颜色都不生效 | 源码待定(需复现) | packages/amis/src/renderers/Chart.tsx:568-627 (renderChart passes config through, no itemStyle/normal handling) |
 
@@ -646,7 +646,7 @@
 | [11537](https://github.com/baidu/amis/issues/11537) | 轮播图Carousel组件的图片信息不显示 | 源码现存(高确信) ✅已修复(本轮) | _carousel.scss 选择器 `.title/.description` 已失效，改为 `.Image-title/.Image-caption`，图片信息不再落到轮播区域外 |
 | [11536](https://github.com/baidu/amis/issues/11536) | 广播订阅事件中无法执行指定了 componentId/componentName 的动作 | 源码现存(高确信) ⏭️跳过(本轮) | 广播事件 componentId/Name，master 一致，属当前设计 → 跳过 | packages/amis-core/src/utils/renderer-event.ts:229 passes renderer.context as scoped; packages/amis-core/src/actions/Act… |
 | [10634](https://github.com/baidu/amis/issues/10634) | 卡片组件中头部标题和副标题未做自适应 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/scss/components/_card.scss:77-82 Card-meta lacks min-width:0 while Card-title (19-21) is nowrap |
-| [10181](https://github.com/baidu/amis/issues/10181) | action的防抖不生效，设置leading为true，trailing为false，没有起到防抖作用 | 源码现存(高确信) ⏭️跳过(本轮) | 复用 debounceInstance 会因闭包捕获旧的 rendererEvent/data 而产生错值，且 bindEvent 里 cancel+重建是既有设计；master 未修复，无测试保障 → 跳过 |
+| [10181](https://github.com/baidu/amis/issues/10181) | action的防抖不生效，设置leading为true，trailing为false，没有起到防抖作用 | 源码现存(高确信) ✅已修复(本轮) | renderer-event.ts 新增 debounceInstanceCache(WeakMap 按 listener.actions 复用 debounce 实例)，每次 dispatch 刷新 renderer/event/check 后复用实例；并移除 bindEvent 内的 `debounceInstance.cancel()`（cancel 会重置 lodash leading 标记导致每次都新建 leading）。已加 leading/trailing 两个用例 |
 | [10145](https://github.com/baidu/amis/issues/10145) | image配置enlargeTitle、enlargeCaption文字超过一行时展示有问题 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-ui/scss/components/_image-gallery.scss:39-48 - title/caption fixed height 18px, line-height 18px |
 | [9093](https://github.com/baidu/amis/issues/9093) | 设置delay为1000的spinner组件，show 属性设为 true 后，并没有延迟显示 | 源码现存(高确信) ✅已修复(本轮) | Spinner.tsx 新增 renderSpinning 状态与 delayTimer，delay>0 时真正等待 delay 毫秒再渲染，delay 不再只是 Transition 时长 |
 | [7605](https://github.com/baidu/amis/issues/7605) | 在编排动作里加入“刷新目标组件”的动作，但实际结上无法刷新目标组件 | 源码现存(高确信) ⏭️跳过(本轮) | CmptAction 仅按 componentId/Name 解析，master 一致 → 跳过 | CmptAction.ts:40-62,90-101 resolves target only via componentId/componentName; `target` is ignored inside onEvent action… |
