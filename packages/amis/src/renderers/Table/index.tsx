@@ -2163,6 +2163,7 @@ export default class Table extends React.Component<TableProps, object> {
     column: IColumn,
     item: IRow,
     props: any,
+    filteredColumns: Array<IColumn>,
     ignoreDrag = false
   ) {
     const {
@@ -2186,6 +2187,7 @@ export default class Table extends React.Component<TableProps, object> {
         ignoreDrag={ignoreDrag}
         render={render}
         store={store}
+        filteredColumns={filteredColumns}
         multiple={store.multiple}
         canAccessSuperData={canAccessSuperData}
         classnames={cx}

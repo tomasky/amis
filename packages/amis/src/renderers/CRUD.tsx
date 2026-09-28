@@ -1848,6 +1848,10 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       };
 
       items.forEach(item => {
+        // Without a primary key, a row cannot be matched across pages.
+        if (!Object.prototype.hasOwnProperty.call(item, primaryField || 'id')) {
+          return;
+        }
         const idx = findIndex(oldItems, a => isSameValue(a, item));
 
         if (~idx) {

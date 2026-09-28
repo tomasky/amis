@@ -36,7 +36,8 @@ interface TableRowProps extends Pick<RendererProps, 'render'> {
     region: string,
     column: IColumn,
     item: IRow,
-    props: any
+    props: any,
+    columns: Array<IColumn>
   ) => React.ReactNode;
   columns: Array<IColumn>;
   item: IRow;
@@ -277,7 +278,8 @@ export class TableRow extends React.PureComponent<
                               onAction: this.handleAction,
                               onQuickChange: this.handleQuickChange,
                               onChange: this.handleChange
-                            }
+                            },
+                            columns
                           )
                         ) : (
                           <td key={column.index}>
@@ -330,17 +332,23 @@ export class TableRow extends React.PureComponent<
       >
         {columns.map(column =>
           appeard ? (
-            renderCell(`${itemIndex}/${column.index}`, column, item, {
-              ...rest,
-              rowIndex: itemIndex,
-              colIndex: column.index,
-              rowIndexPath: item.path,
-              rowPath,
-              key: column.id,
-              onAction: this.handleAction,
-              onQuickChange: this.handleQuickChange,
-              onChange: this.handleChange
-            })
+            renderCell(
+              `${itemIndex}/${column.index}`,
+              column,
+              item,
+              {
+                ...rest,
+                rowIndex: itemIndex,
+                colIndex: column.index,
+                rowIndexPath: item.path,
+                rowPath,
+                key: column.id,
+                onAction: this.handleAction,
+                onQuickChange: this.handleQuickChange,
+                onChange: this.handleChange
+              },
+              columns
+            )
           ) : column.name && item.rowSpans[column.name] === 0 ? null : (
             <td key={column.id}>
               <div className={cx('Table-emptyBlock')}>&nbsp;</div>

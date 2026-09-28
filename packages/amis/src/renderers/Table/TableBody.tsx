@@ -23,7 +23,8 @@ export interface TableBodyProps extends LocaleProps {
     region: string,
     column: IColumn,
     item: IRow,
-    props: any
+    props: any,
+    columns: Array<IColumn>
   ) => React.ReactNode;
   onCheck: (item: IRow, value: boolean, shift?: boolean) => void;
   onRowClick: (item: IRow, index: number) => Promise<RendererEvent<any> | void>;

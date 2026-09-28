@@ -26,6 +26,7 @@ export interface CellProps extends ThemeProps {
     props?: PlainObject
   ) => JSX.Element;
   store: ITableStore;
+  filteredColumns: Array<IColumn>;
   multiple: boolean;
   canAccessSuperData?: boolean;
   itemBadge?: BadgeObject;
@@ -46,6 +47,7 @@ function Cell({
   ignoreDrag,
   render,
   store,
+  filteredColumns,
   multiple,
   itemBadge,
   classnames: cx,
@@ -67,10 +69,10 @@ function Cell({
     const style = {...column.pristine.style};
     const [stickyStyle, stickyClassName] = store.getStickyStyles(
       column,
-      store.filteredColumns
+      filteredColumns
     );
     return [Object.assign(style, stickyStyle), stickyClassName];
-  }, []);
+  }, [filteredColumns]);
 
   const onCheckboxChange = React.useCallback(
     (value: boolean, shiftKey?: boolean) => {

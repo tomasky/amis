@@ -165,7 +165,12 @@ export default class HBox extends React.Component<HBoxProps, object> {
         style={style}
       >
         {itemRender
-          ? itemRender(column, key, length, this.props)
+          ? itemRender(
+              column.body ? {...column, type: 'wrapper', wrap: false} : column,
+              key,
+              length,
+              this.props
+            )
           : this.renderChild(`column/${key}`, (column as any).body, {
               formMode: column.mode || subFormMode || formMode,
               formHorizontal:
