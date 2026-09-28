@@ -136,6 +136,9 @@ export class Pagination extends React.Component<
   PaginationProps,
   PaginationState
 > {
+  perPageChangeFrame?: number;
+  perPageChangeTimer?: ReturnType<typeof setTimeout>;
+
   static defaultProps = {
     layout: [PaginationWidget.Pager],
     maxButtons: 5,
@@ -164,9 +167,40 @@ export class Pagination extends React.Component<
 
   componentDidUpdate(prevProps: PaginationProps) {
     if (prevProps.perPage !== this.props.perPage) {
+      this.cancelPendingPerPageChange();
       const perPage = Number(this.props.perPage);
       this.setState({perPage: isInteger(perPage) ? perPage : 10});
     }
+  }
+
+  componentWillUnmount() {
+    this.cancelPendingPerPageChange();
+  }
+
+  cancelPendingPerPageChange() {
+    if (this.perPageChangeFrame !== undefined) {
+      cancelAnimationFrame(this.perPageChangeFrame);
+      this.perPageChangeFrame = undefined;
+    }
+    if (this.perPageChangeTimer !== undefined) {
+      clearTimeout(this.perPageChangeTimer);
+      this.perPageChangeTimer = undefined;
+    }
+  }
+
+  handlePerPageChange(perPage: number) {
+    if (!Number.isInteger(perPage) || perPage < 1) {
+      throw new Error('Pagination perPage option must be a positive integer');
+    }
+    this.cancelPendingPerPageChange();
+    this.setState({perPage, pageNum: ''});
+    this.perPageChangeFrame = requestAnimationFrame(() => {
+      this.perPageChangeFrame = undefined;
+      this.perPageChangeTimer = setTimeout(() => {
+        this.perPageChangeTimer = undefined;
+        this.handlePageNumChange(1, perPage);
+      }, 0);
+    });
   }
 
   componentWillReceiveProps(nextProps: PaginationProps) {
@@ -664,13 +698,7 @@ export class Pagination extends React.Component<
         options={selection}
         popOverContainer={popOverContainer}
         popOverContainerSelector={popOverContainerSelector}
-        onChange={(p: any) => {
-          this.setState({
-            perPage: p.value,
-            pageNum: ''
-          });
-          this.handlePageNumChange(1, p.value);
-        }}
+        onChange={(p: any) => this.handlePerPageChange(Number(p?.value))}
         {...testIdBuilder?.getChild('perpage').getTestId()}
       />
     );

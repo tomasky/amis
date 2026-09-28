@@ -512,6 +512,8 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   lastData: any;
 
   timer: ReturnType<typeof setTimeout>;
+  perPageChangeFrame?: number;
+  perPageChangeTimer?: ReturnType<typeof setTimeout>;
   mounted: boolean;
   drawerClosing = false;
   /** 父容器, 主要用于定位CRUD内部popover的挂载点 */
@@ -720,6 +722,12 @@ export default class CRUD extends React.Component<CRUDProps, any> {
   componentWillUnmount() {
     this.mounted = false;
     clearTimeout(this.timer);
+    if (this.perPageChangeFrame !== undefined) {
+      cancelAnimationFrame(this.perPageChangeFrame);
+    }
+    if (this.perPageChangeTimer !== undefined) {
+      clearTimeout(this.perPageChangeTimer);
+    }
     this.filterOnEvent.cache.clear?.();
   }
 
@@ -2364,12 +2372,31 @@ export default class CRUD extends React.Component<CRUDProps, any> {
       <div className={cx('Crud-pageSwitch')}>
         {!mobileUI ? <span>{__('CRUD.perPage')}</span> : null}
         <Select
+          key={store.perPage}
           classPrefix={ns}
           searchable={false}
           placeholder={__('Select.placeholder')}
           options={perPages}
-          value={store.perPage + ''}
-          onChange={(value: any) => this.handleChangePage(1, value.value)}
+          defaultValue={store.perPage + ''}
+          onChange={(value: any) => {
+            const perPage = Number(value?.value);
+            if (!Number.isInteger(perPage) || perPage < 1) {
+              throw new Error('CRUD perPage option must be a positive integer');
+            }
+            if (this.perPageChangeFrame !== undefined) {
+              cancelAnimationFrame(this.perPageChangeFrame);
+            }
+            if (this.perPageChangeTimer !== undefined) {
+              clearTimeout(this.perPageChangeTimer);
+            }
+            this.perPageChangeFrame = requestAnimationFrame(() => {
+              this.perPageChangeFrame = undefined;
+              this.perPageChangeTimer = setTimeout(() => {
+                this.perPageChangeTimer = undefined;
+                this.handleChangePage(1, perPage);
+              }, 0);
+            });
+          }}
           clearable={false}
           popOverContainer={this.parentContainer}
           testIdBuilder={testIdBuilder?.getChild('perPage')}
@@ -2430,6 +2457,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
 
     return (
       <button
+        type="button"
         onClick={() => store.setFilterVisible(!store.filterVisible)}
         className={cx('Button Button--size-default Button--default', {
           'is-active': store.filterVisible
