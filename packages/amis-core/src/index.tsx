@@ -54,7 +54,8 @@ import {
   theme,
   getTheme,
   themeable,
-  makeClassnames
+  makeClassnames,
+  defaultTheme
 } from './theme';
 import type {ClassNamesFn, ThemeProps} from './theme';
 const classPrefix = getClassPrefix();
@@ -297,9 +298,9 @@ function AMISRenderer({
   }, Object.keys(options).concat(Object.values(options)).concat(locale));
 
   const env = getEnv(store);
-  let theme = props.theme || options.theme || 'cxd';
+  let theme = props.theme || options.theme || defaultTheme;
   if (theme === 'default') {
-    theme = 'cxd';
+    theme = defaultTheme;
   }
   env.theme = getTheme(theme);
 

@@ -644,6 +644,9 @@ export function lexer(input: string, options: LexerOptions = {}) {
             state = numberStates.POINT;
           } else if (isExp(char)) {
             state = numberStates.EXP;
+          } else if (isDigit(char)) {
+            passedValueIndex = i + 1;
+            state = numberStates.DIGIT;
           } else {
             break iterator;
           }

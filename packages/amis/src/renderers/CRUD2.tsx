@@ -350,7 +350,8 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
   }
 
   componentDidMount() {
-    const {store, pickerMode, loadType, loadDataOnce, perPage} = this.props;
+    const {store, pickerMode, loadType, loadDataOnce, perPage, filter} =
+      this.props;
 
     // 初始化分页
     let pagination = loadType && !!loadDataOnce;
@@ -359,7 +360,9 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
     }
 
     // 初始化筛选条件
-    this.initQuery({});
+    if (!this.normalizeFilterSchema(filter)?.length) {
+      this.initQuery({});
+    }
 
     if (pickerMode) {
       // 解析picker组件默认值
@@ -1173,10 +1176,13 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
   }
 
   @autobind
-  toggleToggle(index: number) {
+  toggleToggle(column: any) {
     const {store} = this.props;
-    const column = store.columns[index];
-    const toggled = column.toggled;
+    const index = store.columns.indexOf(column);
+    if (index === -1) {
+      throw new Error('Column toggler target no longer exists');
+    }
+    const toggled = column.toggled ?? true;
     store.updateColumns(
       store.columns.map((c: any, i: number) => ({
         ...c,
@@ -1258,7 +1264,7 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
     );
   }
 
-  renderFilter(filterSchema: SchemaObject[] | SchemaObject) {
+  normalizeFilterSchema(filterSchema: SchemaObject[] | SchemaObject) {
     if (
       !filterSchema ||
       (Array.isArray(filterSchema) && filterSchema.length === 0)
@@ -1273,6 +1279,16 @@ export default class CRUD2 extends React.Component<CRUD2Props, any> {
       : [];
 
     if (filterSchemas.length < 1) {
+      return null;
+    }
+
+    return filterSchemas;
+  }
+
+  renderFilter(filterSchema: SchemaObject[] | SchemaObject) {
+    const filterSchemas = this.normalizeFilterSchema(filterSchema);
+
+    if (!filterSchemas?.length) {
       return null;
     }
 

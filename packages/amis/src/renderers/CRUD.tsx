@@ -548,6 +548,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     this.renderHeaderToolbar = this.renderHeaderToolbar.bind(this);
     this.renderFooterToolbar = this.renderFooterToolbar.bind(this);
     this.clearSelection = this.clearSelection.bind(this);
+    this.handleItemAction = this.handleItemAction.bind(this);
 
     const {
       location,
@@ -970,8 +971,8 @@ export default class CRUD extends React.Component<CRUDProps, any> {
     }
   }
 
-  handleItemAction(action: ActionObject, ctx: any) {
-    this.doAction(action, ctx);
+  handleItemAction(e: any, action: ActionObject, ctx: any) {
+    return this.doAction(action, ctx);
   }
 
   handleFilterInit(values: object) {
@@ -2225,7 +2226,7 @@ export default class CRUD extends React.Component<CRUDProps, any> {
               key: `item-${index}`,
               data: itemData,
               disabled: btn.disabled || selectedItems.length !== 1,
-              onAction: this.handleItemAction.bind(this, btn, itemData)
+              onAction: this.handleItemAction
             }
           )
         )}

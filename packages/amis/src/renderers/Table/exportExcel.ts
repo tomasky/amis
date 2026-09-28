@@ -341,6 +341,9 @@ export async function exportExcel(
       pageField,
       perPageField
     });
+    if (toolbar.api?.responseType === 'blob') {
+      return;
+    }
     if (!res.data) {
       env.notify('warning', __('placeholder.noData'));
       return;

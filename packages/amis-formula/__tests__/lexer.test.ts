@@ -68,3 +68,10 @@ test('lexer:exception', () => {
     })
   ).toThrow('Unexpected token x in 1:17');
 });
+
+test('lexer:leading zero number', () => {
+  expect(getTokens('001', {evalMode: true})).toEqual([
+    '<Numeric> 1',
+    '<EOF> undefined'
+  ]);
+});

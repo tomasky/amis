@@ -1622,8 +1622,7 @@ export default class Table2 extends React.Component<Table2Props, object> {
                 })
               );
             },
-            toggleToggle: (index: number) => {
-              const column = store.columnsData[index];
+            toggleToggle: (column: any) => {
               column.toggleToggle();
 
               dispatchEvent(

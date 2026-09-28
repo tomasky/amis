@@ -107,7 +107,7 @@ export class ColumnTogglerRenderer extends React.Component<ColumnTogglerRenderer
             className={cx('ColumnToggler-menuItem')}
             key={'item' + (column.index || index)}
             onClick={() => {
-              toggleToggle && toggleToggle(index);
+              toggleToggle && toggleToggle(column);
             }}
           >
             <Checkbox

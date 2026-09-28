@@ -197,7 +197,7 @@ export class TreeSelector extends React.Component<
     iconField: 'icon',
     deferField: 'defer',
     unfoldedField: 'unfolded',
-    foldedField: 'foled',
+    foldedField: 'folded',
     disabledField: 'disabled',
     joinValues: true,
     extractValue: false,
@@ -341,6 +341,8 @@ export class TreeSelector extends React.Component<
         },
         props.enableNodePath
       );
+      // VirtualList 用 renderItem 引用判断是否需要重绘选择状态。
+      this.renderItem = this.renderItem.bind(this);
       this.setState({
         value: newValue,
         valueSet: new Set(newValue)
@@ -477,6 +479,25 @@ export class TreeSelector extends React.Component<
     initFoldedLevel && this.forceUpdate();
     this.flattenOptions(undefined, initial);
     return unfolded;
+  }
+
+  @autobind
+  setFoldedOrUnfolded(targetLevel: number, isFolded = false) {
+    const {options, deferField, onDeferLoad} = this.props;
+    eachTree(options, (node: Option, index, level, paths, indexes) => {
+      if (node[deferField] && !node.loaded) {
+        onDeferLoad?.(node);
+        return;
+      }
+
+      if (node.children?.length) {
+        const path = indexes!.concat(index).join('-');
+        this.unfolded[path] = isFolded
+          ? level < targetLevel
+          : level <= targetLevel;
+      }
+    });
+    this.flattenOptions(this.props);
   }
 
   @autobind

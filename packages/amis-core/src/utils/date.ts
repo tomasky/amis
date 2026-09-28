@@ -113,7 +113,7 @@ export function normalizeDate(
   }
 
   const v = options?.utc
-    ? moment.utc(value, format).local()
+    ? moment.utc(value, format, true).local()
     : moment(value, format, true);
   if (v.isValid()) {
     return v;
@@ -130,7 +130,9 @@ export function normalizeDate(
 
     while (formats.length) {
       const format = formats.shift()!;
-      const date = moment(value, format);
+      const date = options?.utc
+        ? moment.utc(value, format, true)
+        : moment(value, format, true);
 
       if (date.isValid()) {
         return date;
