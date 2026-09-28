@@ -58,6 +58,48 @@ describe('Row', () => {
 });
 
 describe('TableStore', () => {
+  it('keeps cached column visibility when dynamic columns refresh', () => {
+    const key = table.columnsKey;
+    localStorage.removeItem(key);
+
+    try {
+      table.update({
+        columns: [
+          {name: 'a', label: 'A'},
+          {name: 'b', label: 'B'}
+        ]
+      });
+      table.columns.find(column => column.name === 'b')!.toggleToggle();
+
+      table.update({
+        columns: [
+          {name: 'a', label: 'A'},
+          {name: 'b', label: 'B'},
+          {name: 'c', label: 'C'}
+        ]
+      });
+
+      expect(table.columns.find(column => column.name === 'b')!.toggled).toBe(
+        false
+      );
+      expect(table.columns.find(column => column.name === 'c')!.toggled).toBe(
+        true
+      );
+    } finally {
+      localStorage.removeItem(key);
+    }
+  });
+
+  it('uses configured column visibility without cached preferences', () => {
+    const key = table.columnsKey;
+    localStorage.removeItem(key);
+    table.update({columns: [{name: 'a', label: 'A', toggled: false}]});
+
+    expect(table.columns.find(column => column.name === 'a')!.toggled).toBe(
+      false
+    );
+  });
+
   it('选中父节点,所有子节点自动选中', () => {
     firstLevel.toggle(true);
 

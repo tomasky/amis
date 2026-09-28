@@ -1176,6 +1176,16 @@ export const TableStore = iRendererStore
               return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
             });
           }
+
+          if (Array.isArray(tableMetaData?.unToggledColumns)) {
+            const unToggledColumns = new Set(tableMetaData.unToggledColumns);
+            columns = columns.map((item, index) => ({
+              ...item,
+              toggled: !unToggledColumns.has(
+                (item as any).uid || item.name || item.label || index
+              )
+            }));
+          }
         }
 
         updateColumns(columns);

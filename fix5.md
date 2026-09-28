@@ -43,18 +43,18 @@
 | [9939](https://github.com/baidu/amis/issues/9939) | crud懒加载模式下，新增一条子级数据，父级菜单没法再触发查询，也没法通过按钮刷新获取，只能重新打开菜单 | 源码现存(高确信) ⏭️跳过(本轮) | 懒加载父节点重新查询需改 TableStore 懒节点状态，面大 → 跳过 | packages/amis/src/renderers/Table/index.tsx:754 |
 | [9780](https://github.com/baidu/amis/issues/9780) | CRUD 组件多选事件缺少数据 | 源码现存(高确信) ⏭️跳过(本轮) | issue 含 5 个子问题（CRUD2 标签样式、TooltipWrapper、Tag 删除 onSelect、keepItemSelectionOnPageChange 跨页、updateSelectData），属多处 UI/状态改造；Tag 删除已部分修复 → 本轮跳过 |
 | [9566](https://github.com/baidu/amis/issues/9566) | Crud 树形结构Bug | 源码现存(高确信) ⏭️跳过(本轮) | Crud 树形结构在 helper.ts 的扁平化/过滤，改动面大 → 跳过 | packages/amis-core/src/utils/helper.ts:1526-1582 |
-| [9434](https://github.com/baidu/amis/issues/9434) | 当设置crud的"adaptor": "payload.data.page=x时，切换分页不生效。 | 源码现存(高确信) ⏭️跳过(本轮) | 查看 issue 原文，用户 adaptor 里写死 `payload.data.page=3`，每次响应都把 page 重置为 3，属使用方式问题；master 该处仅 `page != null`→`typeof page !== 'undefined'`，与此场景无关 → 跳过 |
+| [9434](https://github.com/baidu/amis/issues/9434) | 当设置crud的"adaptor": "payload.data.page=x时，切换分页不生效。 | 非缺陷（使用方式问题） | issue 示例在 adaptor 中固定返回 `page=3`，因此切换分页后响应仍会把当前页重置为 3。 |
 | [8646](https://github.com/baidu/amis/issues/8646) | crud卡片模式，调用"autoGenerateFilter": true,会引起获取不到数据，且查询区域不生效 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/CRUD.tsx:788-793 |
 | [8457](https://github.com/baidu/amis/issues/8457) | Cards 卡片组itemAction中拿不到上层作用域中的数据 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Card.tsx:369 |
-| [8026](https://github.com/baidu/amis/issues/8026) | List组件在CRUD使用并做为列且绑定数据为数组类型，当绑定的数组为空时，List的placeholder设置无效 | 源码现存(高确信) ⏭️跳过(本轮) | List.render 已有 `store.items.length ? ... : placeholder` 分支；作为 CRUD 列时空数组为何不显示 placeholder 无法静态定位（涉及 store.source 取值作用域），master 未修复 → 跳过 |
-| [7786](https://github.com/baidu/amis/issues/7786) | CRUD 重置表单自动触发查询 | 源码现存(高确信) ⏭️跳过(本轮) | 设计如此：handleFilterReset 主动 search 为预期行为，非 bug → 跳过 | packages/amis/src/renderers/CRUD.tsx:1235-1244; packages/amis-core/src/renderers/Form.tsx:1601 |
+| [8026](https://github.com/baidu/amis/issues/8026) | List组件在CRUD使用并做为列且绑定数据为数组类型，当绑定的数组为空时，List的placeholder设置无效 | 源码待定(需复现) | List 已有空数据展示 `placeholder` 的分支；需用原列配置复现并定位数据作用域，当前不能确认缺陷。 |
+| [7786](https://github.com/baidu/amis/issues/7786) | CRUD 重置表单自动触发查询 | 非缺陷（现有交互） | `handleFilterReset` 按当前设计在重置后主动查询；原“源码现存”结论与备注相矛盾。 |
 | [7617](https://github.com/baidu/amis/issues/7617) | 【CRUD】关于  crud 的 「initFetch」设置为 false 后，curd -「api-sendOn」 属性满足条件也不触发请求 | 源码现存(高确信) ⏭️跳过(本轮) | initFetch:false + api.sendOn 属通用 API/Service 机制，非局部 → 跳过 | packages/amis/src/renderers/CRUD.tsx:1185,1292 |
 | [7609](https://github.com/baidu/amis/issues/7609) | Crud 轮询参数设置为变量，会触发持续持续持续持续持续持续持续持续持续.....请求 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/CRUD.tsx:1608-1624; packages/amis/src/renderers/CRUD2.tsx:794-812 |
 | [6393](https://github.com/baidu/amis/issues/6393) | crud 结合 service使用时，通过service获取表格数据时，total无效 | 源码现存(高确信) ⏭️跳过(本轮) | service+crud total 解析贯穿 fetch/normalize 管线，面大 → 跳过 | packages/amis-core/src/store/crud.ts:686-700 |
-| [5730](https://github.com/baidu/amis/issues/5730) | CRUD 组件第一次查询调用 updateLocation 方法 replace 参数时不应传入 true 会导致页面二次刷新 | 源码现存(高确信) ⏭️跳过(本轮) | v680 该行号对应的是 filter 提交路径的 updateLocation(location,true)，并非首次查询；无法静态确认二次刷新根因，master 未针对性修复 → 跳过 |
+| [5730](https://github.com/baidu/amis/issues/5730) | CRUD 组件第一次查询调用 updateLocation 方法 replace 参数时不应传入 true 会导致页面二次刷新 | 源码待定(需复现) | 原记录引用的是 filter 提交路径，不是首次查询；需复现首次加载的导航过程才能定位二次刷新。 |
 | [4908](https://github.com/baidu/amis/issues/4908) | CURD  如果后端接口返回结构体中包含 page字段为null, 且perPage值小于总数据条数，将触发前端页面卡死 | 源码现存(高确信) ⏭️跳过(本轮) | page:null 导致死循环需分页/adaptor 兜底，需运行时复现 → 跳过 | packages/amis-core/src/store/crud.ts:472 |
 | [4873](https://github.com/baidu/amis/issues/4873) | crud字段filterable中的source无法获取父级变量 | 源码现存(高确信) ✅已修复(本轮) | `superData` 已由 Table 传入；列筛选 API 的有效性检查、过期判断和请求统一使用该上下文，筛选值仍读取 query。仅在筛选 API 路径执行。 |
-| [4551](https://github.com/baidu/amis/issues/4551) | crud的initFetch置为false时不管有没有filter都不会拉数据 | 源码现存(高确信) ⏭️跳过(本轮) | initFetch:false 即不首查为文档语义，非 bug → 跳过 | packages/amis/src/renderers/CRUD.tsx:1185 |
+| [4551](https://github.com/baidu/amis/issues/4551) | crud的initFetch置为false时不管有没有filter都不会拉数据 | 非缺陷（配置语义） | `initFetch: false` 表示不执行首次查询；是否有 filter 不改变该语义。 |
 | [1518](https://github.com/baidu/amis/issues/1518) | CRUD api中存在数据变量时，表格中的排序，过滤构建的url异常 | 源码现存(高确信) ⏭️跳过(本轮) | api data 含变量导致 URL 异常，涉及 attachDataToQuery/qsstringify，面大 → 跳过 | packages/amis-core/src/utils/api.ts:300-303 |
 | [17347](https://github.com/baidu/amis/issues/17347) | CRUD 批量编辑后刷新分页失效 | 源码待定(需复现) | packages/amis/src/renderers/CRUD.tsx:1408 |
 | [14361](https://github.com/baidu/amis/issues/14361) | crud重新请求,无法触发重新渲染,导致界面上显示的是旧值 | 源码待定(需复现) | packages/amis/src/renderers/QuickEdit.tsx:85 |
@@ -124,20 +124,20 @@
 | [11803](https://github.com/baidu/amis/issues/11803) | InputTable组件自定义按钮在编辑状态不会被隐藏 | 源码现存(高确信) ⏭️跳过(本轮) | 与 #10271 同源，operation 列按钮的编辑态显隐与 create 模式、needConfirm 交织，缺乏明确复现与安全边界，master 未修复 → 跳过 |
 | [11596](https://github.com/baidu/amis/issues/11596) | 使用table2表格,工具栏添加右对齐的按钮，按钮执行“清除选中项”事件 无效 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/CRUD2.tsx:1181-1195 |
 | [11592](https://github.com/baidu/amis/issues/11592) | crud表格的mapping状态使用导出excel不显示状态值 bug | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Table/exportExcel.ts:551-562 |
-| [11584](https://github.com/baidu/amis/issues/11584) | popOverEnableOn中使用表达式函数时提示找不到该方法 | 源码现存(高确信) ⏭️跳过(本轮) | v680 不存在 packages/amis-core/src/schema.ts（master 新增），popOverEnableOn 定义在 PopOver.tsx，无对应可改点，无法静态复现 → 跳过 |
+| [11584](https://github.com/baidu/amis/issues/11584) | popOverEnableOn中使用表达式函数时提示找不到该方法 | 源码待定(需复现) | 原记录引用的 `schema.ts` 在 v680 不存在；需原表达式与报错栈定位，不能据此断言当前分支仍有缺陷。 |
 | [11506](https://github.com/baidu/amis/issues/11506) | inputTable取消编辑时会导致数据错误 | 源码现存(高确信) ✅已修复(上轮 db3730ff3) | InputTable.tsx cancelEdit 将 `~lastModifiedRow?.index`（字符串按位取反恒真）改为 `lastModifiedRow.index === this.state.editIndex` |
 | [11489](https://github.com/baidu/amis/issues/11489) | inputTable 编辑模式下 如果列是按钮 动态添加渲染出来是个输入框 | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Form/InputTable.tsx:1766-1781 |
 | [11103](https://github.com/baidu/amis/issues/11103) | input-table needConfirm属性为false的情况下表单disabled属性不生效 | 源码现存(高确信) ✅已修复(本轮) | InputTable.tsx:1360-1372/1393-1405 合并 quickEdit 时把表格级 `disabled` 放在 `...quickEdit` 之后，覆盖了列上 quickEdit.disabled；改为仅当表格 disabled 为真时才强制 `{disabled:true}` |
 | [10982](https://github.com/baidu/amis/issues/10982) | table2组件中选中表达式`selectedRowKeysExpr`无法与变量比较 | 源码现存(高确信) ✅已修复(上轮 db3730ff3) | Table2/index.tsx 表达式作用域由 `{record,rowIndex}` 改为 `createObject(props.data,{record,rowIndex})`，可引用页面变量 |
 | [10980](https://github.com/baidu/amis/issues/10980) | table2组件，无法指定image组件的宽度，恒为110px | 源码现存(高确信) ✅已修复(v680) | packages/amis/src/renderers/Table2/index.tsx:838 |
-| [10950](https://github.com/baidu/amis/issues/10950) | Table2 itemDraggableOn 配置当前行是否可拖拽的条件无效 | 源码现存(高确信) ⏭️跳过(本轮) | v680 的 store/table2.ts 与 Table2/index.tsx 中不存在 `itemDraggableOn`/`draggable` 任何代码（fix5.md 原行号指向 Column 定义，已失效），该能力在此分支未实现 → 不适用，本轮跳过 |
-| [10912](https://github.com/baidu/amis/issues/10912) | crud2(表格2.0)不支持export-excel类型 | 源码现存(高确信) ⏭️跳过(本轮) | crud2 不支持 export-excel 属缺失特性 → 跳过 | packages/amis/src/renderers/Table2/index.tsx:1966-2069; packages/amis/src/renderers/Table/index.tsx:2448 |
+| [10950](https://github.com/baidu/amis/issues/10950) | Table2 itemDraggableOn 配置当前行是否可拖拽的条件无效 | 当前分支不适用（缺失特性） | v680 的 Table2 没有 `itemDraggableOn` 能力；原清单引用的源码行号已失效。 |
+| [10912](https://github.com/baidu/amis/issues/10912) | crud2(表格2.0)不支持export-excel类型 | 缺失特性 | CRUD2 尚未提供 `export-excel` 支持，不能归类为已有功能的回归缺陷。 |
 | [10837](https://github.com/baidu/amis/issues/10837) | table和crud的toggleExpanded动作展开内部层级时不会自动展开祖先 | 源码现存(高确信) ✅已修复(本轮) | Table/index.tsx toggleExpanded/setExpanded 只对目标行操作，内层 index/condition 命中时祖先仍收起；新增 TableStore.expandAncestors 在展开时同步展开祖先行 |
 | [10816](https://github.com/baidu/amis/issues/10816) | CRUD中table使用groupName导出Excel会丢失表头 | 源码现存(高确信) ⏭️跳过(本轮) | groupName 导出表头处理在 worksheet 构建，面大 → 跳过 | packages/amis/src/renderers/Table/exportExcel.ts:377-381 |
 | [10724](https://github.com/baidu/amis/issues/10724) | input-table组件渲染80条数据的时候，遇到特别卡顿的情况需要10秒钟才能加载完成 | 源码现存(高确信) ⏭️跳过(本轮) | 80 行 input-table 卡顿在 CRUD/Table 渲染热路径，改 deep-merge 有性能风险 → 跳过 | packages/amis/src/renderers/QuickEdit.tsx:358-369; packages/amis-core/src/store/table.ts:425 |
 | [10605](https://github.com/baidu/amis/issues/10605) | inputtable组件分页校验不通过仍然提交接口 | 源码现存(高确信) ⏭️跳过(本轮) | InputTable 跨页校验，面大 → 跳过 | packages/amis/src/renderers/Form/InputTable.tsx:507-508,2075 |
 | [10599](https://github.com/baidu/amis/issues/10599) | 6.6 table2快速编辑提交成功后按钮不消失 | 源码现存(高确信) ✅已修复(v680) | Table2/index.tsx:1466/1486 已 dispatchEvent('quickSaveSubmitted')，即 master #10701 的改动，v680 已包含 |
-| [10594](https://github.com/baidu/amis/issues/10594) | 在crud中使用api动态返回列配置，配合columns-toggler一起使用，会在表格刷新时覆盖浏览器缓存中记录的toggled列 | 源码现存(高确信) ⏭️跳过(本轮) | 动态列+columns-toggler 缓存覆盖在 updateColumns，面大 → 跳过 | packages/amis-core/src/store/table.ts:1328-1356 |
+| [10594](https://github.com/baidu/amis/issues/10594) | 在crud中使用api动态返回列配置，配合columns-toggler一起使用，会在表格刷新时覆盖浏览器缓存中记录的toggled列 | 源码现存(高确信) ✅已修复(本轮) | `setColumns` 已读取列偏好缓存；更新动态列时同步恢复 `unToggledColumns`，新列默认可见。仅列配置更新时执行，不增加单元格渲染开销。 |
 | [10271](https://github.com/baidu/amis/issues/10271) | input-table 在执行 addItem 动作的时候 会触发 显示空的"操作"列 | 源码现存(高确信) ⏭️跳过(本轮) | buildColumns 中 save/cancel 按钮与 create 模式(addItem 会置 editIndex)强耦合，简单按 editable 过滤会破坏 create 模式；master 未修复且该处已大幅重构 → 跳过 |
 | [9669](https://github.com/baidu/amis/issues/9669) | 表格2.0行选择 | 源码现存(高确信) ⏭️跳过(本轮) | Table2 行选择在 amis-ui table，面大 → 跳过 | packages/amis-ui/src/components/table/index.tsx:793 |
 | [9643](https://github.com/baidu/amis/issues/9643) | 表格2.0组件同时使用多行选择和可拖拽时，选择框不显示 | 源码现存(高确信) ⏭️跳过(本轮) | Table2 多选+拖拽表头/行渲染，面大 → 跳过 | packages/amis-ui/src/components/table/Head.tsx:204; packages/amis-ui/src/components/table/Row.tsx:360 |
@@ -148,7 +148,7 @@
 | [5826](https://github.com/baidu/amis/issues/5826) | Transfer 穿梭器 table模式 column无法执行模板解析 | 源码现存(高确信) ⏭️跳过(本轮) | 复现用的是 1.x 旧模板语法 `<%=L.get(...)%>`，属历史语法诉求而非确定性缺陷；master 未修复，改动会引入全局模板解析开销 → 跳过 |
 | [5539](https://github.com/baidu/amis/issues/5539) | table表格  行操作按钮 配置  "reload":  属性  刷新当前表格  没有效果了   1.x的版本是可以的刷新的 | 源码现存(高确信) ⏭️跳过(本轮) | 行操作 reload 目标解析（Page 仅 reload crud），需目标解析改造 → 跳过 | packages/amis/src/renderers/Table/index.tsx:1158-1167; packages/amis/src/renderers/Page.tsx:1251-1256 |
 | [5063](https://github.com/baidu/amis/issues/5063) | input-table/table/crud组件列中设置的quickEdit，不支持select类型的控件在只读模式时显示label | 源码现存(高确信) ⏭️跳过(本轮) | quickEdit select 只读 label 渲染，面大 → 跳过 | packages/amis/src/renderers/QuickEdit.tsx:687-701; packages/amis/src/renderers/Table/TableCell.tsx:92 |
-| [3742](https://github.com/baidu/amis/issues/3742) | select 在table mode下配置的autoComplete接口无法触发 | 源码现存(高确信) ⏭️跳过(本轮) | select table 模式 autoComplete 取数接线，面大 → 跳过 | packages/amis/src/renderers/Form/Select.tsx:570-573,763; packages/amis/src/renderers/Form/Transfer.tsx:400 |
+| [3742](https://github.com/baidu/amis/issues/3742) | select 在table mode下配置的autoComplete接口无法触发 | 非缺陷（配置属性不适用） | Select 的 table/transfer 模式使用 `searchApi` 请求搜索结果；`autoComplete` 适用于普通模式。 |
 | [21424](https://github.com/baidu/amis/issues/21424) | inputtable 内存在 包含weight字符的字段 开启分页时切换分页，然后切换回1页时数据错乱 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:495-516,2043-2137 |
 | [12181](https://github.com/baidu/amis/issues/12181) | InputTable新增行时，行内控件能回显示值但提交表单时值为空 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:1937-1968 |
 | [12123](https://github.com/baidu/amis/issues/12123) | 6.12.0版本input-table中使用input-text和textarea组件无法输入空格 | 源码现存(高确信) ✅已修复(本轮) | QuickEdit.tsx:218-219 handleWindowKeyPress 误用最近包裹元素 `el.tagName`（永远是 div/td）判断，导致快速编辑输入框内空格被 preventDefault；改用 `e.target.tagName`（同步 PR #21525） |
@@ -157,7 +157,7 @@
 | [11965](https://github.com/baidu/amis/issues/11965) | input-table 宽度超过父类宽度，并且设置input-table宽度不好使 | 源码待定(需复现) | packages/amis-ui/src/components/InputTable.tsx:227-234 |
 | [11934](https://github.com/baidu/amis/issues/11934) | input-table 组件的columns属性，若其中某列使用了引用的 select组件 ，则无法正确展示。 | 源码待定(需复现) | packages/amis/src/renderers/Form/InputTable.tsx:1513 |
 | [11876](https://github.com/baidu/amis/issues/11876) | crud嵌套表格，第二层级展开时执行新增子级，默认会将第二层级收起 | 源码待定(需复现) | packages/amis/src/renderers/Table2/index.tsx:1887-1947 |
-| [11842](https://github.com/baidu/amis/issues/11842) | inputTable 表单在 6.4.0 版本及其以后，无法对“value”:"${1+1}"中的表达式进行解析了 | 已验证非缺陷 ⏭️跳过(本轮) | v680 实测：列 `value` 表达式在初始化与新增行时均正常求值（`${1==1?'aa':'bb'}` → `aa`）。issue 示例 data 中显式给了 `b:""`，按 amis 规则数据值优先于 `value` 默认值，属既有设计；另将 `input-table formula` 单测等待 400→800ms 与 master 对齐 (#11842) | packages/amis/src/renderers/Form/InputTable.tsx:874-879 |
+| [11842](https://github.com/baidu/amis/issues/11842) | inputTable 表单在 6.4.0 版本及其以后，无法对“value”:"${1+1}"中的表达式进行解析了 | 已验证非缺陷 | v680 实测：列 `value` 表达式在初始化与新增行时均正常求值（`${1==1?'aa':'bb'}` → `aa`）。issue 示例 data 中显式给了 `b:""`，按 amis 规则数据值优先于 `value` 默认值。 |
 | [11768](https://github.com/baidu/amis/issues/11768) | Table 列样式 背景色不能填满表头 | 源码待定(需复现) | packages/amis/src/renderers/Table2/index.tsx:942-963 |
 | [11723](https://github.com/baidu/amis/issues/11723) | Table/CRUD底部展开加载数据时显示空BUG | 源码待定(需复现) | packages/amis/src/renderers/Table/TableContent.tsx:67 |
 | [11673](https://github.com/baidu/amis/issues/11673) | picker 的 table 模式，选中选项会触发两次change事件 | 源码待定(需复现) | packages/amis/src/renderers/Form/Picker.tsx:507-542 |
@@ -301,8 +301,8 @@
 | [11639](https://github.com/baidu/amis/issues/11639) | Select 通过menuTpl实现多行option，option被遮挡 | 源码现存(高确信) ⏭️跳过(本轮) | Select menuTpl 行高为设计（virtualThreshold 控制虚拟渲染），master 一致 → 跳过 | Select.tsx:456 itemHeight fixed (32); option container not auto-sized for menuTpl |
 | [11314](https://github.com/baidu/amis/issues/11314) | select组件搜索后，下拉选项顺序错乱 | 源码现存(高确信) ✅已修复(本轮) | Select.tsx:968-974 filterOption=defaultFilterOption uses matchSorter ranking |
 | [10359](https://github.com/baidu/amis/issues/10359) | select的source是表达式时，数据域发生变化后已选值不会自动清空 | 源码现存(高确信) ✅已修复(v680) | formItem.loadOptionsFromDataScope 已有 clearValue 参数与清空逻辑，Options.tsx:456 已传 props.clearValueOnSourceChange，与 master #10361 一致 |
-| [9295](https://github.com/baidu/amis/issues/9295) | picker组件的嵌套crud模式多选时能否支持下选中节点时不要自动把子节点自动选中 | 源码现存(高确信) ⏭️跳过(本轮) | picker 不级联选中属新增配置能力 → 跳过 | packages/amis/src/renderers/Form/Picker.tsx (no cascade/autoCheckChildren prop) |
-| [9200](https://github.com/baidu/amis/issues/9200) | picker组件回显不能根据id映射name | 源码现存(高确信) ⏭️跳过(本轮) | Picker 回显映射需失败 payload，无法定位 → 跳过 | packages/amis/src/renderers/Form/Picker.tsx:246-263 |
+| [9295](https://github.com/baidu/amis/issues/9295) | picker组件的嵌套crud模式多选时能否支持下选中节点时不要自动把子节点自动选中 | 缺失特性 | 用户请求增加不级联选中的配置能力，现有 Picker 没有对应属性。 |
+| [9200](https://github.com/baidu/amis/issues/9200) | picker组件回显不能根据id映射name | 源码待定(需复现) | 缺少回显失败时的选项数据和请求结果，当前无法确定映射失败的代码路径。 |
 | [21186](https://github.com/baidu/amis/issues/21186) | 6.13.0 picker组件选择后再点击选择器的空白处，是输入光标没有触发弹窗（在线文档演示也有这个问题） | 源码待定(需复现) | Picker.tsx focus/click handling not isolating blank click |
 | [14310](https://github.com/baidu/amis/issues/14310) | 【BUG】Picker 弹窗搜索与选中事件冲突 | 源码待定(需复现) | Picker.tsx:69 close() on interaction |
 | [12212](https://github.com/baidu/amis/issues/12212) | 居右展示抽屉弹框中如有下拉框，点击后会居左 | 源码待定(需复现) | drawer + select popover positioning, popOverContainer set |
@@ -363,7 +363,7 @@
 | [11801](https://github.com/baidu/amis/issues/11801) | inputTree默认收起配置无效 | 源码现存(高确信) ✅已修复(上轮 db3730ff3) | Tree.tsx 展开判断由 `if (!ret && level <= expandLevel)` 改为 `level < expandLevel`，initiallyOpen:false 生效 |
 | [11729](https://github.com/baidu/amis/issues/11729) | InputImage组件，回现时，点击查看大图，使用的还是perview的地址 | 源码现存(高确信) ✅已修复(本轮) | packages/amis/src/renderers/Form/InputImage.tsx:945-950 |
 | [11641](https://github.com/baidu/amis/issues/11641) | 组件数字输入框 展示不全大数字，或者变成科学计数法 | 源码现存(高确信) ⏭️跳过(本轮) | 大数字/科学计数显示在渲染热路径，缺复现 → 跳过 | packages/amis/src/renderers/Form/InputNumber.tsx:381,515,520 |
-| [8259](https://github.com/baidu/amis/issues/8259) | quickEdit 中 input-image 开启 multiple 后 hideUploadButton 失效 | 源码现存(高确信) ⏭️跳过(本轮) | issue 内维护者明确：hideUploadButton 只隐藏“手动上传时额外的上传按钮”，不是 add/选择按钮；设计存在歧义但非 bug，用户用 maxLength:-1 即可绕过 → 跳过 |
+| [8259](https://github.com/baidu/amis/issues/8259) | quickEdit 中 input-image 开启 multiple 后 hideUploadButton 失效 | 非缺陷（配置语义） | 维护者说明 `hideUploadButton` 隐藏的是手动上传按钮，不是选择图片的入口。 |
 | [4201](https://github.com/baidu/amis/issues/4201) | 光标在输入框，按钮的快捷键无效，光标不在输入框时，按钮的快捷键有效  | 源码现存(高确信) ⏭️跳过(本轮) | hotkeys-js 的 filter 是全局 `hotkeys.filter`，无 per-binding filter；要让输入框内也响应只能全局改写 filter，会影响宿主应用所有快捷键 → 风险过高，跳过 |
 | [3889](https://github.com/baidu/amis/issues/3889) | InputTree懒加载不显示添加/编辑控件 | 源码现存(高确信) ⏭️跳过(本轮) | Tree 对未加载懒节点有意禁止新增，非 bug → 跳过 | packages/amis-ui/src/components/Tree.tsx:1450 |
 | [21268](https://github.com/baidu/amis/issues/21268) | input-city控件选择重庆下的县市后报错 | 源码待定(需复现) | CityArea.tsx:216-226 db.district[province][city] lookup |
@@ -464,7 +464,7 @@
 | # | 标题 | 验证结论 | 源码证据 / 备注 |
 | --- | --- | --- | --- |
 | [12062](https://github.com/baidu/amis/issues/12062) | 同一个页面渲染两个amis页面，toast只会显示到后渲染的页面上 | 源码现存(高确信) ✅已修复(v680) | Toast.tsx 已改为 `let toastRefs: Array<any> = []` 并向所有 ref 广播（master 仍是单例 toastRef），v680 已包含该修复 |
-| [9401](https://github.com/baidu/amis/issues/9401) | amis@2.9.0在react@18+的concurrent模式下，出现报错问题 | 源码现存(高确信) ⏭️跳过(本轮) | React18 concurrent 报错针对 2.9.0，v680 无 concurrent 代码 → 跳过 | packages/amis-core/src/renderers/Form.tsx:2442 |
+| [9401](https://github.com/baidu/amis/issues/9401) | amis@2.9.0在react@18+的concurrent模式下，出现报错问题 | 源码待定(需复现) | 原问题针对 2.9.0 与 React 18 concurrent 模式，不能直接推断 v680 仍复现。 |
 | [11872](https://github.com/baidu/amis/issues/11872) | vue2 sdk官方demo 分页器被遮挡 | 源码待定(需复现) | Report targets external aisuda/vue2-amis-demo repo and a pager page-size dropdown being clipped; no amis source defect i… |
 | [11730](https://github.com/baidu/amis/issues/11730) | 使用JSSDK时，主题样式无法切换 | 源码待定(需复现) | examples/embed.tsx |
 | [11316](https://github.com/baidu/amis/issues/11316) | js sdk6.9.0和6.10.0 无法获取amisInstance.getComponentById(id)返回值 | 源码待定(需复现) | packages/amis-core/src/Scoped.tsx:217 |
@@ -528,7 +528,7 @@
 | [21084](https://github.com/baidu/amis/issues/21084) | 事件，执行动作，目标组件选择输入组件id，保存后刷新，再次进去绑定的事件配置面板中，组件id丢失 | 源码现存(高确信) ⏭️跳过(本轮) | 目标组件 id 持久化需重构，v680 无对应文件 → 跳过 | packages/amis-editor/src/renderer/event-control/eventControlConfigHelper.ts:388,616 and helper.tsx:211 still use __cmptI… |
 | [12114](https://github.com/baidu/amis/issues/12114) | amis-editor  向前添加组件必导致错误 bug | 原记录根因不成立(需复现) | `resizeSensorV2` 在访问 `getBoundingClientRect()` 前已有空元素检查；不能据此认定为缺少 null 守卫，需原操作栈定位。 |
 | [11897](https://github.com/baidu/amis/issues/11897) | 编辑器源码中使用amisRender渲染的schema都无法根据主题渲染 | 源码现存(高确信) ⏭️跳过(本轮) | amisRender 主题透传遍布多处 → 跳过 | packages/amis-editor/src/renderer/event-control/index.tsx:1417; TransferTableControl.tsx:489; TimelineItemControl.tsx:41… |
-| [11808](https://github.com/baidu/amis/issues/11808) | 编辑器左侧全局变量弹窗无法指定主题 | 源码现存(高确信) ⏭️跳过(本轮) | GlobalVarManagerPanel 在 v680 不存在 → 跳过 | packages/amis-editor/src/renderer/global-var-control/GlobalVarManagerPanel.tsx:310 ConfirmBox rendered with no theme/cla… |
+| [11808](https://github.com/baidu/amis/issues/11808) | 编辑器左侧全局变量弹窗无法指定主题 | 源码待定(需复现) | 原记录引用的 `GlobalVarManagerPanel` 在 v680 不存在，需定位此分支的对应入口。 |
 | [11735](https://github.com/baidu/amis/issues/11735) | amis-eidtor 容器固定宽高时，拖拽未对 % 等单位特殊处理 | 源码现存(高确信) ⏭️跳过(本轮) | Container 拖拽单位处理，需读原单位，面大 → 跳过 | packages/amis-editor/src/plugin/Container.tsx:268 drag resize hardcodes `${width}px`, no unit handling for %/em/vw/vh. |
 | [11694](https://github.com/baidu/amis/issues/11694) | diff-editor 的左侧值diffValue无法动态更新 | 当前代码已有处理(需原场景复现) | `packages/amis/src/renderers/Form/DiffEditor.tsx` 的 `componentDidUpdate` 在 `diffValue` 或 `data` 变化时更新左侧编辑器模型；原记录仅检查编辑器插件配置，漏看了运行时逻辑。 |
 | [11428](https://github.com/baidu/amis/issues/11428) | amis editor重做(redo)操作只能进行一次 | 源码现存(高确信) ⏭️跳过(本轮) | redo/undo 历史状态耦合，风险高 → 跳过 | packages/amis-editor-core/src/store/editor.ts:2289 traceableSetSchema still splices future history on every call (idx+1.… |
@@ -537,7 +537,7 @@
 | [9390](https://github.com/baidu/amis/issues/9390) | amis-ui/lib/components/Editor定义全局window.MonacoEnvironment导致非amis的monaco editor无法… | 源码现存(高确信) ⏭️跳过(本轮) | Editor 已用 if(!window.MonacoEnvironment) 守卫，非 bug → 跳过 | packages/amis-ui/src/components/Editor.tsx:19-20 still assigns global window.MonacoEnvironment when unset; amis-first sc… |
 | [8283](https://github.com/baidu/amis/issues/8283) | 编辑器中-状态显示组件-编辑左侧源码-添加className，再在右侧面板修改图标配置-比如修改颜色，组件刷新后定义的className不见了 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-editor/src/plugin/Status.tsx:257-261 onChange rebuilds source with pick(['label','color','icon']) only, dr… |
 | [7987](https://github.com/baidu/amis/issues/7987) | amis-editor的CRUD的headerToolbar每次设置后都会覆盖掉在外观设置添加的其他按钮 | 源码现存(高确信) ✅已修复(本轮) | packages/amis-editor/src/plugin/CRUD.tsx:921 sets headerToolbar=[createSchemaBase,'bulkActions'] when create is added, d… |
-| [3012](https://github.com/baidu/amis/issues/3012) | amis-editor 无法配置 combo 多条件分支的子表单集合 | 源码现存(高确信) ⏭️跳过(本轮) | combo 多条件分支属缺失特性 → 跳过 | packages/amis-editor/src/plugin/Form/Combo.tsx:95-98 defines only one 'items' region; no `conditions` handling anywhere … |
+| [3012](https://github.com/baidu/amis/issues/3012) | amis-editor 无法配置 combo 多条件分支的子表单集合 | 缺失特性 | 编辑器 Combo 目前只有一个 `items` 区域，未提供多条件分支的配置能力。 |
 | [12236](https://github.com/baidu/amis/issues/12236) | amis 代码编辑器拖入富文本后顶部工具栏 格式 菜单不能正常使用 | 源码待定(需复现) | Rich text editor (froala/tinymce) not in editor source; reporter notes 6.12.0 runtime fix |
 | [12106](https://github.com/baidu/amis/issues/12106) | amis 6.12.0 fromNow选项展示变成英文的了, 在编辑器里是正常的 | 源码待定(需复现) | No fromNow handling in packages/amis-editor/src or amis-editor-core/src |
 | [11900](https://github.com/baidu/amis/issues/11900) | 6.12 编辑器 白屏崩溃 | 源码待定(需复现) | packages/amis-editor/src/renderer/CRUDControl.tsx (no preview/edit toggle crash logic locatable) |
