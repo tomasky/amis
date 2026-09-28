@@ -136,6 +136,24 @@ export function renderItemActions(
   );
 }
 
+export function getTwoRowHeaderColumns(
+  columns: Array<IColumn>,
+  groups: Array<{rowSpan: number; has: Array<IColumn>}>
+): Set<IColumn> | undefined {
+  // 窄表直接查找分组更省；宽表预建集合避免逐列反复扫描。
+  if (columns.length < 32 || !groups.length) {
+    return undefined;
+  }
+
+  const result = new Set<IColumn>();
+  groups.forEach(group => {
+    if (group.rowSpan === 2) {
+      group.has.forEach(column => result.add(column));
+    }
+  });
+  return result;
+}
+
 export class TableContent extends React.PureComponent<TableContentProps> {
   render() {
     const {
@@ -182,6 +200,10 @@ export class TableContent extends React.PureComponent<TableContentProps> {
 
     const tableClassName = cx('Table-table', this.props.tableClassName);
     const hideHeader = columns.every(column => !column.label);
+    const twoRowHeaderColumns =
+      columns.length >= 32 && columnsGroup.length
+        ? getTwoRowHeaderColumns(columns, columnsGroup)
+        : undefined;
 
     return (
       <div
@@ -236,8 +258,10 @@ export class TableContent extends React.PureComponent<TableContentProps> {
             <tr className={hideHeader ? 'fake-hide' : ''}>
               {columns.map(column =>
                 columnsGroup.length > 0 &&
-                columnsGroup.find(group => ~group.has.indexOf(column))
-                  ?.rowSpan === 2
+                (twoRowHeaderColumns
+                  ? twoRowHeaderColumns.has(column)
+                  : columnsGroup.find(group => ~group.has.indexOf(column))
+                      ?.rowSpan === 2)
                   ? null
                   : renderHeadCell(column, {
                       'data-index': column.index,

@@ -57,7 +57,10 @@ import {TableCell} from './TableCell';
 import type {AutoGenerateFilterObject} from '../CRUD';
 import {HeadCellFilterDropDown} from './HeadCellFilterDropdown';
 import {HeadCellSearchDropDown} from './HeadCellSearchDropdown';
-import TableContent, {renderItemActions} from './TableContent';
+import TableContent, {
+  getTwoRowHeaderColumns,
+  renderItemActions
+} from './TableContent';
 import {
   BaseSchema,
   SchemaApi,
@@ -1466,7 +1469,7 @@ export default class Table extends React.Component<TableProps, object> {
       return;
     }
 
-    const {store, affixColumns, itemActions} = this.props;
+    const {store} = this.props;
 
     // if (
     //   (affixColumns === false ||
@@ -1483,7 +1486,8 @@ export default class Table extends React.Component<TableProps, object> {
     if (row?.id === id) {
       return;
     }
-    eachTree<IRow>(store.rows, (item: IRow) => item.setIsHover(item.id === id));
+    row?.setIsHover(false);
+    store.getRowById(id)?.setIsHover(true);
   }
 
   handleMouseLeave() {
@@ -2217,6 +2221,14 @@ export default class Table extends React.Component<TableProps, object> {
     } = this.props;
     const hideHeader = store.filteredColumns.every(column => !column.label);
     const columnsGroup = store.columnGroup;
+    const twoRowHeaderColumns =
+      affixHeader &&
+      !autoFillHeight &&
+      store.columnWidthReady &&
+      store.filteredColumns.length >= 32 &&
+      columnsGroup.length
+        ? getTwoRowHeaderColumns(store.filteredColumns, columnsGroup)
+        : undefined;
 
     return affixHeader && !autoFillHeight ? (
       <>
@@ -2293,8 +2305,11 @@ export default class Table extends React.Component<TableProps, object> {
                   ) : null}
                   <tr>
                     {store.filteredColumns.map(column =>
-                      columnsGroup.find(group => ~group.has.indexOf(column))
-                        ?.rowSpan === 2
+                      columnsGroup.length > 0 &&
+                      (twoRowHeaderColumns
+                        ? twoRowHeaderColumns.has(column)
+                        : columnsGroup.find(group => ~group.has.indexOf(column))
+                            ?.rowSpan === 2)
                         ? null
                         : this.renderHeadCell(column, {
                             'key': column.index,
