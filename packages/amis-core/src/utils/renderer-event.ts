@@ -74,6 +74,25 @@ export interface RendererEventContext {
 
 let rendererEventListeners: RendererEventListener[] = [];
 
+/**
+ * 缓存事件动作的 debounce 实例。
+ * 之前每次 dispatch 都会新建一个 lodash debounce 实例，导致 leading:true / trailing:false
+ * 的防抖完全失效（每次点击都是新实例的 leading 触发）。
+ * 以 onEvent 的 actions 数组（引用稳定）为 key 复用同一个实例，并在每次 dispatch 时
+ * 更新其闭包引用的 renderer/event/check 回调，避免拿到过期的数据域。
+ */
+const debounceInstanceCache = new WeakMap<
+  any,
+  {
+    type: string;
+    actions: Array<any>;
+    renderer: any;
+    event: RendererEvent<any>;
+    check: () => void;
+    instance: any;
+  }
+>();
+
 // 创建渲染器事件对象
 export function createRendererEvent<T extends RendererEventContext>(
   type: string,
@@ -155,7 +174,9 @@ export const bindEvent = (renderer: any) => {
           item.actions === listeners[key].actions
       );
       if (listener?.executing) {
-        listener?.debounceInstance?.cancel?.();
+        // 注意：这里不能 cancel debounce 实例，cancel 会重置 lodash 的 leading 状态，
+        // 导致 leading:true / trailing:false 的防抖失效（见 #10181）。
+        // debounce 实例已按 actions 缓存复用，pending 的 trailing 会在新一次调用时自动重置计时。
         rendererEventListeners = rendererEventListeners.filter(
           (item: RendererEventListener) =>
             !(
@@ -281,18 +302,37 @@ export async function dispatchEvent(
       maxWait = 10000
     } = listener?.debounce || {};
     if (listener?.debounce) {
-      const debounced = debounce(
-        async () => {
-          await runActions(listener.actions, listener.renderer, rendererEvent);
-          checkExecuted();
-        },
-        wait,
-        {
-          trailing,
-          leading,
-          maxWait
-        }
-      );
+      // 复用同一个 debounce 实例，否则每次 dispatch 都新建实例会导致防抖失效
+      const cacheKey = listener.actions;
+      let cache = debounceInstanceCache.get(cacheKey);
+      if (!cache || cache.type !== listener.type) {
+        cache = {
+          type: listener.type,
+          actions: listener.actions,
+          renderer: listener.renderer,
+          event: rendererEvent,
+          check: checkExecuted,
+          instance: undefined
+        };
+        cache.instance = debounce(
+          async () => {
+            await runActions(cache!.actions, cache!.renderer, cache!.event);
+            cache!.check();
+          },
+          wait,
+          {
+            trailing,
+            leading,
+            maxWait
+          }
+        );
+        debounceInstanceCache.set(cacheKey, cache);
+      }
+      // 每次触发都刷新闭包引用的 renderer/事件/回调，保证执行时用的是最新数据
+      cache.renderer = listener.renderer;
+      cache.event = rendererEvent;
+      cache.check = checkExecuted;
+
       rendererEventListeners.forEach(item => {
         // 找到事件队列中正在执行的事件加上标识，下次待执行队列就会把这个事件过滤掉
         if (
@@ -300,10 +340,10 @@ export async function dispatchEvent(
           listener.type === item.type
         ) {
           item.executing = true;
-          item.debounceInstance = debounced;
+          item.debounceInstance = cache!.instance;
         }
       });
-      debounced();
+      cache.instance();
     } else {
       await runActions(listener.actions, listener.renderer, rendererEvent);
       checkExecuted();
