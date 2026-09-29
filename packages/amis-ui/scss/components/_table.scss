@@ -184,6 +184,12 @@
     min-height: 0.01%;
     overflow-x: auto;
     transform: translateZ(0);
+    overscroll-behavior-x: contain;
+
+    @media (hover: none) and (pointer: coarse) {
+      // Let the table handle horizontal touch dragging without blocking vertical page scroll.
+      touch-action: pan-y pinch-zoom;
+    }
   }
 
   &-content-colDragLine {

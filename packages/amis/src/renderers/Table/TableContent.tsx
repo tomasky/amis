@@ -155,6 +155,65 @@ export function getTwoRowHeaderColumns(
 }
 
 export class TableContent extends React.PureComponent<TableContentProps> {
+  private touchScroll?: {
+    pointerId: number;
+    startX: number;
+    startY: number;
+    scrollLeft: number;
+  };
+  private touchScrollMoved = false;
+
+  private handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const content = event.currentTarget;
+    this.touchScroll = undefined;
+    this.touchScrollMoved = false;
+    if (
+      event.pointerType !== 'touch' ||
+      !event.isPrimary ||
+      content.scrollWidth <= content.clientWidth
+    ) {
+      return;
+    }
+
+    this.touchScroll = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      scrollLeft: content.scrollLeft
+    };
+  };
+
+  private handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = this.touchScroll;
+    if (!start || start.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - start.startX;
+    const deltaY = event.clientY - start.startY;
+    if (!this.touchScrollMoved) {
+      if (Math.abs(deltaX) < 5 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+        return;
+      }
+      this.touchScrollMoved = true;
+    }
+    event.currentTarget.scrollLeft = start.scrollLeft - deltaX;
+  };
+
+  private handlePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (this.touchScroll?.pointerId === event.pointerId) {
+      this.touchScroll = undefined;
+    }
+  };
+
+  private handleClickCapture = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (this.touchScrollMoved) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.touchScrollMoved = false;
+    }
+  };
+
   render() {
     const {
       placeholder,
@@ -210,6 +269,11 @@ export class TableContent extends React.PureComponent<TableContentProps> {
         onMouseMove={onMouseMove}
         className={cx('Table-content', className)}
         onScroll={onScroll}
+        onPointerDown={this.handlePointerDown}
+        onPointerMove={this.handlePointerMove}
+        onPointerUp={this.handlePointerEnd}
+        onPointerCancel={this.handlePointerEnd}
+        onClickCapture={this.handleClickCapture}
       >
         <table ref={tableRef} className={cx(tableClassName)}>
           <ColGroup columns={columns} store={store} />
