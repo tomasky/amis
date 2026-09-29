@@ -1174,3 +1174,26 @@
     margin-top: 0;
   }
 }
+
+@media (max-width: 767px) {
+  .#{$ns}Table-horizontalScrollControls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    padding: 3px 0;
+  }
+
+  .#{$ns}Table-horizontalScrollButton {
+    width: 32px;
+    height: 28px;
+    border: 1px solid var(--Table-borderColor);
+    border-radius: 5px;
+    background: var(--Table-bg);
+    color: var(--Table-color);
+    font-size: 16px;
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+}

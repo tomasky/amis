@@ -28,6 +28,7 @@ import {getStyleNumber} from 'amis-core';
 import {filterTree} from 'amis-core';
 
 import Spinner, {SpinnerExtraProps} from '../Spinner';
+import HorizontalScrollControls from './HorizontalScrollControls';
 import ItemActionsWrapper from './ItemActionsWrapper';
 import Cell from './Cell';
 import ColGroup from './ColGroup';
@@ -1673,6 +1674,8 @@ export class Table extends React.PureComponent<TableProps, TableState> {
             {typeof title === 'function' ? title() : title}
           </div>
         ) : null}
+
+        <HorizontalScrollControls classnames={cx} scrollRef={this.contentDom} />
 
         {hasScrollY || sticky ? (
           this.renderScrollTable()

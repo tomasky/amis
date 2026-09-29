@@ -69,6 +69,7 @@ import TreeSelection from './TreeSelection';
 import AssociatedSelection from './AssociatedSelection';
 import PullRefresh from './PullRefresh';
 import Table from './table';
+import HorizontalScrollControls from './table/HorizontalScrollControls';
 import SchemaVariableListPicker from './schema-editor/SchemaVariableListPicker';
 import SchemaVariableList from './schema-editor/SchemaVariableList';
 import VariableList from './formula/VariableList';
@@ -200,6 +201,7 @@ export {
   ArrayInput,
   PullRefresh,
   Table,
+  HorizontalScrollControls,
   SchemaVariableListPicker,
   SchemaVariableList,
   VariableList,

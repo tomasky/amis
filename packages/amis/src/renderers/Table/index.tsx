@@ -47,6 +47,7 @@ import {
 } from 'amis-core';
 import {
   Button,
+  HorizontalScrollControls,
   Icon,
   BadgeObject,
   Checkbox,
@@ -554,6 +555,7 @@ export default class Table extends React.Component<TableProps, object> {
   };
 
   dom = React.createRef<HTMLDivElement>();
+  contentDom = React.createRef<HTMLDivElement>();
   table?: HTMLTableElement;
   sortable?: Sortable;
   dragTip?: HTMLElement;
@@ -2800,6 +2802,7 @@ export default class Table extends React.Component<TableProps, object> {
     return (
       <>
         <TableContent
+          contentRef={this.contentDom}
           testIdBuilder={testIdBuilder}
           tableClassName={cx(
             {
@@ -2907,6 +2910,7 @@ export default class Table extends React.Component<TableProps, object> {
         {this.renderAffixHeader(tableClassName)}
         {header}
         {heading}
+        <HorizontalScrollControls classnames={cx} scrollRef={this.contentDom} />
         <div
           className={cx('Table-contentWrap')}
           onMouseLeave={this.handleMouseLeave}

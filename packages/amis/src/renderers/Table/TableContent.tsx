@@ -19,6 +19,7 @@ import type {IColumn, IRow, TestIdBuilder} from 'amis-core';
 import ColGroup from './ColGroup';
 
 export interface TableContentProps extends LocaleProps {
+  contentRef: React.RefObject<HTMLDivElement>;
   className?: string;
   tableClassName?: string;
   classnames: ClassNamesFn;
@@ -157,6 +158,7 @@ export function getTwoRowHeaderColumns(
 export class TableContent extends React.PureComponent<TableContentProps> {
   render() {
     const {
+      contentRef,
       placeholder,
       classnames: cx,
       render,
@@ -207,6 +209,7 @@ export class TableContent extends React.PureComponent<TableContentProps> {
 
     return (
       <div
+        ref={contentRef}
         onMouseMove={onMouseMove}
         className={cx('Table-content', className)}
         onScroll={onScroll}
